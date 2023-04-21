@@ -7,6 +7,7 @@
     <title>Camagru</title>
     <link rel="stylesheet" type="text/css" href="./main.css">
     <link rel="stylesheet" type="text/css" href="./upload.css">
+    <link rel="stylesheet" type="text/css" href="./mypage.css">
 </head>
 <body>
     <?php
