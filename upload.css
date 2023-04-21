@@ -1,0 +1,30 @@
+#canvas {
+    width: 100%;
+    height : 70%;
+    border: 1px solid black;
+    background-color: white
+}
+.main-content {
+    width: 80%;
+    height : 50%;
+    display: flex;
+}
+
+#upload-left {
+    border: 1px solid blue;
+    flex : 4
+}
+
+#upload-right {
+    border: 1px solid blue;
+    flex : 1
+}
+
+#sticky-list {
+    border: 1px solid greenyellow;
+    height: 20%;
+}
+#captured-list {
+    border : 1px solid red;
+    height : 80%
+}
