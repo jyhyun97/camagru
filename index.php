@@ -1,3 +1,3 @@
 <?php
-include_once 'main.php';
+include_once 'app/views/main.php';
 ?>
