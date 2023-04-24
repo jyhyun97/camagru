@@ -1,21 +1,3 @@
-html, body {
-    margin : 0px;
-    padding : 0px;
-}
-
-.navi {
-    background-color: lightblue;
-    height : 5vh;
-}
-
-.content {
-    background-color : lightcoral;
-    height : 95vh;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
 .gallary {
     background-color: lightcyan;
     width : 80%;
