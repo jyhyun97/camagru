@@ -1,6 +1,4 @@
 <?php
-//모델 생성
-//뷰 생성
 include_once 'app/model/mainModel.php';
 class MainController
 {

@@ -6,7 +6,13 @@ class MainModel
 
     public function __construct()
     {
-        $this->user = "임시 유저 이름";
+        require_once('app/module/login.php');
+
+        mysqli_select_db($db_server, $db_database);
+        $query = "SELECT * FROM user WHERE username = 'jeonhyun'";
+        $result = mysqli_query($db_server, $query);
+        $row = mysqli_fetch_array($result);
+        $this->user = $row['username'];
         for ($i = 0; $i < 5; $i++) {
             $this->posts[$i] = "https://picsum.photos/300/200";
         }
