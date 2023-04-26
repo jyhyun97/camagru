@@ -20,11 +20,22 @@
         <button>홈</button>
         <button>로그인</button>
         <button>회원가입</button>
+        <label>
+            <?php
+            include_once 'app/controller/mainController.php';
+            $mainController = new MainController;
+
+            echo $mainController->get_userId();
+            ?>
+        </label>
     </header>
     <div class="content">
         <div class="gallary">
-            <img src="https://picsum.photos/300/200">
-            <img src="https://picsum.photos/300/200">
+            <?php
+            // foreach ($model->get_posts() as $ele) {
+            //     echo "<img src=" . $ele . ">";
+            // }
+            ?>
         </div>
         <div class="buttons">
             <button>이전</button>
