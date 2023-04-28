@@ -11,11 +11,9 @@
 </head>
 
 <body>
-    <header class="navi">
-        <button>홈</button>
-        <button>로그인</button>
-        <button>회원가입</button>
-    </header>
+    <?php
+    require_once('app/view/header.php');
+    ?>
     <div class="content">
         <img src="https://picsum.photos/600/300">
         <label>좋아요 개수</label>
@@ -30,6 +28,4 @@
             <button>submit</button>
         </form>
     </div>
-    </div>
-
 </body>
