@@ -1,0 +1,13 @@
+#modal {
+    background-color: greenyellow;
+    z-index: 1;
+	position: fixed;
+	--width: 30vw;
+	--height: 100vh;
+	visibility: hidden;
+
+    width: var(--width);
+	height: var(--height);
+	top: calc(50% - (var(--height) / 2));
+	left: calc(50% - (var(--width) / 2));
+}
