@@ -2,8 +2,8 @@
 <link rel="stylesheet" type="text/css" href="app/styles/modal.css">
 <header class="navi">
     <button>홈</button>
-    <button onclick="submitSignin(event, 'app/view/signin.php')">로그인</button>
-    <button onclick="submitSignin(event, 'app/view/signup.php')">회원가입</button>
+    <button id="signin-button">로그인</button>
+    <button id="signup-button">회원가입</button>
     <label>
         <?php
         include_once 'app/controller/mainController.php';
@@ -15,8 +15,13 @@
 <?php
 include_once 'app/view/modal.php';
 ?>
-
 <script>
+    const signinButton = document.getElementById('signin-button');
+    signinButton.addEventListener('click', () => submitSignin('app/view/signin.php'));
+
+    const signupButton = document.getElementById('signup-button');
+    signupButton.addEventListener('click', () => submitSignin('app/view/signup.php'));
+
     function activeModal() {
         const modal = document.getElementById('modal');
         if (modal.style.visibility == 'visible')
@@ -25,7 +30,7 @@ include_once 'app/view/modal.php';
             modal.style.visibility = 'visible';
     }
 
-    function submitSignin(e, path) {
+    function submitSignin(path) {
         const httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = alertContents;
