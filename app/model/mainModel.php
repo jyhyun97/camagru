@@ -25,6 +25,15 @@ class MainModel
     {
         return $this->posts;
     }
+    public function post_signup($email, $username, $password)
+    {
+        require_once('app/module/login.php'); //어디다 둬야 적절할까..
+
+        $query = `INSERT INTO user VALUES ($email, $username, $password)`;
+        $result = mysqli_query($db_server, $query);
+        print_r($result);
+        return '200 OK'; //나중에 제대로 하세요...
+    }
 }
 
 ?>

@@ -15,8 +15,4 @@ function submitSignup() {
         username : signupUsername,
         password : signupPassword
     };
-    //const 컨트롤러;
-    //const signupRes = 컨트롤러.컨트롤러_무슨 함수()
-    //signupRes 메시지 띄우기 가입 완료, 중복입니다, 유효성검사 지켜주세요 등등등..
-    
 }
