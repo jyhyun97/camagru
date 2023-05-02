@@ -3,11 +3,6 @@ html, body {
     padding : 0px;
 }
 
-.navi {
-    background-color: lightblue;
-    height : 5vh;
-}
-
 .content {
     background-color : lightcoral;
     height : 95vh;

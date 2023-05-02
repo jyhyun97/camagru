@@ -11,11 +11,9 @@
 </head>
 
 <body>
-    <header class="navi">
-        <button>홈</button>
-        <button>로그인</button>
-        <button>회원가입</button>
-    </header>
+    <?php
+    require_once('app/view/header.php');
+    ?>
     <div class="content">
         <form>
             <lable>사용자 : </lable>

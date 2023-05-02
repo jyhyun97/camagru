@@ -1,0 +1,28 @@
+#modal {
+    background-color: greenyellow;
+    z-index: 2;
+	position: fixed;
+	--width: 30vw;
+	--height: 100vh;
+	visibility: hidden;
+
+    width: var(--width);
+	height: var(--height);
+	top: calc(50% - (var(--height) / 2));
+	left: calc(50% - (var(--width) / 2));
+}
+#modal-content {
+	background-color: white;
+	border : 1px solid red;
+	position : relative;
+	z-index : 3;
+}
+#modal-background {
+	background-color: #00000080;
+	width : 100vw;
+	height : 100vh;
+	left: 0px;
+	top: 0px;
+	position : fixed;
+	z-index: 1;
+}
