@@ -2,23 +2,29 @@
 
 class Router
 {
-    private static $routes; //2차원 배열??
-
+    private static $routes = array();
     // 경로, HTTP 메소드, 그에 맞게 실행될 콜백함수를 routes 변수에 등록
-    public static function add($path, $method, $callback)
+    public static function add($path, $method = 'GET', $callback)
     {
-        //routes[$path][$method]에 $callback 추가.
+        //아직 routes[$path]가 존재하지 않을 수 있는 경우 먼저 빈 배열 추가를 해야함
+        if (!isset(self::$routes[$path])) {
+            self::$routes[$path] = array();
+        }
+        self::$routes[$path][$method] = $callback;
     }
     // 실행
     public static function run()
     {
-        //$_SERVER 변수를 이용해 현재 경로에서 url, method 가져오기.
-        //routes에서 해당하는 핸들러 찾아오기
-        //핸들러가 없으면 경로 못찾는 경우 리턴
+        $path = $_SERVER['REQUEST_URI'];
+        $method = $_SERVER['REQUEST_METHOD'];
 
-        //해당 함수 호출...
+        if (isset(self::$routes[$path][$method]))
+            call_user_func(self::$routes[$path][$method]);
+        //arge 필요?? 나중에 생각해서 처리하자..
+        else
+            echo '라우터에 등록된 요청인지 확인하세요';
     }
-// 나중에 잘못된 경로에 대한 예외처리를 만들어야함~~
+// 나중에 잘못된 경로에 대한 예외처리를 만들기.
 }
 
 ?>
