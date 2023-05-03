@@ -4,10 +4,15 @@ class MainModel
     private $user;
     private $posts = array();
 
+    private $db_server;
+    private $db_database;
+
     public function __construct()
     {
         require_once('app/module/login.php');
 
+        $this->db_server = $db_server;
+        $this->db_database = $db_database;
         mysqli_select_db($db_server, $db_database);
         $query = "SELECT * FROM user WHERE username = 'jeonhyun'";
         $result = mysqli_query($db_server, $query);
@@ -27,10 +32,9 @@ class MainModel
     }
     public function post_signup($email, $username, $password)
     {
-        require_once('app/module/login.php'); //어디다 둬야 적절할까..
-
-        $query = `INSERT INTO user VALUES ($email, $username, $password)`;
-        $result = mysqli_query($db_server, $query);
+        mysqli_select_db($this->db_server, $this->db_database);
+        $query = "INSERT INTO user (email, username, password, auth) VALUES ('$email', '$username', '$password', 'NULL')";
+        $result = mysqli_query($this->db_server, $query);
         print_r($result);
         return '200 OK'; //나중에 제대로 하세요...
     }

@@ -18,9 +18,19 @@ class MainController
     {
         include_once 'app/view/upload.php';
     }
-
-    public static function post_signup($data)
+    public static function get_signup()
     {
+        include_once 'app/view/signup.php';
+    }
+    public static function get_signin()
+    {
+        include_once 'app/view/signin.php';
+    }
+
+
+    public static function post_signup()
+    {
+        $data = $_REQUEST;
         $model = new MainModel;
 
         $email = $data['email'];

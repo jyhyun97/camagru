@@ -1,9 +1,9 @@
 import { activeModal } from './modal.js';
 const signinButton = document.getElementById('signin-button');
-signinButton.addEventListener('click', () => submitSignin('app/view/signin.php'));
+signinButton.addEventListener('click', () => submitSignin('/signin'));
 
 const signupButton = document.getElementById('signup-button');
-signupButton.addEventListener('click', () => submitSignin('app/view/signup.php'));
+signupButton.addEventListener('click', () => submitSignin('/signup'));
 
 // signin이나 signup에 대한 요청을 보내고 해당하는 php파일 가져오는 함수
 function submitSignin(path) {
