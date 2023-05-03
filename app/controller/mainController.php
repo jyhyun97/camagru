@@ -2,27 +2,33 @@
 include_once 'app/model/mainModel.php';
 class MainController
 {
-    private $model;
-
-    public function __construct()
+    public static function get_main()
     {
-        $this->model = new MainModel;
+        include_once 'app/view/main.php';
+    }
+    public static function get_post()
+    {
+        include_once 'app/view/post.php';
+    }
+    public static function get_mypage()
+    {
+        include_once 'app/view/mypage.php';
+    }
+    public static function get_upload()
+    {
+        include_once 'app/view/upload.php';
     }
 
-    public function get_userId()
+    public static function post_signup($data)
     {
-        return "<label> hello " . $this->model->get_user() . "</label>";
-    }
-
-    public function post_signup($data)
-    {
+        $model = new MainModel;
 
         $email = $data['email'];
         $username = $data['username'];
         $password = $data['password'];
         //유효성 검사()
         //  return '에러코드, 메시지';
-        $this->model->post_signup($email, $username, $password);
+        $model->post_signup($email, $username, $password);
         return '회원가입 성공, 이메일 중복, 유효성검사 실패 등';
     }
 }
