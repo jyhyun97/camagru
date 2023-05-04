@@ -35,7 +35,6 @@ class MainModel
         mysqli_select_db($this->db_server, $this->db_database);
         $query = "INSERT INTO user (email, username, password, auth) VALUES ('$email', '$username', '$password', 'NULL')";
         $result = mysqli_query($this->db_server, $query);
-        print_r($result);
         return '200 OK'; //나중에 제대로 하세요...
     }
 }

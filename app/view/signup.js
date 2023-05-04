@@ -17,15 +17,9 @@ function submitSignup() {
 
     const httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', '/signup');
-    httpRequest.setRequestHeader('Content-Type', 'application/json'); 
+    httpRequest.setRequestHeader('Content-Type', 'application/json');
+    httpRequest.onload = () => {
+        console.log(httpRequest.response);
+    }
     httpRequest.send(JSON.stringify(signupData));
-    httpRequest.onreadystatechange = () => {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                console.log(httpRequest.response)
-            } else {
-                alert('request 실패');
-            }
-        }
-    };
 }
