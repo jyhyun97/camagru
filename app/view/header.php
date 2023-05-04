@@ -4,13 +4,12 @@
     <button>홈</button>
     <button id="signin-button">로그인</button>
     <button id="signup-button">회원가입</button>
-    <label>
-        <?php
-        include_once 'app/controller/mainController.php';
-        $mainController = new MainController;
-        echo $mainController->get_userId();
-        ?>
-    </label>
+    <?php
+    if (!isset($_SESSION['login']))
+        echo "로그인 X";
+    else
+        echo "로그인 O";
+    ?>
 </header>
 <?php
 include_once 'app/view/modal.php';
