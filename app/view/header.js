@@ -13,12 +13,15 @@ function submitSignin(path) {
     httpRequest.open('GET', path);
     httpRequest.send();
     activeModal();
-
     function alertContents() {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 const modalNode = document.getElementById('modal-content');
+                const newNode = document.createElement('script')
+                newNode.type="module";
+                newNode.src="app/view/signup.js";
                 modalNode.innerHTML = httpRequest.responseText;
+                document.body.appendChild(newNode);
             } else {
                 alert('request 실패');
             }
