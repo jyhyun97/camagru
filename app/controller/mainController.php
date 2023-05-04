@@ -54,8 +54,10 @@ class MainController
         $result = $model->post_signin($email, $password);
         if ($result == false)
             echo "로그인 실패";
-        else
+        else {
             echo "로그인 성공";
+            $_SESSION['login'] = true;
+        }
         return;
         //성공 시 세션에 뭔가 저장해야 할 거 같은데...
     }
