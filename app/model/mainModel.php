@@ -37,6 +37,15 @@ class MainModel
         $result = mysqli_query($this->db_server, $query);
         return '200 OK'; //나중에 제대로 하세요...
     }
+
+    public function post_signin($email, $password)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+        $query = "SELECT * FROM user WHERE email = '$email'";
+        $result = mysqli_query($this->db_server, $query);
+        $row = mysqli_fetch_assoc($result);
+        return ($row['password'] == $password);
+    }
 }
 
 ?>

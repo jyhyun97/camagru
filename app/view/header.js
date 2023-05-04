@@ -17,10 +17,13 @@ function submitSignin(path) {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 const modalNode = document.getElementById('modal-content');
+                modalNode.innerHTML = httpRequest.responseText;
+                if (document.getElementById('modal-js'))
+                    document.getElementById('modal-js').remove();
                 const newNode = document.createElement('script')
                 newNode.type="module";
-                newNode.src="app/view/signup.js";
-                modalNode.innerHTML = httpRequest.responseText;
+                newNode.src="app/view" + path + ".js";
+                newNode.id="modal-js";
                 document.body.appendChild(newNode);
             } else {
                 alert('request 실패');

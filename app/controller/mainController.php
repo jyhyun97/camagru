@@ -43,6 +43,22 @@ class MainController
         }
         return;
     }
+    public static function post_signin()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        $email = $data->email;
+        $password = $data->password;
+
+        $result = $model->post_signin($email, $password);
+        if ($result == false)
+            echo "로그인 실패";
+        else
+            echo "로그인 성공";
+        return;
+        //성공 시 세션에 뭔가 저장해야 할 거 같은데...
+    }
 }
 
 ?>
