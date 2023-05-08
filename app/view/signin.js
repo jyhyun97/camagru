@@ -1,16 +1,12 @@
-import { activeModal } from './modal.js';
-const cancelButton = document.getElementById('signin-cancel');
-cancelButton.addEventListener('click', () => activeModal());
-
-const submitButton = document.getElementById('signin-submit');
-submitButton.addEventListener('click', () => submitSignin());
+const signinSubmitButton = document.getElementById('signin-submit');
+signinSubmitButton.addEventListener('click', () => submitSignin() );
 
 function submitSignin() {
     const signinEmail = document.getElementById('signin-email');
     const signinPassword = document.getElementById('signin-password');
     const signinData = {
-        email : signinEmail.value,
-        password : signinPassword.value
+        email: signinEmail.value,
+        password: signinPassword.value
     };
 
     const httpRequest = new XMLHttpRequest();

@@ -1,9 +1,5 @@
-import { activeModal } from './modal.js';
-const cancelButton = document.getElementById('signup-cancel');
-cancelButton.addEventListener('click', () => activeModal());
-
-const submitButton = document.getElementById('signup-submit');
-submitButton.addEventListener('click', () => submitSignup());
+const signupSubmitButton = document.getElementById('signup-submit');
+signupSubmitButton.addEventListener('click', () => submitSignup());
 
 function submitSignup() {
     const signupEmail = document.getElementById('signup-email');
