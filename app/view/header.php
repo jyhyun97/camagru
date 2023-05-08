@@ -15,3 +15,5 @@
 include_once 'app/view/modal.php';
 ?>
 <script src="app/view/header.js" type="module"></script>
+<script src="app/view/signin.js"></script>
+<script src="app/view/signup.js"></script>
