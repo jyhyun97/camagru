@@ -1,4 +1,4 @@
-import { activeModal } from './modal.js';
+import { activeModal } from './modal/modal.js';
 const signinButton = document.getElementById('signin-button');
 signinButton.addEventListener('click', () => activeModal('signin-form'));
 

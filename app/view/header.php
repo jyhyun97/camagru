@@ -12,8 +12,8 @@
     ?>
 </header>
 <?php
-include_once 'app/view/modal.php';
+include_once 'app/view/modal/modal.php';
 ?>
 <script src="app/view/header.js" type="module"></script>
-<script src="app/view/signin.js"></script>
-<script src="app/view/signup.js"></script>
+<script src="app/view/modal/signin.js"></script>
+<script src="app/view/modal/signup.js"></script>

@@ -20,11 +20,11 @@ class MainController
     }
     public static function get_signup()
     {
-        include_once 'app/view/signup.php';
+        include_once 'app/view/modal/signup.php';
     }
     public static function get_signin()
     {
-        include_once 'app/view/signin.php';
+        include_once 'app/view/modal/signin.php';
     }
 
     public static function post_signup()
