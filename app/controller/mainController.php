@@ -27,6 +27,10 @@ class MainController
         include_once 'app/view/modal/signin.php';
     }
 
+    /**
+     * signup 경로의 post 요청에 대해 유효성 검사 수행,
+     * query 결과에 따라 중복된 이메일, 유저네임 알리기 
+     */
     public static function post_signup()
     {
         $data = json_decode(file_get_contents("php://input"));
@@ -43,6 +47,10 @@ class MainController
         }
         return;
     }
+    /**
+     * signin 경로의 post 요청에 대해 유효성 검사 수행,
+     * query 결과에 따라 로그인 실패 이유, 로그인 성공 및 세션 저장 수행
+     */
     public static function post_signin()
     {
         $data = json_decode(file_get_contents("php://input"));

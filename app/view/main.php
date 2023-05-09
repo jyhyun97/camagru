@@ -17,9 +17,6 @@
     <div class="content">
         <div class="gallary">
             <?php
-            // foreach ($model->get_posts() as $ele) {
-            //     echo "<img src=" . $ele . ">";
-            // }
             ?>
         </div>
         <div class="buttons">
