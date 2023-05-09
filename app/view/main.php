@@ -1,8 +1,3 @@
-<!-- 필요한 정보
-로그인 여부
-총 이미지 수, 한 번에 로드되는 이미지 수, 현재 로드된 이미지 수, 현재 페이지 번호
--->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,9 +17,6 @@
     <div class="content">
         <div class="gallary">
             <?php
-            // foreach ($model->get_posts() as $ele) {
-            //     echo "<img src=" . $ele . ">";
-            // }
             ?>
         </div>
         <div class="buttons">

@@ -1,10 +1,6 @@
-import { activeModal } from './modal.js';
+import { activeModal } from './modal/modal.js';
 const signinButton = document.getElementById('signin-button');
-signinButton.addEventListener('click', () => submitSignRequest('signin-form'));
+signinButton.addEventListener('click', () => activeModal('signin-form'));
 
 const signupButton = document.getElementById('signup-button');
-signupButton.addEventListener('click', () => submitSignRequest('signup-form'));
-
-function submitSignRequest(path) {
-    activeModal(path);
-}
+signupButton.addEventListener('click', () => activeModal('signup-form'));
