@@ -74,11 +74,15 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
         $model = new MainModel;
 
-        //1페이지, 6개 같은 정보를 받고,
-        //그에 따라 쿼리 날리고 정보 받아서 반환
         $currentPage = $data->currentPage;
         $size = $data->size;
         $result = $model->post_gallary($currentPage, $size);
+
+        // 마지막 페이지인지 판단
+        if ($currentPage * $size < $result['rownum'])
+            $result['lastPage'] = true;
+        else
+            $result['lastPage'] = false;
         echo json_encode($result);
         return;
     }

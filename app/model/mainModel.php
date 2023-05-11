@@ -39,7 +39,13 @@ class MainModel
         ORDER BY postId DESC LIMIT $currentRow, $size";
         $result = mysqli_query($this->db_server, $query);
         $row = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        return $row;
+
+        $rownum = mysqli_num_rows($result);
+
+        $response = array();
+        $response['rownum'] = $rownum;
+        $response['data'] = $row;
+        return $response;
     }
 }
 
