@@ -9,6 +9,7 @@ gallaryRightButton.addEventListener('click', () => {});
 function pagination(movePage)
 {
     //옮겨질 페이지 번호에 따라 요청 다르게 보내기
+
 }
 function buttonRerender()
 {
@@ -17,7 +18,7 @@ function buttonRerender()
     else
         gallaryLeftButton.disabled = false;
     if (pageData.lastPage === true)
-        gallaryRightButton.disabled = ture;
+        gallaryRightButton.disabled = true;
     else
         gallaryRightButton.disabled = false;
 }

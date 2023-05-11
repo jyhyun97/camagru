@@ -79,7 +79,7 @@ class MainController
         $result = $model->post_gallary($currentPage, $size);
 
         // 마지막 페이지인지 판단
-        if ($currentPage * $size < $result['rownum'])
+        if ($currentPage * $size > $result['rownum'])
             $result['lastPage'] = true;
         else
             $result['lastPage'] = false;
