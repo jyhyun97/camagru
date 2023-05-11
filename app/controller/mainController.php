@@ -69,6 +69,23 @@ class MainController
         return;
         //성공 시 세션에 뭔가 저장해야 할 거 같은데...
     }
+    public static function post_gallary()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        $currentPage = $data->currentPage;
+        $size = $data->size;
+        $result = $model->post_gallary($currentPage, $size);
+
+        // 마지막 페이지인지 판단
+        if ($currentPage * $size > $result['rownum'])
+            $result['lastPage'] = true;
+        else
+            $result['lastPage'] = false;
+        echo json_encode($result);
+        return;
+    }
 }
 
 ?>

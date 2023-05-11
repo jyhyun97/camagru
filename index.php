@@ -12,5 +12,6 @@ Router::add('/signup', 'GET', 'MainController::get_signup');
 Router::add('/signup', 'POST', 'MainController::post_signup');
 Router::add('/signin', 'GET', 'MainController::get_signin');
 Router::add('/signin', 'POST', 'MainController::post_signin');
+Router::add('/gallary', 'POST', 'MainController::post_gallary');
 Router::run();
 ?>
