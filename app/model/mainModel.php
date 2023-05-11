@@ -40,7 +40,9 @@ class MainModel
         $result = mysqli_query($this->db_server, $query);
         $row = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        $rownum = mysqli_num_rows($result);
+        $rownum_query = "SELECT * FROM post";
+        $rownum_result = mysqli_query($this->db_server, $rownum_query);
+        $rownum = mysqli_num_rows($rownum_result);
 
         $response = array();
         $response['rownum'] = $rownum;

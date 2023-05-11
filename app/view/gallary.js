@@ -1,26 +1,30 @@
 const pageData = { currentPage: 1, size: 6, firstPage : true, lastPage : true };
 
 const gallaryLeftButton = document.getElementById('gallary-left-button');
-gallaryLeftButton.addEventListener('click', () => {});
+gallaryLeftButton.addEventListener('click', () => {pagination(pageData.currentPage - 1)});
 const gallaryRightButton = document.getElementById('gallary-right-button');
-gallaryRightButton.addEventListener('click', () => {});
-
+gallaryRightButton.addEventListener('click', () => {pagination(pageData.currentPage + 1)});
 
 function pagination(movePage)
 {
-    //옮겨질 페이지 번호에 따라 요청 다르게 보내기
-
+    if (pageData.currentPage === 1 && movePage === 2)
+        pageData.firstPage = false;
+    else if (movePage === 1 && pageData.currentPage === 2)
+        pageData.firstPage = true;
+    pageData.currentPage = movePage;
+    postGallary();
 }
+
 function buttonRerender()
 {
     if (pageData.firstPage === true)
-        gallaryLeftButton.disabled = true;
+    gallaryLeftButton.disabled = true;
     else
-        gallaryLeftButton.disabled = false;
+    gallaryLeftButton.disabled = false;
     if (pageData.lastPage === true)
-        gallaryRightButton.disabled = true;
+    gallaryRightButton.disabled = true;
     else
-        gallaryRightButton.disabled = false;
+    gallaryRightButton.disabled = false;
 }
 
 function postGallary() {
@@ -29,8 +33,10 @@ function postGallary() {
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
         const responseData = JSON.parse(httpRequest.response);
+        const gallaryCurrentPage = document.getElementById('gallary-current-page');
+        gallaryCurrentPage.innerText = pageData.currentPage;
         const gallaryPosts = document.getElementById('gallary-posts');
-        console.log(responseData);
+        gallaryPosts.replaceChildren();
         responseData.data.forEach((ele) => {
             /** 이런 element를 만드세요
             * <div class="gallary-post">
@@ -52,4 +58,5 @@ function postGallary() {
     }
     httpRequest.send(JSON.stringify(pageData));
 }
+
 postGallary();
