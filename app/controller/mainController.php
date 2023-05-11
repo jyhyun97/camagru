@@ -69,6 +69,19 @@ class MainController
         return;
         //성공 시 세션에 뭔가 저장해야 할 거 같은데...
     }
+    public static function post_gallary()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        //1페이지, 6개 같은 정보를 받고,
+        //그에 따라 쿼리 날리고 정보 받아서 반환
+        $currentPage = $data->currentPage;
+        $size = $data->size;
+        $result = $model->post_gallary($currentPage, $size);
+        echo json_encode($result);
+        return;
+    }
 }
 
 ?>

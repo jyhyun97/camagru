@@ -15,10 +15,9 @@
     require_once('app/view/header.php');
     ?>
     <div class="content">
-        <div class="gallary">
-            <?php
-            ?>
-        </div>
+        <?php
+        require_once('app/view/gallary.php');
+        ?>
         <div class="buttons">
             <button>이전</button>
             <button>다음</button>
