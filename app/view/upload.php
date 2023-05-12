@@ -6,8 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camagru</title>
-    <link rel="stylesheet" type="text/css" href="../styles/common.css">
-    <link rel="stylesheet" type="text/css" href="../styles/main.css">
+    <link rel="stylesheet" type="text/css" href="app/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="app/styles/main.css">
+    <link rel="stylesheet" type="text/css" href="app/styles/upload.css">
 </head>
 
 <body>
@@ -17,9 +18,15 @@
     <div class="content">
         <div class="main-content">
             <div id="upload-left">
-                <canvas id="canvas"></canvas>
-                <button>촬영</button>
-                <button>이미지업로드</button>
+                <div id="output">
+                    <video id="video"></video>
+                    <canvas id="canvas" hidden></canvas>
+                    <img id="photo" hidden />
+                </div>
+                <div id="buttons">
+                    <button id="start-button">촬영</button>
+                    <button>이미지업로드</button>
+                </div>
                 <div id="sticky-list">스티커 목록</div>
             </div>
             <div id="upload-right">
@@ -30,6 +37,7 @@
             </div>
         </div>
     </div>
+    <script src="app/view/upload.js"></script>
 </body>
 
 </html>
