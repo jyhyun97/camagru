@@ -24,7 +24,7 @@
                     <img id="photo" hidden />
                 </div>
                 <div id="buttons">
-                    <button id="start-button">촬영</button>
+                    <button id="capture-button">촬영</button>
                     <button>이미지업로드</button>
                 </div>
                 <div id="sticky-list">스티커 목록</div>

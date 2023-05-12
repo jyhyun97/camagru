@@ -14,7 +14,7 @@
  */
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
-const startButton = document.getElementById('start-button');
+const captureButton = document.getElementById('capture-button');
 
 navigator.mediaDevices.getUserMedia({video : true, audio : false})
 .then((stream) => {
@@ -27,7 +27,7 @@ navigator.mediaDevices.getUserMedia({video : true, audio : false})
     //대신 대체 이미지 태그 활성화 혹은 추가
 })
 
-startButton.addEventListener('click', () => {takePicture()})
+captureButton.addEventListener('click', () => {takePicture()})
 
 function takePicture() {
     const context = canvas.getContext("2d");
