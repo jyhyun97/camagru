@@ -25,7 +25,7 @@
                 </div>
                 <div id="buttons">
                     <button id="capture-button">촬영</button>
-                    <button>이미지업로드</button>
+                    <input type="file" accept="image/png, image/jpeg" id="upload-button" />
                 </div>
                 <div id="sticky-list">스티커 목록</div>
             </div>
