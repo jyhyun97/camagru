@@ -60,11 +60,11 @@ class MainController
         $password = $data->password;
 
         $result = $model->post_signin($email, $password);
-        if ($result == false)
+        if ($result == null)
             echo "로그인 실패";
         else {
             echo "로그인 성공";
-            $_SESSION['login'] = true;
+            $_SESSION['login'] = $result;
         }
         return;
         //성공 시 세션에 뭔가 저장해야 할 거 같은데...
@@ -84,6 +84,46 @@ class MainController
         else
             $result['lastPage'] = false;
         echo json_encode($result);
+        return;
+    }
+    public static function post_capture()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        $username = $data->username;
+        $baseImage = $data->baseImage;
+        $stickyImages = $data->stickyImages;
+
+        //합성();
+
+        //파일 만들기
+        $newFileName = "img/" . $username . "_" . date("Y-m-d_H:i:s") . ".png";
+        $newImage = str_replace('data:image/png;base64,', '', $baseImage);
+        $newImage = str_replace(' ', '+', $newImage);
+        $newFile = fopen($newFileName, "w");
+        fwrite($newFile, base64_decode($newImage));
+        fclose($newFile);
+
+        //db에 저장하기
+        $result = $model->post_capture($newFileName, $username);
+        echo json_encode($result);
+        return;
+    }
+
+    public static function getImagesByUsername($username)
+    {
+        $model = new MainModel;
+        return $model->getImagesByUsername($username);
+    }
+
+    public static function post_image()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        $imageId = str_replace("captured-image-", "", $data->imageId);
+        $model->post_image($imageId);
         return;
     }
 }

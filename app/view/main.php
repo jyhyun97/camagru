@@ -19,9 +19,7 @@
         require_once('app/view/gallary.php');
         ?>
         <div class="buttons">
-            <button>이전</button>
-            <button>다음</button>
-            <button>업로드</button>
+            <a href="/upload"><button>업로드</button></a>
         </div>
     </div>
 </body>

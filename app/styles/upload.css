@@ -1,13 +1,12 @@
-#canvas {
-    width: 100%;
-    height : 70%;
-    border: 1px solid black;
-    background-color: white
-}
 .main-content {
     width: 80%;
     height : 50%;
     display: flex;
+    background-color: white;
+}
+
+.captured-image {
+    width: 100%;
 }
 
 #upload-left {
@@ -21,7 +20,7 @@
 }
 
 #sticky-list {
-    border: 1px solid greenyellow;
+    border: 1px solid green;
     height: 20%;
 }
 #captured-list {

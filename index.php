@@ -13,5 +13,7 @@ Router::add('/signup', 'POST', 'MainController::post_signup');
 Router::add('/signin', 'GET', 'MainController::get_signin');
 Router::add('/signin', 'POST', 'MainController::post_signin');
 Router::add('/gallary', 'POST', 'MainController::post_gallary');
+Router::add('/capture', 'POST', 'MainController::post_capture');
+Router::add('/image', 'POST', 'MainController::post_image');
 Router::run();
 ?>
