@@ -1,14 +1,3 @@
-//video : 직접 웹캠 데이터 가져올 비디오
-//canvas : 비디오 캡쳐해서 그려줄 용도
-//img : 그려진 이미지..... 생성한 이미지 목록에 추가......
-
-/**
- * 1. 초기값 세팅
- * 2. element 가져오기
- * 3. getUserMedia로 비디오 사용
- * 4. 캔버스 이용해서 캡처하고 img태그 추가하는 기능
- */
-
 /**
  * 웹캠 대신 이미지 업로드 기능 이용해서 이미지를 가져오기
  */
@@ -31,11 +20,39 @@ captureButton.addEventListener('click', () => {takePicture()})
 
 function takePicture() {
     const context = canvas.getContext("2d");
-    context.drawImage(video, 0, 0, 200, 180);
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
     const data = canvas.toDataURL("image/png");
     const capturedList = document.getElementById('captured-list');
     const newNode = document.createElement('img');
     newNode.src = data;
+    newNode.className = 'captured-image';
     capturedList.appendChild(newNode);
+
+    console.log(data);
+
+    const httpRequest = new XMLHttpRequest();
+    const capturedData = {
+        username : 'jeonhyun',
+        baseImage : data,
+        stickyImages : []
+    };
+    httpRequest.open('POST', '/capture');
+    httpRequest.setRequestHeader(
+        'Content-Type', 'text/plain'
+    );
+    httpRequest.onload = () => {
+        console.log(httpRequest.response);
+    }
+    httpRequest.send(JSON.stringify(capturedData));
+    //post /capture
+    //안에 데이터는 이렇게 주기
+    //{username : username, baseImage : data, baseImageType : 이미지타입, stickyImages : [선택한 이미지 이름]}
+    //
 }
+/**
+ * <div class="capture">
+ *  <img>
+ *  <button 삭제>
+ * </div>
+ */

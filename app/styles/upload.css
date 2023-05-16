@@ -5,6 +5,11 @@
     background-color: white;
 }
 
+.captured-image {
+    width: 100%;
+    border : 3px solid hotpink;
+}
+
 #upload-left {
     border: 1px solid blue;
     flex : 4

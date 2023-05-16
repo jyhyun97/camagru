@@ -20,7 +20,7 @@
             <div id="upload-left">
                 <div id="output">
                     <video id="video"></video>
-                    <canvas id="canvas" hidden></canvas>
+                    <canvas id="canvas" width="640" height="480" hidden></canvas>
                     <img id="photo" hidden />
                 </div>
                 <div id="buttons">

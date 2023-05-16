@@ -49,6 +49,18 @@ class MainModel
         $response['data'] = $row;
         return $response;
     }
+    public function post_capture($image, $username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
+        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
+        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+
+        $insertQuery = "INSERT INTO image (date, image, userId) VALUES (NOW(), '$image', '$userId[0]')";
+        $insertResult = mysqli_query($this->db_server, $insertQuery);
+        return;
+    }
 }
 
 ?>

@@ -86,6 +86,29 @@ class MainController
         echo json_encode($result);
         return;
     }
+    public static function post_capture()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        $username = $data->username;
+        $baseImage = $data->baseImage;
+        $stickyImages = $data->stickyImages;
+
+        //합성();
+
+        //파일 만들기
+        $newFileName = "img/" . $username . "_" . date("Y-m-d_H:i:s") . ".png";
+        $newImage = str_replace('data:image/png;base64,', '', $baseImage);
+        $newImage = str_replace(' ', '+', $newImage);
+        $newFile = fopen($newFileName, "w");
+        fwrite($newFile, base64_decode($newImage));
+        fclose($newFile);
+
+        //db에 저장하기
+        $model->post_capture($newFileName, $username);
+        return;
+    }
 }
 
 ?>
