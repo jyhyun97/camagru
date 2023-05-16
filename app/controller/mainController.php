@@ -60,11 +60,11 @@ class MainController
         $password = $data->password;
 
         $result = $model->post_signin($email, $password);
-        if ($result == false)
+        if ($result == null)
             echo "로그인 실패";
         else {
             echo "로그인 성공";
-            $_SESSION['login'] = true;
+            $_SESSION['login'] = $result;
         }
         return;
         //성공 시 세션에 뭔가 저장해야 할 거 같은데...
@@ -106,7 +106,24 @@ class MainController
         fclose($newFile);
 
         //db에 저장하기
-        $model->post_capture($newFileName, $username);
+        $result = $model->post_capture($newFileName, $username);
+        echo json_encode($result);
+        return;
+    }
+
+    public static function getImagesByUsername($username)
+    {
+        $model = new MainModel;
+        return $model->getImagesByUsername($username);
+    }
+
+    public static function post_image()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        $imageId = str_replace("captured-image-", "", $data->imageId);
+        $model->post_image($imageId);
         return;
     }
 }

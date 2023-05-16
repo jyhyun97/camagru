@@ -7,7 +7,7 @@
     <button id="signin-button">로그인</button>
     <button id="signup-button">회원가입</button>
     <?php
-    if (!isset($_SESSION['login']))
+    if (!isset($_SESSION['login']) || $_SESSION['login'] == null)
         echo "로그인 X";
     else
         echo "로그인 O";

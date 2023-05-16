@@ -31,9 +31,19 @@
             </div>
             <div id="upload-right">
                 <div id="captured-list">
+                    <?php
+                    $username = $_SESSION['login'];
+                    $images = Maincontroller::getImagesByUsername($username);
+
+                    foreach ($images as $ele) {
+                        $src = $ele['image'];
+                        $imageId = $ele['imageId'];
+                        echo "<img src=\"$src\" class='captured-image' onclick='selectImage(event)' id='captured-image-$imageId'>";
+                    }
+                    ?>
                     생성한 이미지 목록
                 </div>
-                <button>업로드</button>
+                <button id="post-button">업로드</button>
             </div>
         </div>
     </div>
