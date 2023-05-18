@@ -15,7 +15,10 @@ class Router
     // 실행
     public static function run()
     {
-        $path = $_SERVER['REQUEST_URI'];
+        $url = $_SERVER['REQUEST_URI'];
+        $parsedUrl = parse_url($url);
+
+        $path = $parsedUrl['path'];
         $method = $_SERVER['REQUEST_METHOD'];
 
         if (isset(self::$routes[$path][$method]))

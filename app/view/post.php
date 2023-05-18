@@ -29,3 +29,14 @@
         </form>
     </div>
 </body>
+
+<?php
+$currentUrl = $_SERVER['REQUEST_URI'];
+print_r($currentUrl);
+?>
+
+<!-- 
+기본적으로 /post/postId로 갑시다...
+
+
+ -->

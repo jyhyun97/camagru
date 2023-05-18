@@ -1,5 +1,5 @@
-<link rel="stylesheet" type="text/css" href="app/styles/header.css">
-<link rel="stylesheet" type="text/css" href="app/styles/modal.css">
+<link rel="stylesheet" type="text/css" href="/app/styles/header.css">
+<link rel="stylesheet" type="text/css" href="/app/styles/modal.css">
 <header class="navi">
     <a href="/">
         <button>홈</button>
@@ -16,6 +16,6 @@
 <?php
 include_once 'app/view/modal/modal.php';
 ?>
-<script src="app/view/header.js" type="module"></script>
-<script src="app/view/modal/signin.js"></script>
-<script src="app/view/modal/signup.js"></script>
+<script src="/app/view/header.js" type="module"></script>
+<script src="/app/view/modal/signin.js"></script>
+<script src="/app/view/modal/signup.js"></script>
