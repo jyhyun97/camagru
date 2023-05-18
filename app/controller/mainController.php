@@ -126,6 +126,13 @@ class MainController
         $model->post_image($imageId);
         return;
     }
+
+    public static function getPostByPostId($postId)
+    {
+        $model = new MainModel;
+
+        return $model->getPostByPostId($postId);
+    }
 }
 
 ?>

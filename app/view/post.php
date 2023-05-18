@@ -15,13 +15,16 @@
     require_once('app/view/header.php');
     ?>
     <div class="content">
-        <img src="https://picsum.photos/600/300">
         <?php
         $currentUrl = $_SERVER['REQUEST_URI'];
-        echo $currentUrl;
-        // echo "<img src='imageId'>";
+        $imageId = explode("/", $currentUrl)[2];
+
+        $data = mainController::getPostByPostId($imageId);
+        $likes = $data['likes'];
+        $image = $data['image'];
+        echo "<img src='../$image' width=200px height=200px>";
+        echo "<label> 좋아요 $likes</label>";
         ?>
-        <label>좋아요 개수</label>
         <button>좋아요</button>
         <div>
             <label>댓글 작성자</label>
@@ -34,10 +37,3 @@
         </form>
     </div>
 </body>
-
-
-<!-- 
-기본적으로 /post/postId로 갑시다...
-
-
- -->

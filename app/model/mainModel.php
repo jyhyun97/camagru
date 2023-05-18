@@ -99,7 +99,25 @@ class MainModel
         $userId = $images['userId'];
         $postQuery = "INSERT INTO post (date, likes, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
         $postResult = mysqli_query($this->db_server, $postQuery);
+    }
 
+    public function getPostByPostId($postId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $postQuery = "SELECT * FROM post WHERE postId = '$postId'";
+        $postResult = mysqli_query($this->db_server, $postQuery);
+        $post = mysqli_fetch_array($postResult, MYSQLI_ASSOC);
+
+        $imageId = $post['imageId'];
+        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imageResult = mysqli_query($this->db_server, $imageQuery);
+        $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC);
+
+        $result = array();
+        $result['likes'] = $post['likes'];
+        $result['image'] = $image['image'];
+        return $result;
     }
 }
 
