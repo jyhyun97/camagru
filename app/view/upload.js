@@ -87,7 +87,7 @@ function takePicture() {
             newNode.src = ele.image;
             newNode.className = 'captured-image';
             newNode.id = "captured-image-" + ele.imageId;
-            newNode.onclick = selectImage(event);
+            newNode.onclick = () => selectImage(event);
             capturedList.appendChild(newNode);
         })
     }
