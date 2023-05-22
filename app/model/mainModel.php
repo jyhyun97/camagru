@@ -124,7 +124,12 @@ class MainModel
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $likesQuery = "UPDATE post SET likes = likes + 1 WHERE postId = '$postId'";
+        $likesQuery = "UPDATE post SET likes = 
+        CASE 
+            WHEN likes IS NULL THEN 1
+            ELSE likes + 1
+        END
+        WHERE postId = '$postId'";
         $likesResult = mysqli_query($this->db_server, $likesQuery);
         print_r($likesResult);
     }
