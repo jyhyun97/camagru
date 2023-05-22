@@ -119,6 +119,15 @@ class MainModel
         $result['image'] = $image['image'];
         return $result;
     }
+
+    public function post_likes($postId, $username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $likesQuery = "UPDATE post SET likes = likes + 1 WHERE postId = '$postId'";
+        $likesResult = mysqli_query($this->db_server, $likesQuery);
+        print_r($likesResult);
+    }
 }
 
 ?>

@@ -133,6 +133,18 @@ class MainController
 
         return $model->getPostByPostId($postId);
     }
+
+    public static function post_likes()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $model = new MainModel;
+
+        $postId = $data->postId;
+        $username = $data->username;
+
+        $model->post_likes($postId, $username);
+        return;
+    }
 }
 
 ?>

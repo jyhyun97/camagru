@@ -15,5 +15,6 @@ Router::add('/signin', 'POST', 'MainController::post_signin');
 Router::add('/gallary', 'POST', 'MainController::post_gallary');
 Router::add('/capture', 'POST', 'MainController::post_capture');
 Router::add('/image', 'POST', 'MainController::post_image');
+Router::add('/likes', 'POST', 'MainController::post_likes');
 Router::run();
 ?>
