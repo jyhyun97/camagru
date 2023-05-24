@@ -13,9 +13,11 @@ function submitSignin() {
     httpRequest.open('POST', '/signin');
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
-        console.log(httpRequest.response);
-        if (httpRequest.response === '로그인 성공')
+        if (httpRequest.response !== '로그인 실패')
+        {
             location.reload();
+            sessionStorage.setItem("username", httpRequest.response);
+        }
     }
     httpRequest.send(JSON.stringify(signinData));
 }

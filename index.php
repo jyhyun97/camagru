@@ -4,18 +4,18 @@ include_once 'app/controller/mainController.php';
 
 session_start();
 
-Router::add('/', 'GET', 'MainController::get_main');
-Router::add('/post', 'GET', 'MainController::get_post');
-Router::add('/mypage', 'GET', 'MainController::get_mypage');
-Router::add('/upload', 'GET', 'MainController::get_upload');
-Router::add('/signup', 'GET', 'MainController::get_signup');
-Router::add('/signup', 'POST', 'MainController::post_signup');
-Router::add('/signin', 'GET', 'MainController::get_signin');
-Router::add('/signin', 'POST', 'MainController::post_signin');
-Router::add('/gallary', 'POST', 'MainController::post_gallary');
-Router::add('/capture', 'POST', 'MainController::post_capture');
-Router::add('/image', 'POST', 'MainController::post_image');
-Router::add('/likes', 'POST', 'MainController::post_likes');
-Router::add('/comment', 'POST', 'MainController::post_comment');
+Router::add('/', 'GET', 'MainController::getMain');
+Router::add('/post', 'GET', 'MainController::getPost');
+Router::add('/mypage', 'GET', 'MainController::getMypage');
+Router::add('/upload', 'GET', 'MainController::getUpload');
+Router::add('/signup', 'GET', 'MainController::getSignup');
+Router::add('/signup', 'POST', 'MainController::postSignup');
+Router::add('/signin', 'GET', 'MainController::getSignin');
+Router::add('/signin', 'POST', 'MainController::postSignin');
+Router::add('/gallary', 'POST', 'MainController::postGallary');
+Router::add('/capture', 'POST', 'MainController::postCapture');
+Router::add('/image', 'POST', 'MainController::postImage');
+Router::add('/likes', 'POST', 'MainController::postLikes');
+Router::add('/comment', 'POST', 'MainController::postComment');
 Router::run();
 ?>

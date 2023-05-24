@@ -12,7 +12,7 @@ class MainModel
         $this->db_database = $db_database;
     }
 
-    public function post_signup($email, $username, $password)
+    public function postSignup($email, $username, $password)
     {
         mysqli_select_db($this->db_server, $this->db_database);
         $query = "INSERT INTO user (email, username, password, auth) VALUES ('$email', '$username', '$password', 'NULL')";
@@ -20,7 +20,7 @@ class MainModel
         return '200 OK';
     }
 
-    public function post_signin($email, $password)
+    public function postSignin($email, $password)
     {
         mysqli_select_db($this->db_server, $this->db_database);
         $query = "SELECT * FROM user WHERE email = '$email'";
@@ -33,7 +33,7 @@ class MainModel
             return null;
     }
 
-    public function post_gallary($currentPage, $size)
+    public function postGallary($currentPage, $size)
     {
         mysqli_select_db($this->db_server, $this->db_database);
         $currentRow = ($currentPage - 1) * $size;
@@ -53,7 +53,7 @@ class MainModel
         $response['data'] = $row;
         return $response;
     }
-    public function post_capture($image, $username)
+    public function postCapture($image, $username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
@@ -85,7 +85,7 @@ class MainModel
         return $images;
     }
 
-    public function post_image($imageId)
+    public function postImage($imageId)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
@@ -94,7 +94,6 @@ class MainModel
         $imagesResult = mysqli_query($this->db_server, $imagesQuery);
         $images = mysqli_fetch_array($imagesResult, MYSQLI_ASSOC);
 
-        print_r($images);
         //그 이미지 객체를 바탕으로 post에 insert 쿼리 날리기
         $userId = $images['userId'];
         $postQuery = "INSERT INTO post (date, likes, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
@@ -120,7 +119,7 @@ class MainModel
         return $result;
     }
 
-    public function post_likes($postId, $username)
+    public function postLikes($postId, $username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
@@ -131,10 +130,9 @@ class MainModel
         END
         WHERE postId = '$postId'";
         $likesResult = mysqli_query($this->db_server, $likesQuery);
-        print_r($likesResult);
     }
 
-    public function post_comment($comment, $postId, $username)
+    public function postComment($comment, $postId, $username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
@@ -144,7 +142,6 @@ class MainModel
 
         $commentQuery = "INSERT INTO comment (comment, date, userId, postId) VALUES ('$comment', NOW(), '$userId', '$postId')";
         $commentResult = mysqli_query($this->db_server, $commentQuery);
-        print_r($commentResult);
     }
     public function getCommentByPostId($postId)
     {
