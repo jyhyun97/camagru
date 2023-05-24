@@ -12,28 +12,27 @@ class MainController
         return self::$model;
     }
 
-
-    public static function get_main()
+    public static function getMain()
     {
         include_once 'app/view/main.php';
     }
-    public static function get_post()
+    public static function getPost()
     {
         include_once 'app/view/post.php';
     }
-    public static function get_mypage()
+    public static function getMypage()
     {
         include_once 'app/view/mypage.php';
     }
-    public static function get_upload()
+    public static function getUpload()
     {
         include_once 'app/view/upload.php';
     }
-    public static function get_signup()
+    public static function getSignup()
     {
         include_once 'app/view/modal/signup.php';
     }
-    public static function get_signin()
+    public static function getSignin()
     {
         include_once 'app/view/modal/signin.php';
     }
@@ -42,7 +41,7 @@ class MainController
      * signup 경로의 post 요청에 대해 유효성 검사 수행,
      * query 결과에 따라 중복된 이메일, 유저네임 알리기 
      */
-    public static function post_signup()
+    public static function postSignup()
     {
         $data = json_decode(file_get_contents("php://input"));
 
@@ -52,7 +51,7 @@ class MainController
         if ($email == '' || $username == '' || $password == '')
             echo "빈 문자열입니다"; //추후 유효성 검사 더 넣기
         else {
-            self::getModel()->post_signup($email, $username, $password);
+            self::getModel()->postSignup($email, $username, $password);
             echo "성공!";
         }
         return;
@@ -61,14 +60,14 @@ class MainController
      * signin 경로의 post 요청에 대해 유효성 검사 수행,
      * query 결과에 따라 로그인 실패 이유, 로그인 성공 및 세션 저장 수행
      */
-    public static function post_signin()
+    public static function postSignin()
     {
         $data = json_decode(file_get_contents("php://input"));
 
         $email = $data->email;
         $password = $data->password;
 
-        $result = self::getModel()->post_signin($email, $password);
+        $result = self::getModel()->postSignin($email, $password);
         if ($result == null)
             echo "로그인 실패";
         else {
@@ -76,15 +75,15 @@ class MainController
             $_SESSION['login'] = $result;
         }
         return;
-        //성공 시 세션에 뭔가 저장해야 할 거 같은데...
     }
-    public static function post_gallary()
+
+    public static function postGallary()
     {
         $data = json_decode(file_get_contents("php://input"));
 
         $currentPage = $data->currentPage;
         $size = $data->size;
-        $result = self::getModel()->post_gallary($currentPage, $size);
+        $result = self::getModel()->postGallary($currentPage, $size);
 
         // 마지막 페이지인지 판단
         if ($currentPage * $size > $result['rownum'])
@@ -94,7 +93,7 @@ class MainController
         echo json_encode($result);
         return;
     }
-    public static function post_capture()
+    public static function postCapture()
     {
         $data = json_decode(file_get_contents("php://input"));
 
@@ -113,7 +112,7 @@ class MainController
         fclose($newFile);
 
         //db에 저장하기
-        $result = self::getModel()->post_capture($newFileName, $username);
+        $result = self::getModel()->postCapture($newFileName, $username);
         echo json_encode($result);
         return;
     }
@@ -123,12 +122,12 @@ class MainController
         return self::getModel()->getImagesByUsername($username);
     }
 
-    public static function post_image()
+    public static function postImage()
     {
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = str_replace("captured-image-", "", $data->imageId);
-        self::getModel()->post_image($imageId);
+        self::getModel()->postImage($imageId);
         return;
     }
 
@@ -137,18 +136,18 @@ class MainController
         return self::getModel()->getPostByPostId($postId);
     }
 
-    public static function post_likes()
+    public static function postLikes()
     {
         $data = json_decode(file_get_contents("php://input"));
         
         $postId = $data->postId;
         $username = $data->username;
 
-        self::getModel()->post_likes($postId, $username);
+        self::getModel()->postLikes($postId, $username);
         return;
     }
 
-    public static function post_comment()
+    public static function postComment()
     {
         $data = json_decode(file_get_contents("php://input"));
 
@@ -156,7 +155,7 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
-        self::getModel()->post_comment($comment, $postId, $username);
+        self::getModel()->postComment($comment, $postId, $username);
         return;
     }
     public static function getCommentbyPostId($postId)
