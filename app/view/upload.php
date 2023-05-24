@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <script src="app/view/upload.js"></script>
+    <script src="/app/view/upload.js"></script>
 </body>
 
 </html>

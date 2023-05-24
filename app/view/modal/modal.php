@@ -7,4 +7,4 @@
         ?>
     </div>
 </div>
-<script src="app/view/modal/modal.js" type="module"></script>
+<script src="/app/view/modal/modal.js" type="module"></script>

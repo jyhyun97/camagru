@@ -13,9 +13,25 @@ class Router
         self::$routes[$path][$method] = $callback;
     }
     // 실행
+
+    //다른 곳에서도 쓸 것 같으면 module로 옮기고 여기서만 쓸 것 같으면 private 함수로 만들기
+    static function pathParser($str)
+    {
+        $trimed = trim($str, "/");
+        $pos = array();
+        $pos['/'] = stripos($trimed, "/");
+        $pos['?'] = stripos($trimed, "?");
+        $pos['#'] = stripos($trimed, "#");
+
+        if (array_filter($pos) == null)
+            return ("/" . $trimed);
+        else
+            return ("/" . substr($trimed, 0, min(array_filter($pos))));
+    }
     public static function run()
     {
-        $path = $_SERVER['REQUEST_URI'];
+        $url = $_SERVER['REQUEST_URI'];
+        $path = self::pathParser($url);
         $method = $_SERVER['REQUEST_METHOD'];
 
         if (isset(self::$routes[$path][$method]))

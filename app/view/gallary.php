@@ -6,4 +6,4 @@
         <button id="gallary-right-button">다음 페이지</button>
     </div>
 </div>
-<script src="app/view/gallary.js"></script>
+<script src="/app/view/gallary.js"></script>

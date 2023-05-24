@@ -47,11 +47,27 @@ function postGallary() {
             * <button>좋아요</button>
             * </div>
             */
-            const newNode = document.createElement('img');
-            newNode.src = ele.image;
-            newNode.style.width = '200px';
-            newNode.style.height = '200px';
-            gallaryPosts.appendChild(newNode);
+            const newImgNode = document.createElement('img');
+            newImgNode.src = ele.image;
+            newImgNode.style.width = '200px';
+            newImgNode.style.height = '200px';
+
+            const newANode = document.createElement('a');
+            newANode.href = "/post/" + ele.postId;
+            newANode.appendChild(newImgNode);
+            
+            const newLabelNode = document.createElement('label');
+            if (ele.likes === null)
+                ele.likes = '';
+            newLabelNode.innerText = ele.likes + "❤️";
+
+            const newDivNode = document.createElement('div');
+            newDivNode.className = 'gallary-post';
+            newDivNode.appendChild(newANode);
+            newDivNode.appendChild(newLabelNode);
+
+            gallaryPosts.appendChild(newDivNode);
+            
         });
         pageData.lastPage = responseData.lastPage;
         buttonRerender();

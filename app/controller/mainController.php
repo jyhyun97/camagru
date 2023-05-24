@@ -2,6 +2,17 @@
 include_once 'app/model/mainModel.php';
 class MainController
 {
+    private static $model = null;
+
+    public static function getModel()
+    {
+        if (self::$model === null) {
+            self::$model = new MainModel;
+        }
+        return self::$model;
+    }
+
+
     public static function get_main()
     {
         include_once 'app/view/main.php';
@@ -34,7 +45,6 @@ class MainController
     public static function post_signup()
     {
         $data = json_decode(file_get_contents("php://input"));
-        $model = new MainModel;
 
         $email = $data->email;
         $username = $data->username;
@@ -42,7 +52,7 @@ class MainController
         if ($email == '' || $username == '' || $password == '')
             echo "빈 문자열입니다"; //추후 유효성 검사 더 넣기
         else {
-            $model->post_signup($email, $username, $password);
+            self::getModel()->post_signup($email, $username, $password);
             echo "성공!";
         }
         return;
@@ -54,12 +64,11 @@ class MainController
     public static function post_signin()
     {
         $data = json_decode(file_get_contents("php://input"));
-        $model = new MainModel;
 
         $email = $data->email;
         $password = $data->password;
 
-        $result = $model->post_signin($email, $password);
+        $result = self::getModel()->post_signin($email, $password);
         if ($result == null)
             echo "로그인 실패";
         else {
@@ -72,11 +81,10 @@ class MainController
     public static function post_gallary()
     {
         $data = json_decode(file_get_contents("php://input"));
-        $model = new MainModel;
 
         $currentPage = $data->currentPage;
         $size = $data->size;
-        $result = $model->post_gallary($currentPage, $size);
+        $result = self::getModel()->post_gallary($currentPage, $size);
 
         // 마지막 페이지인지 판단
         if ($currentPage * $size > $result['rownum'])
@@ -89,7 +97,6 @@ class MainController
     public static function post_capture()
     {
         $data = json_decode(file_get_contents("php://input"));
-        $model = new MainModel;
 
         $username = $data->username;
         $baseImage = $data->baseImage;
@@ -106,25 +113,55 @@ class MainController
         fclose($newFile);
 
         //db에 저장하기
-        $result = $model->post_capture($newFileName, $username);
+        $result = self::getModel()->post_capture($newFileName, $username);
         echo json_encode($result);
         return;
     }
 
     public static function getImagesByUsername($username)
     {
-        $model = new MainModel;
-        return $model->getImagesByUsername($username);
+        return self::getModel()->getImagesByUsername($username);
     }
 
     public static function post_image()
     {
         $data = json_decode(file_get_contents("php://input"));
-        $model = new MainModel;
 
         $imageId = str_replace("captured-image-", "", $data->imageId);
-        $model->post_image($imageId);
+        self::getModel()->post_image($imageId);
         return;
+    }
+
+    public static function getPostByPostId($postId)
+    {
+        return self::getModel()->getPostByPostId($postId);
+    }
+
+    public static function post_likes()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        
+        $postId = $data->postId;
+        $username = $data->username;
+
+        self::getModel()->post_likes($postId, $username);
+        return;
+    }
+
+    public static function post_comment()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $comment = $data->comment;
+        $postId = $data->postId;
+        $username = $data->username;
+
+        self::getModel()->post_comment($comment, $postId, $username);
+        return;
+    }
+    public static function getCommentbyPostId($postId)
+    {
+        return self::getModel()->getCommentByPostId($postId);
     }
 }
 

@@ -99,7 +99,64 @@ class MainModel
         $userId = $images['userId'];
         $postQuery = "INSERT INTO post (date, likes, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
         $postResult = mysqli_query($this->db_server, $postQuery);
+    }
 
+    public function getPostByPostId($postId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $postQuery = "SELECT * FROM post WHERE postId = '$postId'";
+        $postResult = mysqli_query($this->db_server, $postQuery);
+        $post = mysqli_fetch_array($postResult, MYSQLI_ASSOC);
+
+        $imageId = $post['imageId'];
+        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imageResult = mysqli_query($this->db_server, $imageQuery);
+        $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC);
+
+        $result = array();
+        $result['likes'] = $post['likes'];
+        $result['image'] = $image['image'];
+        return $result;
+    }
+
+    public function post_likes($postId, $username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $likesQuery = "UPDATE post SET likes = 
+        CASE 
+            WHEN likes IS NULL THEN 1
+            ELSE likes + 1
+        END
+        WHERE postId = '$postId'";
+        $likesResult = mysqli_query($this->db_server, $likesQuery);
+        print_r($likesResult);
+    }
+
+    public function post_comment($comment, $postId, $username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
+        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
+        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+
+        $commentQuery = "INSERT INTO comment (comment, date, userId, postId) VALUES ('$comment', NOW(), '$userId', '$postId')";
+        $commentResult = mysqli_query($this->db_server, $commentQuery);
+        print_r($commentResult);
+    }
+    public function getCommentByPostId($postId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $query = "SELECT * FROM comment JOIN user ON comment.userId = user.userId
+        WHERE comment.postId = '$postId'
+        ORDER BY commentId ASC";
+        $result = mysqli_query($this->db_server, $query);
+        $fetch = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        return $fetch;
     }
 }
 
