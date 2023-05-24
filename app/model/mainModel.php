@@ -94,7 +94,6 @@ class MainModel
         $imagesResult = mysqli_query($this->db_server, $imagesQuery);
         $images = mysqli_fetch_array($imagesResult, MYSQLI_ASSOC);
 
-        print_r($images);
         //그 이미지 객체를 바탕으로 post에 insert 쿼리 날리기
         $userId = $images['userId'];
         $postQuery = "INSERT INTO post (date, likes, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
@@ -131,7 +130,6 @@ class MainModel
         END
         WHERE postId = '$postId'";
         $likesResult = mysqli_query($this->db_server, $likesQuery);
-        print_r($likesResult);
     }
 
     public function postComment($comment, $postId, $username)
@@ -144,7 +142,6 @@ class MainModel
 
         $commentQuery = "INSERT INTO comment (comment, date, userId, postId) VALUES ('$comment', NOW(), '$userId', '$postId')";
         $commentResult = mysqli_query($this->db_server, $commentQuery);
-        print_r($commentResult);
     }
     public function getCommentByPostId($postId)
     {

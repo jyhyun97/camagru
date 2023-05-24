@@ -23,9 +23,6 @@ navigator.mediaDevices.getUserMedia({video : true, audio : false})
 function postImage() {
     if (selectedImage === null)
         return alert('이미지를 선택해주세요');
-    console.log(selectedImage);
-    //selectedImage 기반으로 post 날려야하는데..
-    //일단.. 올릴 이미지의 id를 날리기
     const data = {imageId : selectedImage.id};
 
     const httpRequest = new XMLHttpRequest();
@@ -35,7 +32,6 @@ function postImage() {
         console.log(httpRequest.response);
     }
     httpRequest.send(JSON.stringify(data));
-    
 }
 function selectImage(e) {
     const capturedImages = document.getElementsByClassName('captured-image');
@@ -92,10 +88,6 @@ function takePicture() {
         })
     }
     httpRequest.send(JSON.stringify(capturedData));
-    //post /capture
-    //안에 데이터는 이렇게 주기
-    //{username : username, baseImage : data, baseImageType : 이미지타입, stickyImages : [선택한 이미지 이름]}
-    //
 }
 /**
  * <div class="capture">

@@ -1,6 +1,3 @@
-//댓글달기버튼 addEventListner 추가
-//http post /comment
-//{postId username comment } 이렇게 생긴 객체 보내기
 const commentInput = document.getElementById('comment-input');
 const commentSubmitButton = document.getElementById('comment-submit-button');
 
