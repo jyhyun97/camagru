@@ -64,7 +64,7 @@ function takePicture() {
 
     const httpRequest = new XMLHttpRequest();
     const capturedData = {
-        username : 'jeonhyun',
+        username : sessionStorage.getItem("username"),
         baseImage : data,
         stickyImages : []
     };

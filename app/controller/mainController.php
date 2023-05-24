@@ -71,7 +71,7 @@ class MainController
         if ($result == null)
             echo "로그인 실패";
         else {
-            echo "로그인 성공";
+            echo $result;
             $_SESSION['login'] = $result;
         }
         return;
