@@ -133,6 +133,31 @@ class MainModel
         $likesResult = mysqli_query($this->db_server, $likesQuery);
         print_r($likesResult);
     }
+
+    public function post_comment($comment, $postId, $username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
+        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
+        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+
+        $commentQuery = "INSERT INTO comment (comment, date, userId, postId) VALUES ('$comment', NOW(), '$userId', '$postId')";
+        $commentResult = mysqli_query($this->db_server, $commentQuery);
+        print_r($commentResult);
+    }
+    public function getCommentByPostId($postId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $query = "SELECT * FROM comment JOIN user ON comment.userId = user.userId
+        WHERE comment.postId = '$postId'
+        ORDER BY commentId ASC";
+        $result = mysqli_query($this->db_server, $query);
+        $fetch = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        return $fetch;
+    }
 }
 
 ?>

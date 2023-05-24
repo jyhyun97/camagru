@@ -17,9 +17,9 @@
     <div class="content">
         <?php
         $currentUrl = $_SERVER['REQUEST_URI'];
-        $imageId = explode("/", $currentUrl)[2];
+        $postId = explode("/", $currentUrl)[2];
 
-        $data = mainController::getPostByPostId($imageId);
+        $data = mainController::getPostByPostId($postId);
         $likes = $data['likes'];
         $image = $data['image'];
         echo "<img src='../$image' width=200px height=200px>";
@@ -27,27 +27,30 @@
         ?>
         <button id="likes-button">좋아요</button>
         <div>
-            <label>댓글 작성자</label>
-            <label>댓글 내용</label>
+            <?php
+            $currentUrl = $_SERVER['REQUEST_URI'];
+            $postId = explode("/", $currentUrl)[2];
+            $data = MainController::getCommentbyPostId($postId);
+
+            foreach($data as $ele)
+            {
+                echo "<label class='comment-username'>".$ele['username']."</label>";
+                echo "<label class='comment-comment'>".$ele['comment']."</label>";
+                echo "<label class='comment-date'>".$ele['date']."</label>";                
+            }
+            ?>
         </div>
         <form>
-            <label>username</label>
-            <input />
-            <button>submit</button>
+            <?php
+            if (isset($_SESSION['login'])) {
+                echo "<label id='login-label'>" . $_SESSION['login'] . "</label>";
+                echo "<input id='comment-input'/>";
+                echo "<button id='comment-submit-button'>submit</button>";
+                echo "<script src='/app/view/comment.js'></script>";
+            } else
+                echo "<label>로그인 한 사용자만 댓글을 달 수 있습니다</label>";
+            ?>
         </form>
     </div>
 </body>
-<script>
-    const likesButton = document.getElementById("likes-button");
-    likesButton.addEventListener("click", () => {
-        const data = { postId: window.location.pathname.split('/')[2], username: 'jeonhyun' };
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.open('POST', '/likes');
-        httpRequest.setRequestHeader('Content-Type', 'application/json');
-        httpRequest.onload = () => {
-            console.log(httpRequest.response);
-            location.reload();
-        };
-        httpRequest.send(JSON.stringify(data));
-    });
-</script>
+<script src="/app/view/post.js"></script>
