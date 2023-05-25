@@ -162,6 +162,10 @@ class MainController
     {
         return self::getModel()->getCommentByPostId($postId);
     }
+    public static function getPostsByUsername($username)
+    {
+        return self::getModel()->getPostsByUsername($username);
+    }
 }
 
 ?>

@@ -1,10 +1,22 @@
-#mypost {
+#myimages-scroll {
     border : 1px solid black;
     width : 50%;
-    height : 10%;
+    height : 20%;
+    overflow : scroll;
+    white-space: nowrap;
+
 }
-#mylikes {
+#mylikes-scroll {
     border : 1px solid black;
     width : 50%;
-    height : 10%;
+    height : 20%;
+    overflow : scroll;
+    white-space: nowrap;
+}
+#myposts-scroll {
+    border : 1px solid black;
+    width : 50%;
+    height : 20%;
+    overflow : scroll;
+    white-space: nowrap;
 }

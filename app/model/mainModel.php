@@ -78,7 +78,7 @@ class MainModel
         $userIdResult = mysqli_query($this->db_server, $userIdQuery);
         $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
 
-        $resultQuery = "SELECT * FROM image WHERE userId = '$userId'";
+        $resultQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
         $result = mysqli_query($this->db_server, $resultQuery);
         $images = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -154,6 +154,25 @@ class MainModel
         $fetch = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         return $fetch;
+    }
+
+    public function getPostsByUsername($username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
+        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
+        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+
+        $postsQuery = "SELECT * FROM post JOIN image ON post.imageId = image.imageId
+        WHERE post.userId = '$userId' ORDER BY postId DESC";
+        $postsResult = mysqli_query($this->db_server, $postsQuery);
+        $posts = mysqli_fetch_all($postsResult, MYSQLI_ASSOC);
+
+
+        // $query = "SELECT * FROM post JOIN image ON post.imageId = image.imageId
+        // ORDER BY postId DESC LIMIT $currentRow, $size";
+        return $posts;
     }
 }
 

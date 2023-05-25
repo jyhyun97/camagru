@@ -5,7 +5,6 @@
         <button>홈</button>
     </a>
     
-    
     <?php
     if (!isset($_SESSION['login']) || $_SESSION['login'] == null)
     {
@@ -17,7 +16,7 @@
     else
     {
         echo "Hello, ".$_SESSION['login']."!!";
-        echo "<button id='mypage-button'>마이페이지</button>";
+        echo "<a href='/mypage'><button id='mypage-button'>마이페이지</button></a>";
         echo "<button id='logout-button'>로그아웃</button>";
     }
     ?>
