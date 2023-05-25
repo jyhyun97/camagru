@@ -4,18 +4,24 @@
     <a href="/">
         <button>홈</button>
     </a>
-    <button id="signin-button">로그인</button>
-    <button id="signup-button">회원가입</button>
+    
+    
     <?php
     if (!isset($_SESSION['login']) || $_SESSION['login'] == null)
-        echo "로그인 X";
+    {
+        echo "<button id='signin-button'>로그인</button>";
+        echo "<button id='signup-button'>회원가입</button>";
+        echo "<script src='/app/view/modal/signin.js' type='module'></script>";
+        echo "<script src='/app/view/modal/signup.js' type='module'></script>";
+    }
     else
-        echo "로그인 O";
+    {
+        echo "Hello, ".$_SESSION['login']."!!";
+        echo "<button id='mypage-button'>마이페이지</button>";
+        echo "<button id='logout-button'>로그아웃</button>";
+    }
     ?>
 </header>
 <?php
 include_once 'app/view/modal/modal.php';
 ?>
-<script src="/app/view/header.js" type="module"></script>
-<script src="/app/view/modal/signin.js"></script>
-<script src="/app/view/modal/signup.js"></script>

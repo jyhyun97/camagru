@@ -1,5 +1,10 @@
+import { activeModal } from '/app/view/modal/modal.js';
+
 const signinSubmitButton = document.getElementById('signin-submit');
 signinSubmitButton.addEventListener('click', () => submitSignin() );
+
+const signinButton = document.getElementById('signin-button');
+signinButton.addEventListener('click', () => activeModal('signin-form'));
 
 function submitSignin() {
     const signinEmail = document.getElementById('signin-email');
