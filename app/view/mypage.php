@@ -25,16 +25,21 @@
             <button id="username-submit-button" hidden>제출</button>
             <button id="username-cancel-button" hidden>취소</button>
         </div>
-        <form>
+        <div>
             <lable>이메일 : </lable>
-            <lable>aaaa@aaaa</lable>
-            <button>변경</button>
-        </form>
-        <form>
+            <?php
+                echo "<label id='email-label'>".$_SESSION['email']."</label>";
+            ?>
+            <input id="email-change-input" hidden></input>
+            <button id="email-change-button">변경</button>
+            <button id="email-submit-button" hidden>제출</button>
+            <button id="email-cancel-button" hidden>취소</button>
+        </div>
+        <div>
             <lable>비밀번호 : </lable>
             <input type="text" disabled>
             <button>변경</button>
-        </form>
+        </div>
         <button>메일 활성화/비활성화</button>
         <label>내가 올린 이미지 목록</label>
         <div id="myimages-scroll">

@@ -18,5 +18,6 @@ Router::add('/image', 'POST', 'MainController::postImage');
 Router::add('/likes', 'POST', 'MainController::postLikes');
 Router::add('/comment', 'POST', 'MainController::postComment');
 Router::add('/username', 'PATCH', 'MainController::patchUsername');
+Router::add('/email', 'PATCH', 'MainController::patchEmail');
 Router::run();
 ?>

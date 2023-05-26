@@ -189,6 +189,23 @@ class MainModel
             return true;
         }
     }
+    public function patchEmail($email, $change)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $dupQuery = "SELECT * FROM user WHERE email='$change'";
+        $dupResult = mysqli_query($this->db_server, $dupQuery);
+        $dup = mysqli_fetch_array($dupResult, MYSQLI_ASSOC)['email'];
+
+        if ($dup === $change)
+            return false;
+        else
+        {
+            $updateQuery = "UPDATE user SET email='$change' WHERE email='$email'";
+            $updateResult = mysqli_query($this->db_server, $updateQuery);
+            return true;
+        }
+    }
 }
 
 ?>

@@ -73,6 +73,7 @@ class MainController
         else {
             echo $result;
             $_SESSION['login'] = $result;
+            $_SESSION['email'] = $email;
         }
         return;
     }
@@ -171,6 +172,8 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
         $change = $data->username;
         $username = $_SESSION['login'];
+        
+        //유효성 검사();
 
         $result = self::getModel()->patchUsername($username, $change);
         if ($result === false)
@@ -180,7 +183,23 @@ class MainController
             $_SESSION['login'] = $change;
             return print_r('성공');
         }
-        
+    }
+    public static function patchEmail()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $change = $data->email;
+        $email = $_SESSION['email'];
+
+        //유효성 검사();
+
+        $result = self::getModel()->patchEmail($email, $change);
+        if ($result === false)
+            return print_r('중복');
+        else
+        {
+            $_SESSION['email'] = $change;
+            return print_r('성공');
+        }
     }
 }
 
