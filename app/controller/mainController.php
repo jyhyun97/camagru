@@ -166,6 +166,22 @@ class MainController
     {
         return self::getModel()->getPostsByUsername($username);
     }
+    public static function patchUsername()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $change = $data->username;
+        $username = $_SESSION['login'];
+
+        $result = self::getModel()->patchUsername($username, $change);
+        if ($result === false)
+            return print_r('중복');
+        else
+        {
+            $_SESSION['login'] = $change;
+            return print_r('성공');
+        }
+        
+    }
 }
 
 ?>

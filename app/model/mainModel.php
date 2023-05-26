@@ -64,7 +64,7 @@ class MainModel
         $insertQuery = "INSERT INTO image (date, image, userId) VALUES (NOW(), '$image', '$userId[0]')";
         mysqli_query($this->db_server, $insertQuery);
 
-        $resultQuery = "SELECT * FROM image WHERE userId = '$userId'";
+        $resultQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
         $result = mysqli_query($this->db_server, $resultQuery);
         $images = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -90,7 +90,7 @@ class MainModel
         mysqli_select_db($this->db_server, $this->db_database);
 
         //유저 아이디 기반으로 이미지 객체를 가져오고,
-        $imagesQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imagesQuery = "SELECT * FROM image WHERE imageId = '$imageId' ORDER BY imageId DESC";
         $imagesResult = mysqli_query($this->db_server, $imagesQuery);
         $images = mysqli_fetch_array($imagesResult, MYSQLI_ASSOC);
 
@@ -109,7 +109,7 @@ class MainModel
         $post = mysqli_fetch_array($postResult, MYSQLI_ASSOC);
 
         $imageId = $post['imageId'];
-        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId' ORDER BY imageId DESC";
         $imageResult = mysqli_query($this->db_server, $imageQuery);
         $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC);
 
@@ -162,17 +162,32 @@ class MainModel
 
         $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
         $userIdResult = mysqli_query($this->db_server, $userIdQuery);
-        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+        $userId = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['userId'];
 
         $postsQuery = "SELECT * FROM post JOIN image ON post.imageId = image.imageId
         WHERE post.userId = '$userId' ORDER BY postId DESC";
         $postsResult = mysqli_query($this->db_server, $postsQuery);
         $posts = mysqli_fetch_all($postsResult, MYSQLI_ASSOC);
 
-
-        // $query = "SELECT * FROM post JOIN image ON post.imageId = image.imageId
-        // ORDER BY postId DESC LIMIT $currentRow, $size";
         return $posts;
+    }
+
+    public function patchUsername($username, $change)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $dupQuery = "SELECT * FROM user WHERE username='$change'";
+        $dupResult = mysqli_query($this->db_server, $dupQuery);
+        $dup = mysqli_fetch_array($dupResult, MYSQLI_ASSOC)['username'];
+
+        if ($dup === $change)
+            return false;
+        else
+        {
+            $updateQuery = "UPDATE user SET username='$change' WHERE username='$username'";
+            $updateResult = mysqli_query($this->db_server, $updateQuery);
+            return true;
+        }
     }
 }
 

@@ -15,14 +15,16 @@
     require_once('app/view/header.php');
     ?>
     <div class="content">
-        <form>
-            <lable>사용자 : </lable>
+        <div>
+            <lable>닉네임 : </lable>
             <?php
-                echo "<label>".$_SESSION['login']."</label>";
+                echo "<label id='username-label'>".$_SESSION['login']."</label>";
             ?>
-            <label></label>
-            <button>변경</button>
-        </form>
+            <input id="username-change-input" hidden></input>
+            <button id="username-change-button">변경</button>
+            <button id="username-submit-button" hidden>제출</button>
+            <button id="username-cancel-button" hidden>취소</button>
+        </div>
         <form>
             <lable>이메일 : </lable>
             <lable>aaaa@aaaa</lable>
@@ -54,6 +56,6 @@
         <div id="mylikes-scroll"></div>
     </div>
 </body>
- 
+ <script src="/app/view/mypage.js"></script>
 
 </html>
