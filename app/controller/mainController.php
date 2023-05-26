@@ -73,6 +73,7 @@ class MainController
         else {
             echo $result;
             $_SESSION['login'] = $result;
+            $_SESSION['email'] = $email;
         }
         return;
     }
@@ -161,6 +162,65 @@ class MainController
     public static function getCommentbyPostId($postId)
     {
         return self::getModel()->getCommentByPostId($postId);
+    }
+    public static function getPostsByUsername($username)
+    {
+        return self::getModel()->getPostsByUsername($username);
+    }
+    public static function patchUsername()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $change = $data->username;
+        $username = $_SESSION['login'];
+        
+        //유효성 검사();
+
+        $result = self::getModel()->patchUsername($username, $change);
+        if ($result === false)
+            return print_r('중복');
+        else
+        {
+            $_SESSION['login'] = $change;
+            return print_r('성공');
+        }
+    }
+    public static function patchEmail()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $change = $data->email;
+        $email = $_SESSION['email'];
+
+        //유효성 검사();
+
+        $result = self::getModel()->patchEmail($email, $change);
+        if ($result === false)
+            return print_r('중복');
+        else
+        {
+            $_SESSION['email'] = $change;
+            return print_r('성공');
+        }
+    }
+
+    public static function patchPassword()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $originPassword = $data->originPassword;
+        $newPassword = $data->newPassword;
+        $checkPassword = $data->checkPassword;
+        $username = $_SESSION['login'];
+
+        if ($originPassword === $newPassword)
+            return print_r('현재 비밀번호와 같습니다.');
+        else if ($newPassword !== $checkPassword)
+            return print_r('변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        //유효성 검사();
+
+        $result = self::getModel()->patchPassword($originPassword, $newPassword, $username);
+        if ($result)
+            return print_r('성공');  
+        else
+            return print_r('기존 비밀번호가 틀렸습니다.');
     }
 }
 

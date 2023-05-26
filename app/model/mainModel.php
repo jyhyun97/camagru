@@ -64,7 +64,7 @@ class MainModel
         $insertQuery = "INSERT INTO image (date, image, userId) VALUES (NOW(), '$image', '$userId[0]')";
         mysqli_query($this->db_server, $insertQuery);
 
-        $resultQuery = "SELECT * FROM image WHERE userId = '$userId'";
+        $resultQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
         $result = mysqli_query($this->db_server, $resultQuery);
         $images = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -78,7 +78,7 @@ class MainModel
         $userIdResult = mysqli_query($this->db_server, $userIdQuery);
         $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
 
-        $resultQuery = "SELECT * FROM image WHERE userId = '$userId'";
+        $resultQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
         $result = mysqli_query($this->db_server, $resultQuery);
         $images = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -90,7 +90,7 @@ class MainModel
         mysqli_select_db($this->db_server, $this->db_database);
 
         //유저 아이디 기반으로 이미지 객체를 가져오고,
-        $imagesQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imagesQuery = "SELECT * FROM image WHERE imageId = '$imageId' ORDER BY imageId DESC";
         $imagesResult = mysqli_query($this->db_server, $imagesQuery);
         $images = mysqli_fetch_array($imagesResult, MYSQLI_ASSOC);
 
@@ -109,7 +109,7 @@ class MainModel
         $post = mysqli_fetch_array($postResult, MYSQLI_ASSOC);
 
         $imageId = $post['imageId'];
-        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId' ORDER BY imageId DESC";
         $imageResult = mysqli_query($this->db_server, $imageQuery);
         $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC);
 
@@ -154,6 +154,72 @@ class MainModel
         $fetch = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         return $fetch;
+    }
+
+    public function getPostsByUsername($username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
+        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
+        $userId = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['userId'];
+
+        $postsQuery = "SELECT * FROM post JOIN image ON post.imageId = image.imageId
+        WHERE post.userId = '$userId' ORDER BY postId DESC";
+        $postsResult = mysqli_query($this->db_server, $postsQuery);
+        $posts = mysqli_fetch_all($postsResult, MYSQLI_ASSOC);
+
+        return $posts;
+    }
+
+    public function patchUsername($username, $change)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $dupQuery = "SELECT * FROM user WHERE username='$change'";
+        $dupResult = mysqli_query($this->db_server, $dupQuery);
+        $dup = mysqli_fetch_array($dupResult, MYSQLI_ASSOC)['username'];
+
+        if ($dup === $change)
+            return false;
+        else
+        {
+            $updateQuery = "UPDATE user SET username='$change' WHERE username='$username'";
+            $updateResult = mysqli_query($this->db_server, $updateQuery);
+            return true;
+        }
+    }
+    public function patchEmail($email, $change)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $dupQuery = "SELECT * FROM user WHERE email='$change'";
+        $dupResult = mysqli_query($this->db_server, $dupQuery);
+        $dup = mysqli_fetch_array($dupResult, MYSQLI_ASSOC)['email'];
+
+        if ($dup === $change)
+            return false;
+        else
+        {
+            $updateQuery = "UPDATE user SET email='$change' WHERE email='$email'";
+            $updateResult = mysqli_query($this->db_server, $updateQuery);
+            return true;
+        }
+    }
+    
+    public function patchPassword($origin, $new, $username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $originCheckQuery = "SELECT * FROM user WHERE username='$username' AND password='$origin'";
+        $originCheckResult = mysqli_query($this->db_server, $originCheckQuery);
+        $originCheck = mysqli_fetch_array($originCheckResult, MYSQLI_ASSOC);
+
+        if (empty($originCheck))
+            return false;
+        $updateQuery = "UPDATE user SET password='$new' WHERE username='$username'";
+        $updateResult = mysqli_query($this->db_server, $updateQuery);
+        return true;
     }
 }
 
