@@ -1,27 +1,54 @@
+/**
+ * 비밀번호 처리 과정
+ * 1. current password, new password, check password 세 input이 있음
+ * 2. current password가 현재 비번과 일치하고, new, check가 일치해야함
+ * 3. 중복 검사는 필요없음.
+ */
+
 patchData('username');
 patchData('email');
+patchData('password');
 
 function patchData(type)
 {
-    const changeButton = document.getElementById(type + '-change-button');
-    const changeInput = document.getElementById(type + '-change-input');
-    const submitButton = document.getElementById(type + '-submit-button');
-    const cancelButton = document.getElementById(type + '-cancel-button');
-
-    changeButton.addEventListener('click', () => {
-        changeHiddenStatus(changeButton, changeInput, submitButton, cancelButton);
+    const elements = {
+        submitButton: document.getElementById(type + '-submit-button'),
+        cancelButton: document.getElementById(type + '-cancel-button'),
+        changeButton: document.getElementById(type + '-change-button')
+    };
+      
+    if (type === 'password') {
+        elements.passwordOrigin = document.getElementById(type + '-origin');
+        elements.passwordOriginInput = document.getElementById(type + '-origin-input');
+        elements.passwordNew = document.getElementById(type + '-new');
+        elements.passwordNewInput = document.getElementById(type + '-new-input');
+        elements.passwordCheck = document.getElementById(type + '-check');
+        elements.passwordCheckInput = document.getElementById(type + '-check-input');
+    } else {
+        elements.changeInput = document.getElementById(type + '-change-input');
+    }
+    
+    elements.changeButton.addEventListener('click', () => {
+        changeHiddenStatus(elements);
     });
-    cancelButton.addEventListener('click', () => {
-        changeHiddenStatus(changeButton, changeInput, submitButton, cancelButton);
+    elements.cancelButton.addEventListener('click', () => {
+        changeHiddenStatus(elements);
     });
-    submitButton.addEventListener('click', () => {
-        const data = {};//좀 더 다형성 살려서 객체 만들 방법은 없을까...
+    elements.submitButton.addEventListener('click', () => {
+        const data = {};
         if (type === 'username')
-            data.username = changeInput.value;
+            data.username = elements.changeInput.value;
         else if (type === 'email')
-            data.email = changeInput.value;
+            data.email = elements.changeInput.value;
+        else if (type === 'password')
+        {
+            data.originPassword = elements.passwordOriginInput.value;
+            data.newPassword = elements.passwordNewInput.value;
+            data.checkPassword = elements.passwordCheckInput.value;
+        }
         const httpRequest = new XMLHttpRequest();
-        httpRequest.open('PATCH', '/' + type+ '/' + sessionStorage.getItem('username'));
+        const url = '/' + type+ '/' + sessionStorage.getItem('username');
+        httpRequest.open('PATCH', url);
         httpRequest.setRequestHeader('Conetent-Type', 'application/json');
         httpRequest.onload = () => {
             if (httpRequest.response === '성공')
@@ -36,14 +63,13 @@ function patchData(type)
         httpRequest.send(JSON.stringify(data));
     });
 
-    function changeHiddenStatus(...element)
+    function changeHiddenStatus(elements)
     {
-        const args = Array.from(element);
-
-        if (args.length < 1)
+        const objectArray = Object.keys(elements).map(ele => elements[ele]);
+        if (objectArray.length < 1)
             console.log('나중에 throw');
         
-        args.forEach((ele) => {
+        objectArray.forEach((ele) => {
             if (ele.hidden === true)
                 ele.hidden = false;
             else

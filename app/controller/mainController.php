@@ -201,6 +201,27 @@ class MainController
             return print_r('성공');
         }
     }
+
+    public static function patchPassword()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $originPassword = $data->originPassword;
+        $newPassword = $data->newPassword;
+        $checkPassword = $data->checkPassword;
+        $username = $_SESSION['login'];
+
+        if ($originPassword === $newPassword)
+            return print_r('현재 비밀번호와 같습니다.');
+        else if ($newPassword !== $checkPassword)
+            return print_r('변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        //유효성 검사();
+
+        $result = self::getModel()->patchPassword($originPassword, $newPassword, $username);
+        if ($result)
+            return print_r('성공');  
+        else
+            return print_r('기존 비밀번호가 틀렸습니다.');
+    }
 }
 
 ?>

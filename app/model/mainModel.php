@@ -206,6 +206,21 @@ class MainModel
             return true;
         }
     }
+    
+    public function patchPassword($origin, $new, $username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $originCheckQuery = "SELECT * FROM user WHERE username='$username' AND password='$origin'";
+        $originCheckResult = mysqli_query($this->db_server, $originCheckQuery);
+        $originCheck = mysqli_fetch_array($originCheckResult, MYSQLI_ASSOC);
+
+        if (empty($originCheck))
+            return false;
+        $updateQuery = "UPDATE user SET password='$new' WHERE username='$username'";
+        $updateResult = mysqli_query($this->db_server, $updateQuery);
+        return true;
+    }
 }
 
 ?>
