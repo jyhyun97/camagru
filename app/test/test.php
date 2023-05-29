@@ -11,15 +11,16 @@ class plusTest extends test
     {
         try {
             $this->assertEquals(plus(1, 3), 4);
+            $this->assertEquals(plus(2, 3), 5);
+            echo "testPlus success!\n";
         } catch (Exception $e) {
-            echo $e;
-
+            echo "$e\n";
         }
     }
 
     public function run()
     {
-        testplus();
+        $this->testplus();
     }
 }
 
@@ -55,5 +56,8 @@ abstract class test
         }
     }
 }
+
+$test1 = new plusTest;
+$test1->run();
 
 ?>
