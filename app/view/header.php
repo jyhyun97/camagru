@@ -4,7 +4,6 @@
     <a href="/">
         <button>홈</button>
     </a>
-    
     <?php
     if (!isset($_SESSION['login']) || $_SESSION['login'] == null)
     {
@@ -18,6 +17,7 @@
         echo "Hello, ".$_SESSION['login']."!!";
         echo "<a href='/mypage'><button id='mypage-button'>마이페이지</button></a>";
         echo "<button id='logout-button'>로그아웃</button>";
+        echo "<script src='/app/view/logout.js'></script>";
     }
     ?>
 </header>

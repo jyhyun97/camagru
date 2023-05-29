@@ -222,6 +222,14 @@ class MainController
         else
             return print_r('기존 비밀번호가 틀렸습니다.');
     }
+
+    public static function postLogout()
+    {
+        unset($_SESSION['login']);
+        unset($_SESSION['email']);
+
+        return print_r('성공');
+    }
 }
 
 ?>
