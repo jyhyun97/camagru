@@ -32,7 +32,7 @@
             <div id="upload-right">
                 <div id="captured-list">
                     <?php
-                    $username = $_SESSION['login'];
+                    $username = $_SESSION['username'];
                     $images = Maincontroller::getImagesByUsername($username);
 
                     foreach ($images as $ele) {

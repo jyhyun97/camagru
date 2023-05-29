@@ -72,7 +72,7 @@ class MainController
             echo "로그인 실패";
         else {
             echo $result;
-            $_SESSION['login'] = $result;
+            $_SESSION['username'] = $result;
             $_SESSION['email'] = $email;
         }
         return;
@@ -171,7 +171,7 @@ class MainController
     {
         $data = json_decode(file_get_contents("php://input"));
         $change = $data->username;
-        $username = $_SESSION['login'];
+        $username = $_SESSION['username'];
         
         //유효성 검사();
 
@@ -180,7 +180,7 @@ class MainController
             return print_r('중복');
         else
         {
-            $_SESSION['login'] = $change;
+            $_SESSION['username'] = $change;
             return print_r('성공');
         }
     }
@@ -208,7 +208,7 @@ class MainController
         $originPassword = $data->originPassword;
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
-        $username = $_SESSION['login'];
+        $username = $_SESSION['username'];
 
         if ($originPassword === $newPassword)
             return print_r('현재 비밀번호와 같습니다.');
@@ -225,7 +225,7 @@ class MainController
 
     public static function postLogout()
     {
-        unset($_SESSION['login']);
+        unset($_SESSION['username']);
         unset($_SESSION['email']);
 
         return print_r('성공');

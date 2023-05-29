@@ -42,8 +42,8 @@
         </div>
         <form>
             <?php
-            if (isset($_SESSION['login'])) {
-                echo "<label id='login-label'>" . $_SESSION['login'] . "</label>";
+            if (isset($_SESSION['username'])) {
+                echo "<label id='login-label'>" . $_SESSION['username'] . "</label>";
                 echo "<input id='comment-input'/>";
                 echo "<button id='comment-submit-button'>submit</button>";
                 echo "<script src='/app/view/comment.js'></script>";

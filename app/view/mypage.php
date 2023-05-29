@@ -18,7 +18,7 @@
         <div>
             <lable>닉네임 : </lable>
             <?php
-                echo "<label id='username-label'>".$_SESSION['login']."</label>";
+                echo "<label id='username-label'>".$_SESSION['username']."</label>";
             ?>
             <input id="username-change-input" hidden></input>
             <button id="username-change-button">변경</button>
@@ -57,7 +57,7 @@
         <label>내가 올린 이미지 목록</label>
         <div id="myimages-scroll">
             <?php
-                $images = mainController::getImagesByUsername($_SESSION['login']);
+                $images = mainController::getImagesByUsername($_SESSION['username']);
                 foreach($images as $ele)
                     echo "<img src=".$ele['image']." width='200px'>";
             ?>
@@ -65,7 +65,7 @@
         <label>내가 올린 게시물 목록</label>
         <div id="myposts-scroll">
             <?php
-                $posts = mainController::getPostsByUsername($_SESSION['login']);
+                $posts = mainController::getPostsByUsername($_SESSION['username']);
                 foreach($posts as $ele)
                     echo "<a href=/post/".$ele['postId']."><img src=".$ele['image']." width='200px'></a>";
             ?>
