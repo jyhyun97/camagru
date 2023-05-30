@@ -1,30 +1,23 @@
 <?php
 
-function plus($a, $b)
-{
-return ($a + $b);
-}
+$path = rtrim(__DIR__, '/app/test');
+chdir($path);
 
-class plusTest extends test
+include_once 'app/controller/mainController.php';
+class TestController extends MainController
 {
-    public function testPlus()
+    private static $model = null;
+
+    public static function getModel()
     {
-        try {
-            $this->assertEquals(plus(1, 3), 4);
-            $this->assertEquals(plus(2, 3), 5);
-            echo "testPlus success!\n";
-        } catch (Exception $e) {
-            echo "$e\n";
+        if (self::$model === null) {
+            self::$model = new MainModel('test');
         }
-    }
-
-    public function run()
-    {
-        $this->testplus();
+        return self::$model;
     }
 }
 
-abstract class test
+abstract class Test
 {
     public abstract function run();
     
@@ -57,7 +50,5 @@ abstract class test
     }
 }
 
-$test1 = new plusTest;
-$test1->run();
 
 ?>
