@@ -4,12 +4,12 @@ class MainModel
     private $db_server;
     private $db_database;
 
-    public function __construct()
+    public function __construct($db_name)
     {
         require_once('app/module/login.php');
 
         $this->db_server = $db_server;
-        $this->db_database = $db_database;
+        $this->db_database = $db_name;
     }
 
     public function postSignup($email, $username, $password)

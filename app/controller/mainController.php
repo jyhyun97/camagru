@@ -7,7 +7,7 @@ class MainController
     public static function getModel()
     {
         if (self::$model === null) {
-            self::$model = new MainModel;
+            self::$model = new MainModel('camagru');
         }
         return self::$model;
     }
