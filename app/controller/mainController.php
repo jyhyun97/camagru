@@ -48,13 +48,18 @@ class MainController
         $email = $data->email;
         $username = $data->username;
         $password = $data->password;
-        if ($email == '' || $username == '' || $password == '')
-            echo "빈 문자열입니다"; //추후 유효성 검사 더 넣기
-        else {
-            self::getModel()->postSignup($email, $username, $password);
-            echo "성공!";
-        }
+        
+        echo self::postSignupProcess($email, $username, $password);
         return;
+    }
+    public static function postSignupProcess($email, $username, $password)
+    {
+        if ($email == '' || $username == '' || $password == '')
+            return "빈 문자열입니다"; //추후 유효성 검사 더 넣기
+        else {
+            $result = self::getModel()->postSignup($email, $username, $password);
+            return ($result);
+        }
     }
     /**
      * signin 경로의 post 요청에 대해 유효성 검사 수행,

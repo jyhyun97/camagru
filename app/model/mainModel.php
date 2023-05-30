@@ -15,9 +15,23 @@ class MainModel
     public function postSignup($email, $username, $password)
     {
         mysqli_select_db($this->db_server, $this->db_database);
+        $usernameDupQuery = "SELECT * FROM user WHERE username='$username'";
+        $usernameDupResult = mysqli_query($this->db_server, $usernameDupQuery);
+        $usernameDup = mysqli_fetch_array($usernameDupResult, MYSQLI_ASSOC);
+
+        if (isset($usernameDup))
+            return '중복된 닉네임입니다.';
+        $emailDupQuery = "SELECT * FROM user WHERE email='$email'";
+        $emailDupResult = mysqli_query($this->db_server, $emailDupQuery);
+        $emailDup = mysqli_fetch_array($emailDupResult, MYSQLI_ASSOC);
+        
+        if (isset($emailDup))
+            return '중복된 이메일입니다.';
+
         $query = "INSERT INTO user (email, username, password, auth) VALUES ('$email', '$username', '$password', 'NULL')";
         $result = mysqli_query($this->db_server, $query);
-        return '200 OK';
+
+        return '성공';
     }
 
     public function postSignin($email, $password)
