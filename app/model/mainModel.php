@@ -235,6 +235,16 @@ class MainModel
         $updateResult = mysqli_query($this->db_server, $updateQuery);
         return true;
     }
+
+    public function deleteComment($commentId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $deleteQuery = "DELETE FROM comment WHERE commentId='$commentId'";
+        $deleteResult = mysqli_query($this->db_server, $deleteQuery);
+
+        return $deleteResult;
+    }
 }
 
 ?>

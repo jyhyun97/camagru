@@ -21,5 +21,6 @@ Router::add('/username', 'PATCH', 'MainController::patchUsername');
 Router::add('/email', 'PATCH', 'MainController::patchEmail');
 Router::add('/password', 'PATCH', 'MainController::patchPassword');
 Router::add('/logout', 'POST', 'MainController::postLogout');
+Router::add('/comment', 'DELETE', 'MainController::deleteComment');
 Router::run();
 ?>

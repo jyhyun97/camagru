@@ -34,10 +34,15 @@
 
             foreach($data as $ele)
             {
-                echo "<label class='comment-username'>".$ele['username']."</label>";
-                echo "<label class='comment-comment'>".$ele['comment']."</label>";
-                echo "<label class='comment-date'>".$ele['date']."</label>";                
+                echo "<div class='comment'>";//추후 <li>로 변경
+                echo "<span class='comment-username'>".$ele['username']."</span>";
+                echo "<span class='comment-comment'>".$ele['comment']."</span>";
+                echo "<span class='comment-date'>".$ele['date']."</span>";
+                if ($ele['username'] === $_SESSION['username'])
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-delete-button'>삭제</button>";
+                echo "</div>";
             }
+            echo "<script src='/app/view/post.js'></script>";
             ?>
         </div>
         <form>
@@ -53,4 +58,4 @@
         </form>
     </div>
 </body>
-<script src="/app/view/post.js"></script>
+<!-- <script src="/app/view/post.js"></script> -->

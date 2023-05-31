@@ -235,6 +235,16 @@ class MainController
 
         return print_r('성공');
     }
+
+    public static function deleteComment()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $commentId = $data->commentId;
+        
+        $result = self::getModel()->deleteComment($commentId);
+        return print_r($result);
+    }
 }
 
 ?>
