@@ -74,6 +74,6 @@
         <div id="mylikes-scroll"></div>
     </div>
 </body>
- <script src="/app/view/mypage.js"></script>
+ <script src="/app/view/mypage.js" type="module"></script>
 
 </html>

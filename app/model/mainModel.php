@@ -245,6 +245,16 @@ class MainModel
 
         return $deleteResult;
     }
+
+    public function patchComment($commentId, $newComment)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $updateQuery = "UPDATE comment SET comment = '$newComment' WHERE commentId = '$commentId'";
+        $updateResult = mysqli_query($this->db_server, $updateQuery);
+
+        return $updateResult;
+    }
 }
 
 ?>

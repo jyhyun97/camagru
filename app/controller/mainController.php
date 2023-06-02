@@ -245,6 +245,17 @@ class MainController
         $result = self::getModel()->deleteComment($commentId);
         return print_r($result);
     }
+    
+    public static function patchComment()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $commentId = $data->commentId;
+        $newComment = $data->newComment;
+
+        $result = self::getModel()->patchComment($commentId, $newComment);
+        return print_r($result);
+    }
 }
 
 ?>

@@ -39,10 +39,16 @@
                 echo "<span class='comment-comment'>".$ele['comment']."</span>";
                 echo "<span class='comment-date'>".$ele['date']."</span>";
                 if ($ele['username'] === $_SESSION['username'])
+                {
+                    echo "<input data-comment-id='".$ele['commentId']."' class='comment-patch-input' hidden></input>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-button'>변경</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-submit' hidden>제출</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-cancel' hidden>취소</button>";
                     echo "<button data-comment-id='".$ele['commentId']."' class='comment-delete-button'>삭제</button>";
+                }    
                 echo "</div>";
             }
-            echo "<script src='/app/view/post.js'></script>";
+            echo "<script src='/app/view/post.js' type='module'></script>";
             ?>
         </div>
         <form>
@@ -58,4 +64,3 @@
         </form>
     </div>
 </body>
-<!-- <script src="/app/view/post.js"></script> -->

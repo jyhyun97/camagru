@@ -1,3 +1,5 @@
+import {changeHiddenStatus} from '/app/view/common.js'
+
 const likesButton = document.getElementById("likes-button");
 likesButton.addEventListener("click", () => {
     const data = {
@@ -36,3 +38,29 @@ Array.from(commentDeleteButtons).forEach((ele) => {
 
     })
 });
+
+const commentPatchButtons = document.getElementsByClassName('comment-patch-button');
+const commentPatchInputs = document.getElementsByClassName('comment-patch-input');
+const commentPatchCancels = document.getElementsByClassName('comment-patch-cancel');
+const commentPatchSubmits = document.getElementsByClassName('comment-patch-submit');
+
+Array.from(commentPatchButtons).concat(Array.from(commentPatchCancels)).forEach((ele) => {
+    ele.addEventListener('click', () => {
+        function findElementByCommentId (elementArray, commentId) {
+            const element = Array.from(elementArray).find((ele) => {
+                if (ele.dataset.commentId === commentId)
+                    return ele;
+            })
+            return element;
+        }
+        const commentId = ele.dataset.commentId;
+        const elements = {
+            commentPatchInput : findElementByCommentId(commentPatchInputs, commentId),
+            commentPatchCancel : findElementByCommentId(commentPatchCancels, commentId),
+            commentPatchSubmit : findElementByCommentId(commentPatchSubmits, commentId),
+            commentDeleteButton : findElementByCommentId(commentDeleteButtons, commentId),
+            commentPatchButton : findElementByCommentId(commentPatchButtons, commentId)
+        }
+        changeHiddenStatus(elements);
+    })
+})

@@ -1,9 +1,4 @@
-/**
- * 비밀번호 처리 과정
- * 1. current password, new password, check password 세 input이 있음
- * 2. current password가 현재 비번과 일치하고, new, check가 일치해야함
- * 3. 중복 검사는 필요없음.
- */
+import {changeHiddenStatus} from '/app/view/common.js'
 
 patchData('username');
 patchData('email');
@@ -63,17 +58,17 @@ function patchData(type)
         httpRequest.send(JSON.stringify(data));
     });
 
-    function changeHiddenStatus(elements)
-    {
-        const objectArray = Object.keys(elements).map(ele => elements[ele]);
-        if (objectArray.length < 1)
-            console.log('나중에 throw');
+    // function changeHiddenStatus(elements)
+    // {
+    //     const objectArray = Object.keys(elements).map(ele => elements[ele]);
+    //     if (objectArray.length < 1)
+    //         console.log('나중에 throw');
         
-        objectArray.forEach((ele) => {
-            if (ele.hidden === true)
-                ele.hidden = false;
-            else
-                ele.hidden = true;
-        });
-    }
+    //     objectArray.forEach((ele) => {
+    //         if (ele.hidden === true)
+    //             ele.hidden = false;
+    //         else
+    //             ele.hidden = true;
+    //     });
+    // }
 }
