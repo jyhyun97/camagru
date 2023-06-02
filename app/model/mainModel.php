@@ -284,10 +284,10 @@ class MainModel
         mysqli_select_db($this->db_server, $this->db_database);
 
         $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
-        $imageResult = mysqli_query($this->db_server, $userIdQuery);
-        $image = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['image'];
+        $imageResult = mysqli_query($this->db_server, $imageQuery);
+        $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC)['image'];
 
-        return $userId;
+        return $image;
     }
 }
 

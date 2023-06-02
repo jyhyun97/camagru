@@ -278,7 +278,7 @@ class MainController
 
         $imageId = $data->imageId;
         $image = self::getModel()->getImageByImageId($imageId);
-        unlink('./img/'.$image);
+        unlink($image);
 
         $result = self::getModel()->deleteImage($imageId);
         return print_r($result);
