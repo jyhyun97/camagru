@@ -256,6 +256,21 @@ class MainController
         $result = self::getModel()->patchComment($commentId, $newComment);
         return print_r($result);
     }
+
+    public static function getUserIdbyUsername($username)
+    {
+        return self::getModel()->getUserIdbyUsername($username);
+    }
+    
+    public static function deletePost()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $postId = $data->postId;
+
+        $result = self::getModel()->deletePost($postId);
+        return print_r($result);
+    }
 }
 
 ?>

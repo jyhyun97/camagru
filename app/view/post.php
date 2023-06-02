@@ -19,11 +19,13 @@
         $currentUrl = $_SERVER['REQUEST_URI'];
         $postId = explode("/", $currentUrl)[2];
 
-        $data = mainController::getPostByPostId($postId);
+        $data = MainController::getPostByPostId($postId);
         $likes = $data['likes'];
         $image = $data['image'];
+        $userId = $data['userId'];
         
-        echo "<button>게시물 삭제</button>";
+        if ($userId === MainController::getUserIdbyUsername($_SESSION['username']))
+            echo "<button id='post-delete-button'>게시물 삭제</button>";
         echo "<img src='../$image' width=200px height=200px>";
         echo "<label> 좋아요 $likes</label>";
         ?>

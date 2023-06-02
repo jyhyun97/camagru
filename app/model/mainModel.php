@@ -251,11 +251,23 @@ class MainModel
 
     public function getUserIdbyUsername($username)
     {
+        mysqli_select_db($this->db_server, $this->db_database);
+
         $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
         $userIdResult = mysqli_query($this->db_server, $userIdQuery);
         $userId = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['userId'];
 
-        return $userId; 
+        return $userId;
+    }
+    public function deletePost($postId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $deleteQuery = "DELETE FROM post WHERE postId='$postId'";
+        $deleteResult = mysqli_query($this->db_server, $deleteQuery);
+
+        return $deleteResult;
+
     }
 }
 

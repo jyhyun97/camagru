@@ -1,10 +1,10 @@
 import {changeHiddenStatus} from '/app/view/common.js'
 
-const likesButton = document.getElementById("likes-button");
-likesButton.addEventListener("click", () => {
+const likesButton = document.getElementById('likes-button');
+likesButton.addEventListener('click', () => {
     const data = {
         postId: window.location.pathname.split('/')[2],
-        username: sessionStorage.getItem("username")
+        username: sessionStorage.getItem('username')
     };
     const httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', '/likes');
@@ -14,6 +14,26 @@ likesButton.addEventListener("click", () => {
     };
     httpRequest.send(JSON.stringify(data));
 });
+
+const postDeleteButton = document.getElementById('post-delete-button');
+postDeleteButton.addEventListener('click', () => {
+    //포스트를 삭제한 후 홈으로 리다이렉트 시키거나, 존재하지 않는 게시물입니다 페이지가 떠야 되겠죠?
+    if (confirm("정말로 게시물을 삭제하시겠습니까?"))
+    {
+        const data = {postId: window.location.pathname.split('/')[2],};
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.open('DELETE', 'post');
+        httpRequest.setRequestHeader('Content-Type', 'application/json');
+        httpRequest.onload = () => {
+            alert('삭제되었습니다');
+            window.location.href = '/';
+        };
+        httpRequest.send(JSON.stringify(data));
+    }
+    
+
+
+})
 
 
 const commentDeleteButtons = document.getElementsByClassName('comment-delete-button');
