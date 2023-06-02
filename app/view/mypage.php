@@ -67,13 +67,18 @@
             <?php
                 $posts = mainController::getPostsByUsername($_SESSION['username']);
                 foreach($posts as $ele)
+                {
                     echo "<a href=/post/".$ele['postId']."><img src=".$ele['image']." width='200px'></a>";
+                    echo "<button class='post-delete-button' data-post-id=".$ele['postId'].">X</button>";
+                }
             ?>
         </div>
         <lable>내가 좋아요한 게시물 목록</label>
         <div id="mylikes-scroll"></div>
     </div>
 </body>
- <script src="/app/view/mypage.js" type="module"></script>
+<?php
+    echo "<script src='/app/view/mypage.js' type='module'></script>";
+?>
 
 </html>

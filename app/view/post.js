@@ -22,7 +22,7 @@ postDeleteButton.addEventListener('click', () => {
     {
         const data = {postId: window.location.pathname.split('/')[2],};
         const httpRequest = new XMLHttpRequest();
-        httpRequest.open('DELETE', 'post');
+        httpRequest.open('DELETE', '/post');
         httpRequest.setRequestHeader('Content-Type', 'application/json');
         httpRequest.onload = () => {
             alert('삭제되었습니다');
@@ -30,9 +30,6 @@ postDeleteButton.addEventListener('click', () => {
         };
         httpRequest.send(JSON.stringify(data));
     }
-    
-
-
 })
 
 

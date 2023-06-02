@@ -58,3 +58,22 @@ function patchData(type)
         httpRequest.send(JSON.stringify(data));
     });
 }
+
+const postDeleteButtons = document.getElementsByClassName('post-delete-button');
+
+Array.from(postDeleteButtons).forEach((ele) => {    
+    ele.addEventListener('click', () => {
+        if (confirm("정말로 게시물을 삭제하시겠습니까?"))
+        {
+            const data = {postId: ele.dataset.postId};
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open('DELETE', '/post');
+            httpRequest.setRequestHeader('Content-Type', 'application/json');
+            httpRequest.onload = () => {
+                alert('삭제되었습니다');
+                location.reload();
+            };
+            httpRequest.send(JSON.stringify(data));
+        }
+    })
+})
