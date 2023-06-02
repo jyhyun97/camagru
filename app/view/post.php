@@ -20,7 +20,7 @@
         $postId = explode("/", $currentUrl)[2];
 
         $data = MainController::getPostByPostId($postId);
-        $likes = $data['likes'];
+        $likes = $data['likes_count'];
         $image = $data['image'];
         $userId = $data['userId'];
         

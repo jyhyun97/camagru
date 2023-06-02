@@ -106,7 +106,7 @@ class MainModel
 
         //그 이미지 객체를 바탕으로 post에 insert 쿼리 날리기
         $userId = $images['userId'];
-        $postQuery = "INSERT INTO post (date, likes, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
+        $postQuery = "INSERT INTO post (date, likes_count, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
         $postResult = mysqli_query($this->db_server, $postQuery);
     }
 
@@ -124,7 +124,7 @@ class MainModel
         $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC);
 
         $result = array();
-        $result['likes'] = $post['likes'];
+        $result['likes_count'] = $post['likes_count'];
         $result['image'] = $image['image'];
         $result['userId'] = $post['userId'];
         return $result;
@@ -134,13 +134,20 @@ class MainModel
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $likesQuery = "UPDATE post SET likes = 
-        CASE 
-            WHEN likes IS NULL THEN 1
-            ELSE likes + 1
-        END
+        $userId = $this->getUserIdbyUsername($username);
+        $insertQuery = "INSERT IGNORE INTO likes(userId, postId)
+            VALUES ('$userId', '$postId')";
+        $insertResult = mysqli_query($this->db_server, $insertQuery);
+        $affectedRow = mysqli_affected_rows($this->db_server);
+
+        $likesQuery = "UPDATE post SET likes_count = 
+        (
+            SELECT COUNT(*) FROM likes WHERE postId = '$postId'
+        )
         WHERE postId = '$postId'";
         $likesResult = mysqli_query($this->db_server, $likesQuery);
+        
+        return $affectedRow;
     }
 
     public function postComment($comment, $postId, $username)
