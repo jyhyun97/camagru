@@ -45,14 +45,7 @@ const commentPatchCancels = document.getElementsByClassName('comment-patch-cance
 const commentPatchSubmits = document.getElementsByClassName('comment-patch-submit');
 
 Array.from(commentPatchButtons).concat(Array.from(commentPatchCancels)).forEach((ele) => {
-    ele.addEventListener('click', () => {
-        function findElementByCommentId (elementArray, commentId) {
-            const element = Array.from(elementArray).find((ele) => {
-                if (ele.dataset.commentId === commentId)
-                    return ele;
-            })
-            return element;
-        }
+    ele.addEventListener('click', () => { 
         const commentId = ele.dataset.commentId;
         const elements = {
             commentPatchInput : findElementByCommentId(commentPatchInputs, commentId),
@@ -64,3 +57,32 @@ Array.from(commentPatchButtons).concat(Array.from(commentPatchCancels)).forEach(
         changeHiddenStatus(elements);
     })
 })
+
+Array.from(commentPatchSubmits).forEach((ele) => {
+    ele.addEventListener('click', () => {
+        const commentId = ele.dataset.commentId;
+        const commentPatchInput = findElementByCommentId(commentPatchInputs, commentId);
+            
+        const httpRequest = new XMLHttpRequest();
+        const data = {
+            commentId : commentId,
+            newComment : commentPatchInput.value
+        }
+        httpRequest.open('PATCH', '/comment');
+        httpRequest.setRequestHeader('Content-Type', 'application/json');
+        httpRequest.onload = () => {
+            console.log(httpRequest.response);
+            location.reload();
+        }
+        httpRequest.send(JSON.stringify(data));
+    })
+
+})
+
+function findElementByCommentId (elementArray, commentId) {
+    const element = Array.from(elementArray).find((ele) => {
+        if (ele.dataset.commentId === commentId)
+            return ele;
+    })
+    return element;
+}
