@@ -230,8 +230,7 @@ class MainController
 
     public static function postLogout()
     {
-        unset($_SESSION['username']);
-        unset($_SESSION['email']);
+        session_destroy();
 
         return print_r('성공');
     }
