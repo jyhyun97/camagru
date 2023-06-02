@@ -57,9 +57,9 @@ function postGallary() {
             newANode.appendChild(newImgNode);
             
             const newLabelNode = document.createElement('label');
-            if (ele.likes === null)
-                ele.likes = '';
-            newLabelNode.innerText = ele.likes + "❤️";
+            if (ele.likes_count === null)
+                ele.likes_count = '';
+            newLabelNode.innerText = ele.likes_count + "❤️";
 
             const newDivNode = document.createElement('div');
             newDivNode.className = 'gallary-post';

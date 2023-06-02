@@ -149,8 +149,10 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
-        self::getModel()->postLikes($postId, $username);
-        return;
+        if (self::getModel()->postLikes($postId, $username) === 0)
+            return print_r('중복');
+        else
+            return print_r('성공');
     }
 
     public static function postComment()
@@ -281,6 +283,12 @@ class MainController
 
         $result = self::getModel()->deleteImage($imageId);
         return print_r($result);
+    }
+
+    public static function getLikesPostsByUsername($username)
+    {
+        $result = self::getModel()->getLikesPostsByUsername($username);
+        return $result;
     }
 }
 

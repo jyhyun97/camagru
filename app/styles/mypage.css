@@ -20,3 +20,11 @@
     overflow : scroll;
     white-space: nowrap;
 }
+
+#mylikes-scroll {
+    border : 1px solid black;
+    width : 50%;
+    height : 20%;
+    overflow : scroll;
+    white-space: nowrap;
+}
