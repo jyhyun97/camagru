@@ -59,7 +59,10 @@
             <?php
                 $images = mainController::getImagesByUsername($_SESSION['username']);
                 foreach($images as $ele)
+                {
                     echo "<img src=".$ele['image']." width='200px'>";
+                    echo "<button class='image-delete-button' data-image-id=".$ele['imageId'].">X</button>";
+                }
             ?>
         </div>
         <label>내가 올린 게시물 목록</label>

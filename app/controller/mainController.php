@@ -277,6 +277,8 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = $data->imageId;
+        $image = self::getModel()->getImageByImageId($imageId);
+        unlink('./img/'.$image);
 
         $result = self::getModel()->deleteImage($imageId);
         return print_r($result);

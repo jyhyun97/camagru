@@ -278,6 +278,17 @@ class MainModel
 
         return $deleteResult;
     }
+
+    public function getImageByImageId($imageId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imageResult = mysqli_query($this->db_server, $userIdQuery);
+        $image = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['image'];
+
+        return $userId;
+    }
 }
 
 ?>
