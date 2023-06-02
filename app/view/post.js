@@ -15,35 +15,14 @@ likesButton.addEventListener("click", () => {
     httpRequest.send(JSON.stringify(data));
 });
 
-//comment-delete-button들 onclick 시
-//해당하는 댓글 삭제하는 DELETE 요청(commentId)
-//새로고침!
 
 const commentDeleteButtons = document.getElementsByClassName('comment-delete-button');
-
-Array.from(commentDeleteButtons).forEach((ele) => {
-    ele.addEventListener('click', () => {
-        if (confirm('댓글을 삭제하시겠습니까?'))
-        {
-            const data = {commentId : ele.dataset.commentId};
-            
-            const httpRequest = new XMLHttpRequest();
-            httpRequest.open('DELETE', '/comment');
-            httpRequest.onload = () => {
-                console.log(httpRequest.response);
-                location.reload();
-            }
-            httpRequest.send(JSON.stringify(data));
-        }
-
-    })
-});
-
 const commentPatchButtons = document.getElementsByClassName('comment-patch-button');
 const commentPatchInputs = document.getElementsByClassName('comment-patch-input');
 const commentPatchCancels = document.getElementsByClassName('comment-patch-cancel');
 const commentPatchSubmits = document.getElementsByClassName('comment-patch-submit');
 
+//변경, 취소 버튼 hidden 상태 변경
 Array.from(commentPatchButtons).concat(Array.from(commentPatchCancels)).forEach((ele) => {
     ele.addEventListener('click', () => { 
         const commentId = ele.dataset.commentId;
@@ -57,7 +36,7 @@ Array.from(commentPatchButtons).concat(Array.from(commentPatchCancels)).forEach(
         changeHiddenStatus(elements);
     })
 })
-
+//댓글 수정
 Array.from(commentPatchSubmits).forEach((ele) => {
     ele.addEventListener('click', () => {
         const commentId = ele.dataset.commentId;
@@ -78,6 +57,24 @@ Array.from(commentPatchSubmits).forEach((ele) => {
     })
 
 })
+// 댓글 삭제
+Array.from(commentDeleteButtons).forEach((ele) => {
+    ele.addEventListener('click', () => {
+        if (confirm('댓글을 삭제하시겠습니까?'))
+        {
+            const data = {commentId : ele.dataset.commentId};
+            
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open('DELETE', '/comment');
+            httpRequest.onload = () => {
+                console.log(httpRequest.response);
+                location.reload();
+            }
+            httpRequest.send(JSON.stringify(data));
+        }
+
+    })
+});
 
 function findElementByCommentId (elementArray, commentId) {
     const element = Array.from(elementArray).find((ele) => {

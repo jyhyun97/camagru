@@ -22,6 +22,8 @@
         $data = mainController::getPostByPostId($postId);
         $likes = $data['likes'];
         $image = $data['image'];
+        
+        echo "<button>게시물 삭제</button>";
         echo "<img src='../$image' width=200px height=200px>";
         echo "<label> 좋아요 $likes</label>";
         ?>
