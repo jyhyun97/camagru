@@ -77,3 +77,20 @@ Array.from(postDeleteButtons).forEach((ele) => {
         }
     })
 })
+
+const imageDeleteButtons = document.getElementsByClassName('image-delete-button')
+Array.from(imageDeleteButtons).forEach((ele) => {
+    ele.addEventListener('click', () => {
+        if(confirm('정말로 이미지를 삭제하시겠습니까? 이미지에 연결된 게시물도 삭제됩니다.'))
+        {
+            const data = {imageId : ele.dataset.imageId}
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open('DELETE', '/image');
+            httpRequest.setRequestHeader('Content-Type', 'application/json');
+            httpRequest.onload = () => {
+                location.reload();
+            }
+            httpRequest.send(JSON.stringify(data));
+        }
+    })
+})
