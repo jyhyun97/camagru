@@ -267,7 +267,16 @@ class MainModel
         $deleteResult = mysqli_query($this->db_server, $deleteQuery);
 
         return $deleteResult;
+    }
 
+    public function deleteImage($imageId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $deleteQuery = "DELETE FROM image WHERE imageId='$imageId'";
+        $deleteResult = mysqli_query($this->db_server, $deleteQuery);
+
+        return $deleteResult;
     }
 }
 

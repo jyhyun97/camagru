@@ -39,6 +39,7 @@
                         $src = $ele['image'];
                         $imageId = $ele['imageId'];
                         echo "<img src=\"$src\" class='captured-image' onclick='selectImage(event)' id='captured-image-$imageId'>";
+                        echo "<button onclick='deleteImage(event)' data-image-id='$imageId'>X</button>";
                     }
                     ?>
                     생성한 이미지 목록

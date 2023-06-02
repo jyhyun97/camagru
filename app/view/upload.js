@@ -20,6 +20,21 @@ navigator.mediaDevices.getUserMedia({video : true, audio : false})
     video.hidden = true;
 })
 
+function deleteImage(e) {
+    
+    if(confirm('정말로 이미지를 삭제하시겠습니까? 이미지에 연결된 게시물도 삭제됩니다.'))
+    {
+        const data = {imageId : e.target.dataset.imageId}
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.open('DELETE', '/image');
+        httpRequest.setRequestHeader('Content-Type', 'application/json');
+        httpRequest.onload = () => {
+            location.reload();
+        }
+        httpRequest.send(JSON.stringify(data));
+    }
+}
+
 function postImage() {
     if (selectedImage === null)
         return alert('이미지를 선택해주세요');

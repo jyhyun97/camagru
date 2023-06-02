@@ -271,6 +271,16 @@ class MainController
         $result = self::getModel()->deletePost($postId);
         return print_r($result);
     }
+
+    public static function deleteImage()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $imageId = $data->imageId;
+
+        $result = self::getModel()->deleteImage($imageId);
+        return print_r($result);
+    }
 }
 
 ?>
