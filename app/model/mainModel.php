@@ -296,6 +296,25 @@ class MainModel
 
         return $image;
     }
+    
+    public function getLikesPostsByUsername($username)
+    {
+        $userId = $this->getUserIdbyUsername($username);
+
+        $likesQuery = "SELECT * FROM likes WHERE userId = '$userId' ORDER BY postId DESC";
+        $likesResult = mysqli_query($this->db_server, $likesQuery);
+        $likes = mysqli_fetch_all($likesResult, MYSQLI_ASSOC);
+
+        $result = array();
+        foreach($likes as $ele)
+        {
+            $post = $this->getPostByPostId($ele['postId']);
+            $post['postId'] = $ele['postId'];
+            array_push($result, $post);
+        }
+
+        return $result;
+    }
 }
 
 ?>

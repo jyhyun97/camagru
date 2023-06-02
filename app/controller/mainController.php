@@ -284,6 +284,12 @@ class MainController
         $result = self::getModel()->deleteImage($imageId);
         return print_r($result);
     }
+
+    public static function getLikesPostsByUsername($username)
+    {
+        $result = self::getModel()->getLikesPostsByUsername($username);
+        return $result;
+    }
 }
 
 ?>
