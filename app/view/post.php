@@ -19,9 +19,13 @@
         $currentUrl = $_SERVER['REQUEST_URI'];
         $postId = explode("/", $currentUrl)[2];
 
-        $data = mainController::getPostByPostId($postId);
+        $data = MainController::getPostByPostId($postId);
         $likes = $data['likes'];
         $image = $data['image'];
+        $userId = $data['userId'];
+        
+        if ($userId === MainController::getUserIdbyUsername($_SESSION['username']))
+            echo "<button id='post-delete-button'>게시물 삭제</button>";
         echo "<img src='../$image' width=200px height=200px>";
         echo "<label> 좋아요 $likes</label>";
         ?>
@@ -34,10 +38,21 @@
 
             foreach($data as $ele)
             {
-                echo "<label class='comment-username'>".$ele['username']."</label>";
-                echo "<label class='comment-comment'>".$ele['comment']."</label>";
-                echo "<label class='comment-date'>".$ele['date']."</label>";                
+                echo "<div class='comment'>";//추후 <li>로 변경
+                echo "<span class='comment-username'>".$ele['username']."</span>";
+                echo "<span class='comment-comment'>".$ele['comment']."</span>";
+                echo "<span class='comment-date'>".$ele['date']."</span>";
+                if ($ele['username'] === $_SESSION['username'])
+                {
+                    echo "<input data-comment-id='".$ele['commentId']."' class='comment-patch-input' hidden></input>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-button'>변경</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-submit' hidden>제출</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-cancel' hidden>취소</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-delete-button'>삭제</button>";
+                }    
+                echo "</div>";
             }
+            echo "<script src='/app/view/post.js' type='module'></script>";
             ?>
         </div>
         <form>
@@ -53,4 +68,3 @@
         </form>
     </div>
 </body>
-<script src="/app/view/post.js"></script>

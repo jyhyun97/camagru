@@ -21,5 +21,9 @@ Router::add('/username', 'PATCH', 'MainController::patchUsername');
 Router::add('/email', 'PATCH', 'MainController::patchEmail');
 Router::add('/password', 'PATCH', 'MainController::patchPassword');
 Router::add('/logout', 'POST', 'MainController::postLogout');
+Router::add('/comment', 'DELETE', 'MainController::deleteComment');
+Router::add('/comment', 'PATCH', 'MainController::patchComment');
+Router::add('/post', 'DELETE', 'MainController::deletePost');
+Router::add('/image', 'DELETE', 'MainController::deleteImage');
 Router::run();
 ?>

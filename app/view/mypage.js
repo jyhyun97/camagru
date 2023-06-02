@@ -1,9 +1,4 @@
-/**
- * 비밀번호 처리 과정
- * 1. current password, new password, check password 세 input이 있음
- * 2. current password가 현재 비번과 일치하고, new, check가 일치해야함
- * 3. 중복 검사는 필요없음.
- */
+import {changeHiddenStatus} from '/app/view/common.js'
 
 patchData('username');
 patchData('email');
@@ -62,18 +57,40 @@ function patchData(type)
         };    
         httpRequest.send(JSON.stringify(data));
     });
-
-    function changeHiddenStatus(elements)
-    {
-        const objectArray = Object.keys(elements).map(ele => elements[ele]);
-        if (objectArray.length < 1)
-            console.log('나중에 throw');
-        
-        objectArray.forEach((ele) => {
-            if (ele.hidden === true)
-                ele.hidden = false;
-            else
-                ele.hidden = true;
-        });
-    }
 }
+
+const postDeleteButtons = document.getElementsByClassName('post-delete-button');
+
+Array.from(postDeleteButtons).forEach((ele) => {    
+    ele.addEventListener('click', () => {
+        if (confirm("정말로 게시물을 삭제하시겠습니까?"))
+        {
+            const data = {postId: ele.dataset.postId};
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open('DELETE', '/post');
+            httpRequest.setRequestHeader('Content-Type', 'application/json');
+            httpRequest.onload = () => {
+                alert('삭제되었습니다');
+                location.reload();
+            };
+            httpRequest.send(JSON.stringify(data));
+        }
+    })
+})
+
+const imageDeleteButtons = document.getElementsByClassName('image-delete-button')
+Array.from(imageDeleteButtons).forEach((ele) => {
+    ele.addEventListener('click', () => {
+        if(confirm('정말로 이미지를 삭제하시겠습니까? 이미지에 연결된 게시물도 삭제됩니다.'))
+        {
+            const data = {imageId : ele.dataset.imageId}
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open('DELETE', '/image');
+            httpRequest.setRequestHeader('Content-Type', 'application/json');
+            httpRequest.onload = () => {
+                location.reload();
+            }
+            httpRequest.send(JSON.stringify(data));
+        }
+    })
+})

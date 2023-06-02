@@ -235,6 +235,54 @@ class MainController
 
         return print_r('성공');
     }
+
+    public static function deleteComment()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $commentId = $data->commentId;
+        
+        $result = self::getModel()->deleteComment($commentId);
+        return print_r($result);
+    }
+    
+    public static function patchComment()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $commentId = $data->commentId;
+        $newComment = $data->newComment;
+
+        $result = self::getModel()->patchComment($commentId, $newComment);
+        return print_r($result);
+    }
+
+    public static function getUserIdbyUsername($username)
+    {
+        return self::getModel()->getUserIdbyUsername($username);
+    }
+    
+    public static function deletePost()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $postId = $data->postId;
+
+        $result = self::getModel()->deletePost($postId);
+        return print_r($result);
+    }
+
+    public static function deleteImage()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        $imageId = $data->imageId;
+        $image = self::getModel()->getImageByImageId($imageId);
+        unlink($image);
+
+        $result = self::getModel()->deleteImage($imageId);
+        return print_r($result);
+    }
 }
 
 ?>

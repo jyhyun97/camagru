@@ -59,7 +59,10 @@
             <?php
                 $images = mainController::getImagesByUsername($_SESSION['username']);
                 foreach($images as $ele)
+                {
                     echo "<img src=".$ele['image']." width='200px'>";
+                    echo "<button class='image-delete-button' data-image-id=".$ele['imageId'].">X</button>";
+                }
             ?>
         </div>
         <label>내가 올린 게시물 목록</label>
@@ -67,13 +70,18 @@
             <?php
                 $posts = mainController::getPostsByUsername($_SESSION['username']);
                 foreach($posts as $ele)
+                {
                     echo "<a href=/post/".$ele['postId']."><img src=".$ele['image']." width='200px'></a>";
+                    echo "<button class='post-delete-button' data-post-id=".$ele['postId'].">X</button>";
+                }
             ?>
         </div>
         <lable>내가 좋아요한 게시물 목록</label>
         <div id="mylikes-scroll"></div>
     </div>
 </body>
- <script src="/app/view/mypage.js"></script>
+<?php
+    echo "<script src='/app/view/mypage.js' type='module'></script>";
+?>
 
 </html>

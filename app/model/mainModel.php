@@ -71,9 +71,7 @@ class MainModel
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
-        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
-        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+        $userId = $this->getUserIdbyUsername($username);
 
         $insertQuery = "INSERT INTO image (date, image, userId) VALUES (NOW(), '$image', '$userId[0]')";
         mysqli_query($this->db_server, $insertQuery);
@@ -88,9 +86,7 @@ class MainModel
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
-        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
-        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+        $userId = $this->getUserIdbyUsername($username);
 
         $resultQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
         $result = mysqli_query($this->db_server, $resultQuery);
@@ -130,6 +126,7 @@ class MainModel
         $result = array();
         $result['likes'] = $post['likes'];
         $result['image'] = $image['image'];
+        $result['userId'] = $post['userId'];
         return $result;
     }
 
@@ -150,9 +147,7 @@ class MainModel
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
-        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
-        $userId = mysqli_fetch_array($userIdResult, MYSQLI_NUM)[0];
+        $userId = $this->getUserIdbyUsername($username);
 
         $commentQuery = "INSERT INTO comment (comment, date, userId, postId) VALUES ('$comment', NOW(), '$userId', '$postId')";
         $commentResult = mysqli_query($this->db_server, $commentQuery);
@@ -174,9 +169,7 @@ class MainModel
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
-        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
-        $userId = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['userId'];
+        $userId = $this->getUserIdbyUsername($username);
 
         $postsQuery = "SELECT * FROM post JOIN image ON post.imageId = image.imageId
         WHERE post.userId = '$userId' ORDER BY postId DESC";
@@ -234,6 +227,67 @@ class MainModel
         $updateQuery = "UPDATE user SET password='$new' WHERE username='$username'";
         $updateResult = mysqli_query($this->db_server, $updateQuery);
         return true;
+    }
+
+    public function deleteComment($commentId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $deleteQuery = "DELETE FROM comment WHERE commentId='$commentId'";
+        $deleteResult = mysqli_query($this->db_server, $deleteQuery);
+
+        return $deleteResult;
+    }
+
+    public function patchComment($commentId, $newComment)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $updateQuery = "UPDATE comment SET comment = '$newComment' WHERE commentId = '$commentId'";
+        $updateResult = mysqli_query($this->db_server, $updateQuery);
+
+        return $updateResult;
+    }
+
+    public function getUserIdbyUsername($username)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $userIdQuery = "SELECT * FROM user WHERE username = '$username'";
+        $userIdResult = mysqli_query($this->db_server, $userIdQuery);
+        $userId = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['userId'];
+
+        return $userId;
+    }
+    public function deletePost($postId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $deleteQuery = "DELETE FROM post WHERE postId='$postId'";
+        $deleteResult = mysqli_query($this->db_server, $deleteQuery);
+
+        return $deleteResult;
+    }
+
+    public function deleteImage($imageId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $deleteQuery = "DELETE FROM image WHERE imageId='$imageId'";
+        $deleteResult = mysqli_query($this->db_server, $deleteQuery);
+
+        return $deleteResult;
+    }
+
+    public function getImageByImageId($imageId)
+    {
+        mysqli_select_db($this->db_server, $this->db_database);
+
+        $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId'";
+        $imageResult = mysqli_query($this->db_server, $imageQuery);
+        $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC)['image'];
+
+        return $image;
     }
 }
 
