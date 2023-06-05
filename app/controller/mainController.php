@@ -36,6 +36,14 @@ class MainController
     {
         include_once 'app/view/modal/signin.php';
     }
+    private static function createResult($success, $message, $data)
+    {
+        $result = array();
+        $result['success'] = $success;
+        $result['message'] = $message;
+        $result['data'] = $data;
+        return $result;
+    }
 
     /**
      * query 결과에 따라 중복된 이메일, 유저네임 알리기
@@ -50,13 +58,13 @@ class MainController
         $password = $data->password;
         
         $result = self::postSignupProcess($email, $username, $password);
-        return print_r($result);
+        return print_r($result['message']);
     }
 
     public static function postSignupProcess($email, $username, $password)
     {
         if ($email == '' || $username == '' || $password == '')
-            return "빈 문자열입니다"; //추후 유효성 검사 더 넣기
+            return self::createResult(false, "빈 문자열입니다", NULL); //추후 유효성 검사 더 넣기
         else {
             return self::getModel()->postSignup($email, $username, $password);
         }
@@ -80,12 +88,12 @@ class MainController
     public static function postSigninProcess($email, $password)
     {
         $result = self::getModel()->postSignin($email, $password);
-        if ($result == null)
+        if ($result['success'] == false)
             return "로그인 실패";
         else {
-            $_SESSION['username'] = $result;
+            $_SESSION['username'] = $result['data'];
             $_SESSION['email'] = $email;
-            return $result;
+            return $result['data'];
         }
     }
     /**
@@ -109,11 +117,11 @@ class MainController
         $result = self::getModel()->postGallary($currentPage, $size);
 
         // 마지막 페이지인지 판단
-        if ($currentPage * $size > $result['rownum'])
-            $result['lastPage'] = true;
+        if ($currentPage * $size > $result['data']['rownum'])
+            $result['data']['lastPage'] = true;
         else
-            $result['lastPage'] = false;
-        return json_encode($result);
+            $result['data']['lastPage'] = false;
+        return json_encode($result['data']);
     }
     /**
      * 사용자가 캡처한 이미지를 받아서 파일을 /img 경로에 쓰고 db에 저장함
@@ -139,9 +147,9 @@ class MainController
         fwrite($newFile, base64_decode($newImage));
         fclose($newFile);
 
-        //db에 저장하기
+        //db에 저장하고 올린 이미지 목록 받아옴
         $result = self::getModel()->postCapture($newFileName, $username);
-        print_r(json_encode($result));
+        print_r(json_encode($result['data']));
         return;
     }
 
@@ -150,7 +158,7 @@ class MainController
      */
     public static function getImagesByUsername($username)
     {
-        return self::getModel()->getImagesByUsername($username);
+        return self::getModel()->getImagesByUsername($username)['data'];
     }
 
     /**
@@ -161,7 +169,7 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = str_replace("captured-image-", "", $data->imageId);
-        return self::getModel()->postImage($imageId);
+        return print_r(self::getModel()->postImage($imageId)['message']);
     }
 
     /**
@@ -169,7 +177,7 @@ class MainController
      */
     public static function getPostByPostId($postId)
     {
-        return self::getModel()->getPostByPostId($postId);
+        return self::getModel()->getPostByPostId($postId)['data'];
     }
 
     /**
@@ -179,19 +187,18 @@ class MainController
     public static function postLikes()
     {
         $data = json_decode(file_get_contents("php://input"));
-        
         $postId = $data->postId;
         $username = $data->username;
 
         $result = self::postLikesProcess($postId, $username);
         return print_r($result);
     }
-    public static function postLikesProcess($poseId, $username)
+    public static function postLikesProcess($postId, $username)
     {
-        if (self::getModel()->postLikes($postId, $username) === 0)
-            return '중복';
-        else
+        if (self::getModel()->postLikes($postId, $username)['success'] = true)
             return '성공';
+        else
+            return '중복';
     }
 
     /**
@@ -214,7 +221,7 @@ class MainController
      */
     public static function getCommentbyPostId($postId)
     {
-        return self::getModel()->getCommentByPostId($postId);
+        return self::getModel()->getCommentByPostId($postId)['data'];
     }
 
     /**
@@ -222,7 +229,7 @@ class MainController
      */
     public static function getPostsByUsername($username)
     {
-        return self::getModel()->getPostsByUsername($username);
+        return self::getModel()->getPostsByUsername($username)['data'];
     }
 
     /**
@@ -242,7 +249,7 @@ class MainController
         //유효성 검사();
 
         $result = self::getModel()->patchUsername($username, $change);
-        if ($result === false)
+        if ($result['success'] === false)
             return '중복';
         else
         {
@@ -268,7 +275,7 @@ class MainController
         //유효성 검사();
 
         $result = self::getModel()->patchEmail($email, $change);
-        if ($result === false)
+        if ($result['success'] === false)
             return '중복';
         else
         {
@@ -290,6 +297,7 @@ class MainController
 
         return print_r(self::patchPasswordProcess($originPassword, $newPassword, $checkPassword));
     }
+
     public static function patchPasswordProcess($originPassword, $newPassword, $checkPassword)
     {
         $username = $_SESSION['username'];
@@ -302,7 +310,7 @@ class MainController
         //유효성 검사();
 
         $result = self::getModel()->patchPassword($originPassword, $newPassword, $username);
-        if ($result)
+        if ($result['success'])
             return '성공';
         else
             return '기존 비밀번호가 틀렸습니다.';
@@ -350,7 +358,7 @@ class MainController
      */
     public static function getUserIdbyUsername($username)
     {
-        return self::getModel()->getUserIdbyUsername($username);
+        return self::getModel()->getUserIdbyUsername($username)['data'];
     }
     
     /**
@@ -374,7 +382,7 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = $data->imageId;
-        $image = self::getModel()->getImageByImageId($imageId);
+        $image = self::getModel()->getImageByImageId($imageId)['data'];
         unlink($image);
 
         $result = self::getModel()->deleteImage($imageId);
@@ -387,7 +395,7 @@ class MainController
     public static function getLikesPostsByUsername($username)
     {
         $result = self::getModel()->getLikesPostsByUsername($username);
-        return $result;
+        return $result['data'];
     }
 }
 

@@ -12,26 +12,36 @@ class MainModel
         $this->db_database = $db_name;
     }
 
+    private function createResult($success, $message, $data)
+    {
+        $result = array();
+        $result['success'] = $success;
+        $result['message'] = $message;
+        $result['data'] = $data;
+        return $result;
+    }
+
     public function postSignup($email, $username, $password)
     {
         mysqli_select_db($this->db_server, $this->db_database);
+        
         $usernameDupQuery = "SELECT * FROM user WHERE username='$username'";
         $usernameDupResult = mysqli_query($this->db_server, $usernameDupQuery);
         $usernameDup = mysqli_fetch_array($usernameDupResult, MYSQLI_ASSOC);
 
         if (isset($usernameDup))
-            return '중복된 닉네임입니다.';
+            return $this->createResult(false, '중복된 닉네임입니다.', NULL);;
         $emailDupQuery = "SELECT * FROM user WHERE email='$email'";
         $emailDupResult = mysqli_query($this->db_server, $emailDupQuery);
         $emailDup = mysqli_fetch_array($emailDupResult, MYSQLI_ASSOC);
         
         if (isset($emailDup))
-            return '중복된 이메일입니다.';
+            return $this->createResult(false, '중복된 이메일입니다.', NULL);
 
-        $query = "INSERT INTO user (email, username, password, auth) VALUES ('$email', '$username', '$password', 'NULL')";
-        $result = mysqli_query($this->db_server, $query);
+        $insertQuery = "INSERT INTO user (email, username, password, auth) VALUES ('$email', '$username', '$password', 'NULL')";
+        $insert = mysqli_query($this->db_server, $insertQuery);
 
-        return '성공';
+        return $this->createResult(true, '성공', NULL);
     }
 
     public function postSignin($email, $password)
@@ -42,9 +52,9 @@ class MainModel
         $row = mysqli_fetch_assoc($result);
 
         if ($row['password'] == $password)
-            return $row['username'];
+            return $this->createResult(true, '로그인 성공', $row['username']);
         else
-            return null;
+            return $this->createResult(false, '로그인 실패', null);
     }
 
     public function postGallary($currentPage, $size)
@@ -65,34 +75,36 @@ class MainModel
         $response = array();
         $response['rownum'] = $rownum;
         $response['data'] = $row;
-        return $response;
+        return $this->createResult(true, '갤러리 데이터 전송', $response);
     }
+
     public function postCapture($image, $username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userId = $this->getUserIdbyUsername($username);
+        $userId = $this->getUserIdbyUsername($username)['data'];
 
-        $insertQuery = "INSERT INTO image (date, image, userId) VALUES (NOW(), '$image', '$userId[0]')";
+        $insertQuery = "INSERT INTO image (date, image, userId) VALUES (NOW(), '$image', '$userId')";
         mysqli_query($this->db_server, $insertQuery);
 
-        $resultQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
-        $result = mysqli_query($this->db_server, $resultQuery);
-        $images = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $imagesQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
+        $imagesResult = mysqli_query($this->db_server, $imagesQuery);
+        $images = mysqli_fetch_all($imagesResult, MYSQLI_ASSOC);
 
-        return $images;
+        return $this->createResult(true, '이미지 저장 성공', $images);
     }
+
     public function getImagesByUsername($username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userId = $this->getUserIdbyUsername($username);
+        $userId = $this->getUserIdbyUsername($username)['data'];
 
-        $resultQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
-        $result = mysqli_query($this->db_server, $resultQuery);
-        $images = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $imagesQuery = "SELECT * FROM image WHERE userId = '$userId' ORDER BY imageId DESC";
+        $imagesResult = mysqli_query($this->db_server, $imagesQuery);
+        $images = mysqli_fetch_all($imagesResult, MYSQLI_ASSOC);
 
-        return $images;
+        return $this->createResult(true, '이미지 조회', $images);
     }
 
     public function postImage($imageId)
@@ -108,6 +120,8 @@ class MainModel
         $userId = $images['userId'];
         $postQuery = "INSERT INTO post (date, likes_count, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
         $postResult = mysqli_query($this->db_server, $postQuery);
+
+        return $this->createResult(true, '업로드 성공', NULL);
     }
 
     public function getPostByPostId($postId)
@@ -127,14 +141,14 @@ class MainModel
         $result['likes_count'] = $post['likes_count'];
         $result['image'] = $image['image'];
         $result['userId'] = $post['userId'];
-        return $result;
+        return $this->createResult(true, '게시물 조회 성공', $result);
     }
 
     public function postLikes($postId, $username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userId = $this->getUserIdbyUsername($username);
+        $userId = $this->getUserIdbyUsername($username)['data'];
         $insertQuery = "INSERT IGNORE INTO likes(userId, postId)
             VALUES ('$userId', '$postId')";
         $insertResult = mysqli_query($this->db_server, $insertQuery);
@@ -147,18 +161,24 @@ class MainModel
         WHERE postId = '$postId'";
         $likesResult = mysqli_query($this->db_server, $likesQuery);
         
-        return $affectedRow;
+        if ($affectedRow === 0)
+            return $this->createResult(false, '중복', NULL);
+        else
+            return $this->createResult(true, '추천 성공', NULL);
     }
 
     public function postComment($comment, $postId, $username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userId = $this->getUserIdbyUsername($username);
+        $userId = $this->getUserIdbyUsername($username)['data'];
 
         $commentQuery = "INSERT INTO comment (comment, date, userId, postId) VALUES ('$comment', NOW(), '$userId', '$postId')";
         $commentResult = mysqli_query($this->db_server, $commentQuery);
+
+        return $this->createResult(true, '댓글 추가 성공', NULL);
     }
+
     public function getCommentByPostId($postId)
     {
         mysqli_select_db($this->db_server, $this->db_database);
@@ -169,21 +189,21 @@ class MainModel
         $result = mysqli_query($this->db_server, $query);
         $fetch = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        return $fetch;
+        return $this->createResult(true, '댓글 조회 성공', $fetch);
     }
 
     public function getPostsByUsername($username)
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
-        $userId = $this->getUserIdbyUsername($username);
+        $userId = $this->getUserIdbyUsername($username)['data'];
 
         $postsQuery = "SELECT * FROM post JOIN image ON post.imageId = image.imageId
         WHERE post.userId = '$userId' ORDER BY postId DESC";
         $postsResult = mysqli_query($this->db_server, $postsQuery);
         $posts = mysqli_fetch_all($postsResult, MYSQLI_ASSOC);
 
-        return $posts;
+        return $this->createResult(true, '게시물 조회 성공', $posts);
     }
 
     public function patchUsername($username, $change)
@@ -195,14 +215,15 @@ class MainModel
         $dup = mysqli_fetch_array($dupResult, MYSQLI_ASSOC)['username'];
 
         if ($dup === $change)
-            return false;
+            return $this->createResult(false, '중복된 닉네임입니다', NULL);
         else
         {
             $updateQuery = "UPDATE user SET username='$change' WHERE username='$username'";
             $updateResult = mysqli_query($this->db_server, $updateQuery);
-            return true;
+            return $this->createResult(true, '닉네임 변경 성공', NULL);
         }
     }
+
     public function patchEmail($email, $change)
     {
         mysqli_select_db($this->db_server, $this->db_database);
@@ -212,12 +233,12 @@ class MainModel
         $dup = mysqli_fetch_array($dupResult, MYSQLI_ASSOC)['email'];
 
         if ($dup === $change)
-            return false;
+            return $this->createResult(false, '중복된 이메일입니다.', NULL);
         else
         {
             $updateQuery = "UPDATE user SET email='$change' WHERE email='$email'";
             $updateResult = mysqli_query($this->db_server, $updateQuery);
-            return true;
+            return $this->createResult(true, '이메일 변경 성공', NULL);
         }
     }
     
@@ -230,10 +251,10 @@ class MainModel
         $originCheck = mysqli_fetch_array($originCheckResult, MYSQLI_ASSOC);
 
         if (empty($originCheck))
-            return false;
+            return $this->createResult(false, '기존 비밀번호가 틀렸습니다', NULL);
         $updateQuery = "UPDATE user SET password='$new' WHERE username='$username'";
         $updateResult = mysqli_query($this->db_server, $updateQuery);
-        return true;
+        return $this->createResult(true, '비밀번호 변경 성공', NULL);
     }
 
     public function deleteComment($commentId)
@@ -243,7 +264,7 @@ class MainModel
         $deleteQuery = "DELETE FROM comment WHERE commentId='$commentId'";
         $deleteResult = mysqli_query($this->db_server, $deleteQuery);
 
-        return $deleteResult;
+        return $this->createResult(true, '댓글 삭제 성공', NULL);
     }
 
     public function patchComment($commentId, $newComment)
@@ -253,7 +274,7 @@ class MainModel
         $updateQuery = "UPDATE comment SET comment = '$newComment' WHERE commentId = '$commentId'";
         $updateResult = mysqli_query($this->db_server, $updateQuery);
 
-        return $updateResult;
+        return $this->createResult(true, '댓글 수정 성공', NULL);
     }
 
     public function getUserIdbyUsername($username)
@@ -264,8 +285,9 @@ class MainModel
         $userIdResult = mysqli_query($this->db_server, $userIdQuery);
         $userId = mysqli_fetch_array($userIdResult, MYSQLI_ASSOC)['userId'];
 
-        return $userId;
+        return $this->createResult(true, '닉네임 조회 성공', $userId);
     }
+
     public function deletePost($postId)
     {
         mysqli_select_db($this->db_server, $this->db_database);
@@ -273,7 +295,7 @@ class MainModel
         $deleteQuery = "DELETE FROM post WHERE postId='$postId'";
         $deleteResult = mysqli_query($this->db_server, $deleteQuery);
 
-        return $deleteResult;
+        return $this->createResult(true, '게시물 삭제 성공', NULL);
     }
 
     public function deleteImage($imageId)
@@ -283,7 +305,7 @@ class MainModel
         $deleteQuery = "DELETE FROM image WHERE imageId='$imageId'";
         $deleteResult = mysqli_query($this->db_server, $deleteQuery);
 
-        return $deleteResult;
+        return $this->createResult(true, '이미지 삭제 성공', NULL);
     }
 
     public function getImageByImageId($imageId)
@@ -294,12 +316,12 @@ class MainModel
         $imageResult = mysqli_query($this->db_server, $imageQuery);
         $image = mysqli_fetch_array($imageResult, MYSQLI_ASSOC)['image'];
 
-        return $image;
+        return $this->createResult(true, '이미지 조회 성공', $image);
     }
     
     public function getLikesPostsByUsername($username)
     {
-        $userId = $this->getUserIdbyUsername($username);
+        $userId = $this->getUserIdbyUsername($username)['data'];
 
         $likesQuery = "SELECT * FROM likes WHERE userId = '$userId' ORDER BY postId DESC";
         $likesResult = mysqli_query($this->db_server, $likesQuery);
@@ -308,12 +330,11 @@ class MainModel
         $result = array();
         foreach($likes as $ele)
         {
-            $post = $this->getPostByPostId($ele['postId']);
+            $post = $this->getPostByPostId($ele['postId'])['data'];
             $post['postId'] = $ele['postId'];
             array_push($result, $post);
         }
-
-        return $result;
+        return $this->createResult(true, '좋아요 조회 성공', $result);
     }
 }
 
