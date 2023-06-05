@@ -98,7 +98,7 @@ class MainController
         $currentPage = $data->currentPage;
         $size = $data->size;
         
-        return print_r(postGallaryProcess($currentPage, $size));
+        return print_r(self::postGallaryProcess($currentPage, $size));
     }
 
     public static function postGallaryProcess($currentPage, $size)
@@ -128,7 +128,7 @@ class MainController
         //합성();
         
         //파일 만들기
-        $userId = $this->getUserIdbyUsername($username);
+        $userId = self::getUserIdbyUsername($username);
         $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . ".png";
         $newImage = str_replace('data:image/png;base64,', '', $baseImage);
         $newImage = str_replace(' ', '+', $newImage);
@@ -180,7 +180,7 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
-        $result = $this->postLikesProcess($postId, $username);
+        $result = self::postLikesProcess($postId, $username);
         return print_r($result);
     }
     public static function postLikesProcess($poseId, $username)
@@ -258,7 +258,7 @@ class MainController
         $change = $data->email;
         $email = $_SESSION['email'];
 
-        return ($this::patchEmailProcess($change, $email));
+        return (self::patchEmailProcess($change, $email));
     }
     public static function patchEmailProcess($change, $email)
     {
@@ -285,7 +285,7 @@ class MainController
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
 
-        return print_r($this->patchPasswordProcess($originPassword, $newPassword, $checkPassword));
+        return print_r(self::patchPasswordProcess($originPassword, $newPassword, $checkPassword));
     }
     public static function patchPasswordProcess($originPassword, $newPassword, $checkPassword)
     {
