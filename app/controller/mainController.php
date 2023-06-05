@@ -49,7 +49,8 @@ class MainController
         $username = $data->username;
         $password = $data->password;
         
-        return print_r(self::postSignupProcess($email, $username, $password));
+        $result = self::postSignupProcess($email, $username, $password);
+        return print_r($result);
     }
 
     public static function postSignupProcess($email, $username, $password)
@@ -72,7 +73,8 @@ class MainController
         $email = $data->email;
         $password = $data->password;
 
-        return print_r(postSigninProcess($email, $password));
+        $result = self::postSigninProcess($email, $password);
+        return print_r($result);
     }
 
     public static function postSigninProcess($email, $password)
@@ -98,7 +100,8 @@ class MainController
         $currentPage = $data->currentPage;
         $size = $data->size;
         
-        return print_r(self::postGallaryProcess($currentPage, $size));
+        $result = self::postGallaryProcess($currentPage, $size);
+        return print_r($result);
     }
 
     public static function postGallaryProcess($currentPage, $size)
