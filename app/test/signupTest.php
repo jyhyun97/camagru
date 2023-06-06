@@ -17,9 +17,43 @@ class SignupTest extends Test
     {
         try {
             $this->assertTrue(TestController::validateEmail(
-                'aa@bb.com'));
+                'ArthurDent42@hitchhiker.galaxy'));
+            $this->assertTrue(TestController::validateEmail(
+                'F.Mulder.X-files@fbi.gov'));
+            $this->assertTrue(TestController::validateEmail(
+                'D.Scully.X-files@fbi.gov'));
             $this->assertFalse(TestController::validateEmail(
-                'abcd.com'));
+                'ItsOver@Anakin'));
+            $this->assertFalse(TestController::validateEmail(
+                'I!Have!!@the.high.ground'));
+            $this->assertFalse(TestController::validateEmail(
+                ''));
+
+            $this->assertTrue(TestController::validateUsername(
+                'JamesKirk1701'));
+            $this->assertTrue(TestController::validateUsername(
+                'USSenterprise'));
+            $this->assertFalse(TestController::validateUsername(
+                'SPACEeEeEeEeeeeeEEeee'));
+            $this->assertFalse(TestController::validateUsername(
+                'ImInSpace!!'));
+            $this->assertFalse(TestController::validateUsername(
+                ''));
+
+            $this->assertTrue(TestController::validatePassword(
+                'passwordSimple'));
+            $this->assertTrue(TestController::validatePassword(
+                'PaS!Wor@s$mpl^'));
+            $this->assertTrue(TestController::validatePassword(
+                'deepSpace9'));
+            $this->assertTrue(TestController::validatePassword(
+                'ncc!@74656'));
+            $this->assertFalse(TestController::validatePassword(
+                '42'));
+            $this->assertFalse(TestController::validatePassword(
+                'overThe20LetterCase!!!!'));
+            $this->assertFalse(TestController::validatePassword(
+                ''));
             print_r("testValidate success!\n");
         } catch (Exception $e) {
             echo "$e\n";
