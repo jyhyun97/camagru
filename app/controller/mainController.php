@@ -73,16 +73,38 @@ class MainController
         $username = $data->username;
         $password = $data->password;
         
-        $result = self::postSignupProcess($email, $username, $password);
-        return print_r($result);
+        $response = self::postSignupProcess($email, $username, $password);
+        return print_r(json_encode($response));
     }
 
     public static function postSignupProcess($email, $username, $password)
     {
-        if ($email == '' || $username == '' || $password == '')
-            return "빈 문자열입니다"; //추후 유효성 검사 더 넣기
+        if (!self::validateEmail($email) || !self::validateUsername($username) ||
+            !self::validatePassword($password))
+        {
+            http_response_code(400);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            if (!self::validateEmail($email))
+                $body['message'] = '이메일 규칙을 확인해주세요.';
+            else if (!self::validateUsername($username))
+                $body['message'] = '닉네임 규칙을 확인해주세요.';
+            else
+                $body['message'] = '비밀번호 규칙을 확인해주세요';
+            return $body;
+        }
+        $result = self::getModel()->postSignup($email, $username, $password);
+        if ($result['success'] === false)
+        {
+            http_response_code(409);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            $body['message'] = $result['message'];
+            return $body;
+        }
         else {
-            return self::getModel()->postSignup($email, $username, $password)['message'];
+            http_response_code(201);
+            return;
         }
     }
 
@@ -97,8 +119,8 @@ class MainController
         $email = $data->email;
         $password = $data->password;
 
-        $body = self::postSigninProcess($email, $password);
-        return print_r(json_encode($body));
+        $response = self::postSigninProcess($email, $password);
+        return print_r(json_encode($response));
     }
 
     public static function postSigninProcess($email, $password)
@@ -117,9 +139,11 @@ class MainController
         else {
             $_SESSION['username'] = $result['data'];
             $_SESSION['email'] = $email;
+            header('Content-type: application/json; charset=utf-8');
             http_response_code(200);
-            $username = $result['data'];
-            return $username;
+            $body = array();
+            $body['username'] = $result['data'];
+            return $body;
         }
     }
     /**

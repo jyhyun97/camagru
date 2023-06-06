@@ -18,16 +18,14 @@ function submitSignin() {
     httpRequest.open('POST', '/signin');
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
-        console.log(httpRequest.response);
+        const response = JSON.parse(httpRequest.response);
         if (httpRequest.status === 200)
         {
             location.reload();
-            sessionStorage.setItem("username", httpRequest.response.username);
+            sessionStorage.setItem("username", response.username);
         }
         else if (httpRequest.status === 400 || httpRequest.status === 401)
-        {
             alert("이메일과 비밀번호를 확인해주세요.");
-        }
     }
     httpRequest.send(JSON.stringify(signinData));
 }
