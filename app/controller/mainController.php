@@ -36,13 +36,29 @@ class MainController
     {
         include_once 'app/view/modal/signin.php';
     }
-    private static function createResult($success, $message, $data)
+    /**
+     * [영숫자-_.]*@[영숫자-_.]*.[영숫자]
+     */
+    public static function validateEmail($email)
     {
-        $result = array();
-        $result['success'] = $success;
-        $result['message'] = $message;
-        $result['data'] = $data;
-        return $result;
+        $regex = "/^[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*[.][a-zA-Z0-9]*$/";
+        return preg_match($regex, $email);
+    }
+    /**
+     * 5글자 이상 20글자 이하의 영숫자만 허용
+     */
+    public static function validateUsername($username)
+    {
+        $regex = "/^[a-zA-Z0-9]{5,20}$/";
+        return preg_match($regex, $username);
+    }
+    /**
+     * 8글자 이상 20글자 이하의 영숫자, 특문 허용
+     */
+    public static function validatePassword($password)
+    {
+        $regex = "/^[a-zA-Z0-9`~!@#$%^&*|\\\'\";:\/?]{8,20}$/";
+        return preg_match($regex, $password);
     }
 
     /**
@@ -58,15 +74,15 @@ class MainController
         $password = $data->password;
         
         $result = self::postSignupProcess($email, $username, $password);
-        return print_r($result['message']);
+        return print_r($result);
     }
 
     public static function postSignupProcess($email, $username, $password)
     {
         if ($email == '' || $username == '' || $password == '')
-            return self::createResult(false, "빈 문자열입니다", NULL); //추후 유효성 검사 더 넣기
+            return "빈 문자열입니다"; //추후 유효성 검사 더 넣기
         else {
-            return self::getModel()->postSignup($email, $username, $password);
+            return self::getModel()->postSignup($email, $username, $password)['message'];
         }
     }
 
@@ -81,19 +97,29 @@ class MainController
         $email = $data->email;
         $password = $data->password;
 
-        $result = self::postSigninProcess($email, $password);
-        return print_r($result);
+        $body = self::postSigninProcess($email, $password);
+        return print_r(json_encode($body));
     }
 
     public static function postSigninProcess($email, $password)
     {
+        if (!self::validateEmail($email) || !self::validatePassword($password))
+        {
+            http_response_code(400);
+            return;
+        }
         $result = self::getModel()->postSignin($email, $password);
         if ($result['success'] == false)
-            return "로그인 실패";
+        {
+            http_response_code(401);
+            return;
+        }
         else {
             $_SESSION['username'] = $result['data'];
             $_SESSION['email'] = $email;
-            return $result['data'];
+            http_response_code(200);
+            $username = $result['data'];
+            return $username;
         }
     }
     /**
