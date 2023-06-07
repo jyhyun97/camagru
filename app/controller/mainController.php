@@ -317,20 +317,28 @@ class MainController
         $change = $data->username;
         $username = $_SESSION['username'];
         
-        return print_r(self::patchUsernameProcess($change, $username));
+        $body = self::patchUsernameProcess($change, $username);
+        return print_r(json_encode($body));
     }
     public static function patchUsernameProcess($change, $username)
     {
-        //유효성 검사();
+        $body = array();
+        if (!self::validateUsername($change))
+        {
+            http_response_code(400);
+            $body['message'] = '닉네임 규칙을 확인해주세요';
+            return $body;
+        }
 
         $result = self::getModel()->patchUsername($username, $change);
         if ($result['success'] === false)
-            return '중복';
+            http_response_code(409);
         else
         {
+            http_response_code(200);
             $_SESSION['username'] = $change;
-            return '성공';
         }
+        return;
     }
 
     /**
@@ -343,20 +351,27 @@ class MainController
         $change = $data->email;
         $email = $_SESSION['email'];
 
-        return (self::patchEmailProcess($change, $email));
+        $body = self::patchEmailProcess($change, $email);
+        return print_r(json_encode($body));
     }
     public static function patchEmailProcess($change, $email)
     {
-        //유효성 검사();
-
+        $body = array();
+        if (!self::validateEmail($change))
+        {
+            http_response_code(400);
+            $body['message'] = '이메일 규칙을 확인해주세요';
+            return $body;
+        }
         $result = self::getModel()->patchEmail($email, $change);
         if ($result['success'] === false)
-            return '중복';
+            http_response_code(409);
         else
         {
+            http_response_code(200);
             $_SESSION['email'] = $change;
-            return '성공';
         }
+        return;
     }
 
     /**
@@ -370,25 +385,43 @@ class MainController
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
 
-        return print_r(self::patchPasswordProcess($originPassword, $newPassword, $checkPassword));
+        $body = self::patchPasswordProcess($originPassword, $newPassword, $checkPassword);
+        return print_r(json_encode($body));
     }
 
     public static function patchPasswordProcess($originPassword, $newPassword, $checkPassword)
     {
         $username = $_SESSION['username'];
-
+        $body = array();
         if ($originPassword === $newPassword)
-            return '현재 비밀번호와 같습니다.';
+        {
+            http_response_code(400);
+            $body['message'] = '현재 비밀번호와 같습니다.';
+            return $body;
+        }
         else if ($newPassword !== $checkPassword)
-            return '변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.';
-        
-        //유효성 검사();
+        {
+            http_response_code(400);
+            $body['message'] = '변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.';
+            return $body;
+        }
+
+        if (!self::validatePassword($newPassword))
+        {
+            http_response_code(400);
+            $body['message'] = '비밀번호 규칙을 확인해주세요';
+            return $body;
+        }
 
         $result = self::getModel()->patchPassword($originPassword, $newPassword, $username);
         if ($result['success'])
-            return '성공';
+            http_response_code(200);
         else
-            return '기존 비밀번호가 틀렸습니다.';
+        {
+            http_response_code(400);
+            $body['message'] = '기존 비밀번호가 틀렸습니다.';
+        }
+        return $body;
     }
 
     /**
