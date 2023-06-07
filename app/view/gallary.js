@@ -32,45 +32,53 @@ function postGallary() {
     httpRequest.open('POST', '/gallary');
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
-        const responseData = JSON.parse(httpRequest.response);
-        const gallaryCurrentPage = document.getElementById('gallary-current-page');
-        gallaryCurrentPage.innerText = pageData.currentPage;
-        const gallaryPosts = document.getElementById('gallary-posts');
-        gallaryPosts.replaceChildren();
-        responseData.data.forEach((ele) => {
-            /** 이런 element를 만드세요
-            * <div class="gallary-post">
-            * <a href="/post/포스트id">
-            *   <img src="이미지 path">
-            * </a>
-            * <label>ele.likes</label>
-            * <button>좋아요</button>
-            * </div>
-            */
-            const newImgNode = document.createElement('img');
-            newImgNode.src = ele.image;
-            newImgNode.style.width = '200px';
-            newImgNode.style.height = '200px';
-
-            const newANode = document.createElement('a');
-            newANode.href = "/post/" + ele.postId;
-            newANode.appendChild(newImgNode);
+        if (httpRequest.status === 200)
+        {
+            const responseData = JSON.parse(httpRequest.response);
+            const gallaryCurrentPage = document.getElementById('gallary-current-page');
+            gallaryCurrentPage.innerText = pageData.currentPage;
+            const gallaryPosts = document.getElementById('gallary-posts');
+            gallaryPosts.replaceChildren();
             
-            const newLabelNode = document.createElement('label');
-            if (ele.likes_count === null)
+            responseData.data.forEach((ele) => {
+                const newImgNode = document.createElement('img');
+                newImgNode.src = ele.image;
+                newImgNode.style.width = '200px';
+                newImgNode.style.height = '200px';
+                
+                const newANode = document.createElement('a');
+                newANode.href = "/post/" + ele.postId;
+                newANode.appendChild(newImgNode);
+                
+                const newLabelNode = document.createElement('label');
+                if (ele.likes_count === null)
                 ele.likes_count = '';
-            newLabelNode.innerText = ele.likes_count + "❤️";
+                newLabelNode.innerText = ele.likes_count + "❤️";
+                
+                const newDivNode = document.createElement('div');
+                newDivNode.className = 'gallary-post';
+                newDivNode.appendChild(newANode);
+                newDivNode.appendChild(newLabelNode);
+                
+                gallaryPosts.appendChild(newDivNode);
+                
+            });
+            pageData.lastPage = responseData.lastPage;
+            buttonRerender();
+        }
+        else if (httpRequest.status === 204)
+        {
+            const gallaryPosts = document.getElementById('gallary-posts');
+            gallaryPosts.replaceChildren();
 
+            gallaryLeftButton.disabled = true;
+            gallaryRightButton.disabled = true;
             const newDivNode = document.createElement('div');
             newDivNode.className = 'gallary-post';
-            newDivNode.appendChild(newANode);
-            newDivNode.appendChild(newLabelNode);
-
+            newDivNode.innerText = '아직 게시물이 없습니다. 새 게시물을 올려보세요';
             gallaryPosts.appendChild(newDivNode);
             
-        });
-        pageData.lastPage = responseData.lastPage;
-        buttonRerender();
+        }
     }
     httpRequest.send(JSON.stringify(pageData));
 }

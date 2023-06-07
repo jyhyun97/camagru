@@ -14,7 +14,8 @@ function submitComment()
     httpRequest.open('POST', '/comment');
     httpRequest.setRequestHeader('Conetent-Type', 'application/json')
     httpRequest.onload = () => {
-        console.log(httpRequest.response);
+        if (httpRequest.status === 201)
+            location.reload();
     };
     httpRequest.send(JSON.stringify(data));
 }

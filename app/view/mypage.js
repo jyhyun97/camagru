@@ -46,14 +46,22 @@ function patchData(type)
         httpRequest.open('PATCH', url);
         httpRequest.setRequestHeader('Conetent-Type', 'application/json');
         httpRequest.onload = () => {
-            if (httpRequest.response === '성공')
+            const responseData = JSON.parse(httpRequest.response);
+            if (httpRequest.status === 200)
             {
                 if (type === 'username')
                     sessionStorage.setItem('username', data.username);
                 location.reload();
             }
-            else
-                alert(httpRequest.response);
+            else if (httpRequest.status === 400)
+                alert(responseData.message);
+            else if (httpRequest.status === 409)
+            {
+                if (type === 'username')
+                    alert('이미 등록된 닉네임입니다.');
+                else if (type === 'email')
+                    alert('이미 등록된 이메일입니다.');
+            }
         };    
         httpRequest.send(JSON.stringify(data));
     });

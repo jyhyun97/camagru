@@ -36,13 +36,29 @@ class MainController
     {
         include_once 'app/view/modal/signin.php';
     }
-    private static function createResult($success, $message, $data)
+    /**
+     * [영숫자-_.]*@[영숫자-_.]*.[영숫자]
+     */
+    public static function validateEmail($email)
     {
-        $result = array();
-        $result['success'] = $success;
-        $result['message'] = $message;
-        $result['data'] = $data;
-        return $result;
+        $regex = "/^[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*[.][a-zA-Z0-9]*$/";
+        return preg_match($regex, $email);
+    }
+    /**
+     * 5글자 이상 20글자 이하의 영숫자만 허용
+     */
+    public static function validateUsername($username)
+    {
+        $regex = "/^[a-zA-Z0-9]{5,20}$/";
+        return preg_match($regex, $username);
+    }
+    /**
+     * 8글자 이상 20글자 이하의 영숫자, 특문 허용
+     */
+    public static function validatePassword($password)
+    {
+        $regex = "/^[a-zA-Z0-9`~!@#$%^&*|\\\'\";:\/?]{8,20}$/";
+        return preg_match($regex, $password);
     }
 
     /**
@@ -57,16 +73,38 @@ class MainController
         $username = $data->username;
         $password = $data->password;
         
-        $result = self::postSignupProcess($email, $username, $password);
-        return print_r($result['message']);
+        $response = self::postSignupProcess($email, $username, $password);
+        return print_r(json_encode($response));
     }
 
     public static function postSignupProcess($email, $username, $password)
     {
-        if ($email == '' || $username == '' || $password == '')
-            return self::createResult(false, "빈 문자열입니다", NULL); //추후 유효성 검사 더 넣기
+        if (!self::validateEmail($email) || !self::validateUsername($username) ||
+            !self::validatePassword($password))
+        {
+            http_response_code(400);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            if (!self::validateEmail($email))
+                $body['message'] = '이메일 규칙을 확인해주세요.';
+            else if (!self::validateUsername($username))
+                $body['message'] = '닉네임 규칙을 확인해주세요.';
+            else
+                $body['message'] = '비밀번호 규칙을 확인해주세요';
+            return $body;
+        }
+        $result = self::getModel()->postSignup($email, $username, $password);
+        if ($result['success'] === false)
+        {
+            http_response_code(409);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            $body['message'] = $result['message'];
+            return $body;
+        }
         else {
-            return self::getModel()->postSignup($email, $username, $password);
+            http_response_code(201);
+            return;
         }
     }
 
@@ -81,19 +119,31 @@ class MainController
         $email = $data->email;
         $password = $data->password;
 
-        $result = self::postSigninProcess($email, $password);
-        return print_r($result);
+        $response = self::postSigninProcess($email, $password);
+        return print_r(json_encode($response));
     }
 
     public static function postSigninProcess($email, $password)
     {
+        if (!self::validateEmail($email) || !self::validatePassword($password))
+        {
+            http_response_code(400);
+            return;
+        }
         $result = self::getModel()->postSignin($email, $password);
         if ($result['success'] == false)
-            return "로그인 실패";
+        {
+            http_response_code(401);
+            return;
+        }
         else {
             $_SESSION['username'] = $result['data'];
             $_SESSION['email'] = $email;
-            return $result['data'];
+            header('Content-type: application/json; charset=utf-8');
+            http_response_code(200);
+            $body = array();
+            $body['username'] = $result['data'];
+            return $body;
         }
     }
     /**
@@ -115,12 +165,18 @@ class MainController
     public static function postGallaryProcess($currentPage, $size)
     {
         $result = self::getModel()->postGallary($currentPage, $size);
+        if (!$result['data']['rownum'])
+        {
+            http_response_code(204);
+            return;
+        }
 
         // 마지막 페이지인지 판단
         if ($currentPage * $size > $result['data']['rownum'])
             $result['data']['lastPage'] = true;
         else
             $result['data']['lastPage'] = false;
+        http_response_code(200);
         return json_encode($result['data']);
     }
     /**
@@ -149,8 +205,10 @@ class MainController
 
         //db에 저장하고 올린 이미지 목록 받아옴
         $result = self::getModel()->postCapture($newFileName, $username);
-        print_r(json_encode($result['data']));
-        return;
+        http_response_code(201);
+        $body = array();
+        $body['data'] = $result['data'];
+        return print_r(json_encode($body));
     }
 
     /**
@@ -169,7 +227,20 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = str_replace("captured-image-", "", $data->imageId);
-        return print_r(self::getModel()->postImage($imageId)['message']);
+        $result = self::getModel()->postImage($imageId);
+        $body = array();
+
+        if ($result['message'] === '중복')
+        {
+            http_response_code(409);
+            $body['message'] = '이미 업로드한 이미지입니다.';
+        }
+        else
+        {
+            http_response_code(201);
+            $body['postId'] = $result['data'];
+        }
+        return print_r(json_encode($body));
     }
 
     /**
@@ -190,15 +261,18 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
-        $result = self::postLikesProcess($postId, $username);
-        return print_r($result);
+        self::postLikesProcess($postId, $username);
+        return;
     }
     public static function postLikesProcess($postId, $username)
     {
-        if (self::getModel()->postLikes($postId, $username)['success'] = true)
-            return '성공';
+        $statusCode = 0;
+        if (self::getModel()->postLikes($postId, $username)['success'] === true)
+            $statusCode = 201;
         else
-            return '중복';
+            $statusCode = 409;
+        http_response_code($statusCode);
+        return $statusCode;
     }
 
     /**
@@ -213,6 +287,7 @@ class MainController
         $username = $data->username;
 
         self::getModel()->postComment($comment, $postId, $username);
+        http_response_code(201);
         return;
     }
 
@@ -242,20 +317,28 @@ class MainController
         $change = $data->username;
         $username = $_SESSION['username'];
         
-        return print_r(self::patchUsernameProcess($change, $username));
+        $body = self::patchUsernameProcess($change, $username);
+        return print_r(json_encode($body));
     }
     public static function patchUsernameProcess($change, $username)
     {
-        //유효성 검사();
+        $body = array();
+        if (!self::validateUsername($change))
+        {
+            http_response_code(400);
+            $body['message'] = '닉네임 규칙을 확인해주세요';
+            return $body;
+        }
 
         $result = self::getModel()->patchUsername($username, $change);
         if ($result['success'] === false)
-            return '중복';
+            http_response_code(409);
         else
         {
+            http_response_code(200);
             $_SESSION['username'] = $change;
-            return '성공';
         }
+        return;
     }
 
     /**
@@ -268,20 +351,27 @@ class MainController
         $change = $data->email;
         $email = $_SESSION['email'];
 
-        return (self::patchEmailProcess($change, $email));
+        $body = self::patchEmailProcess($change, $email);
+        return print_r(json_encode($body));
     }
     public static function patchEmailProcess($change, $email)
     {
-        //유효성 검사();
-
+        $body = array();
+        if (!self::validateEmail($change))
+        {
+            http_response_code(400);
+            $body['message'] = '이메일 규칙을 확인해주세요';
+            return $body;
+        }
         $result = self::getModel()->patchEmail($email, $change);
         if ($result['success'] === false)
-            return '중복';
+            http_response_code(409);
         else
         {
+            http_response_code(200);
             $_SESSION['email'] = $change;
-            return '성공';
         }
+        return;
     }
 
     /**
@@ -295,25 +385,43 @@ class MainController
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
 
-        return print_r(self::patchPasswordProcess($originPassword, $newPassword, $checkPassword));
+        $body = self::patchPasswordProcess($originPassword, $newPassword, $checkPassword);
+        return print_r(json_encode($body));
     }
 
     public static function patchPasswordProcess($originPassword, $newPassword, $checkPassword)
     {
         $username = $_SESSION['username'];
-
+        $body = array();
         if ($originPassword === $newPassword)
-            return '현재 비밀번호와 같습니다.';
+        {
+            http_response_code(400);
+            $body['message'] = '현재 비밀번호와 같습니다.';
+            return $body;
+        }
         else if ($newPassword !== $checkPassword)
-            return '변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.';
-        
-        //유효성 검사();
+        {
+            http_response_code(400);
+            $body['message'] = '변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.';
+            return $body;
+        }
+
+        if (!self::validatePassword($newPassword))
+        {
+            http_response_code(400);
+            $body['message'] = '비밀번호 규칙을 확인해주세요';
+            return $body;
+        }
 
         $result = self::getModel()->patchPassword($originPassword, $newPassword, $username);
         if ($result['success'])
-            return '성공';
+            http_response_code(200);
         else
-            return '기존 비밀번호가 틀렸습니다.';
+        {
+            http_response_code(400);
+            $body['message'] = '기존 비밀번호가 틀렸습니다.';
+        }
+        return $body;
     }
 
     /**
@@ -336,7 +444,8 @@ class MainController
         $commentId = $data->commentId;
         
         $result = self::getModel()->deleteComment($commentId);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
     
     /**
@@ -350,7 +459,8 @@ class MainController
         $newComment = $data->newComment;
 
         $result = self::getModel()->patchComment($commentId, $newComment);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
 
     /**
@@ -371,7 +481,8 @@ class MainController
         $postId = $data->postId;
 
         $result = self::getModel()->deletePost($postId);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
 
     /**
@@ -386,7 +497,8 @@ class MainController
         unlink($image);
 
         $result = self::getModel()->deleteImage($imageId);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
 
     /**

@@ -20,7 +20,16 @@ function submitSignup() {
     httpRequest.open('POST', '/signup');
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
-        console.log(httpRequest.response);
+        const response = JSON.parse(httpRequest.response);
+        if (httpRequest.status === 201)
+        {
+            alert("가입이 완료되었습니다.");
+            location.reload();
+        }
+        else if (httpRequest.status === 400)
+            alert(response.message);
+        else if (httpRequest.status === 409)
+            alert(response.message);
     }
     httpRequest.send(JSON.stringify(signupData));
 }

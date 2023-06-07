@@ -39,8 +39,10 @@
                     foreach ($images as $ele) {
                         $src = $ele['image'];
                         $imageId = $ele['imageId'];
+                        echo "<div class='capture'>";
                         echo "<img src=\"$src\" class='captured-image' onclick='selectImage(event)' id='captured-image-$imageId'>";
-                        echo "<button onclick='deleteImage(event)' data-image-id='$imageId'>X</button>";
+                        echo "<button onclick='deleteImage(event)' class='capture-delete-button' data-image-id='$imageId'>X</button>";
+                        echo "</div>";
                     }
                     ?>
                 </div>
@@ -52,11 +54,3 @@
 </body>
 
 </html>
-
-CREATE TABLE `likes` (
-    `likesId` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `userId` int(11) NOT NULL,
-    `postId` int(11) NOT NULL,
-    FOREIGN KEY (`userId`) REFERENCES `user` (`userId`),
-    FOREIGN KEY (`postId`) REFERENCES `post` (`postId`) ON DELETE CASCADE
-);
