@@ -261,15 +261,18 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
-        $result = self::postLikesProcess($postId, $username);
-        return print_r($result);
+        self::postLikesProcess($postId, $username);
+        return;
     }
     public static function postLikesProcess($postId, $username)
     {
-        if (self::getModel()->postLikes($postId, $username)['success'] = true)
-            return '성공';
+        $statusCode = 0;
+        if (self::getModel()->postLikes($postId, $username)['success'] === true)
+            $statusCode = 201;
         else
-            return '중복';
+            $statusCode = 409;
+        http_response_code($statusCode);
+        return $statusCode;
     }
 
     /**
@@ -284,6 +287,7 @@ class MainController
         $username = $data->username;
 
         self::getModel()->postComment($comment, $postId, $username);
+        http_response_code(201);
         return;
     }
 

@@ -10,9 +10,10 @@ likesButton.addEventListener('click', () => {
     httpRequest.open('POST', '/likes');
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
-        if (httpRequest.response === '중복')
+        if (httpRequest.status === 201)
+            location.reload();
+        else if (httpRequest.status === 409)
             alert('이미 추천한 글입니다');
-        location.reload();
     };
     httpRequest.send(JSON.stringify(data));
 });
