@@ -165,12 +165,18 @@ class MainController
     public static function postGallaryProcess($currentPage, $size)
     {
         $result = self::getModel()->postGallary($currentPage, $size);
+        if (!$result['data']['rownum'])
+        {
+            http_response_code(204);
+            return;
+        }
 
         // 마지막 페이지인지 판단
         if ($currentPage * $size > $result['data']['rownum'])
             $result['data']['lastPage'] = true;
         else
             $result['data']['lastPage'] = false;
+        http_response_code(200);
         return json_encode($result['data']);
     }
     /**
@@ -199,8 +205,10 @@ class MainController
 
         //db에 저장하고 올린 이미지 목록 받아옴
         $result = self::getModel()->postCapture($newFileName, $username);
-        print_r(json_encode($result['data']));
-        return;
+        http_response_code(201);
+        $body = array();
+        $body['data'] = $result['data'];
+        return print_r(json_encode($body));
     }
 
     /**
@@ -219,7 +227,20 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = str_replace("captured-image-", "", $data->imageId);
-        return print_r(self::getModel()->postImage($imageId)['message']);
+        $result = self::getModel()->postImage($imageId);
+        $body = array();
+
+        if ($result['message'] === '중복')
+        {
+            http_response_code(409);
+            $body['message'] = '이미 업로드한 이미지입니다.';
+        }
+        else
+        {
+            http_response_code(201);
+            $body['postId'] = $result['data'];
+        }
+        return print_r(json_encode($body));
     }
 
     /**

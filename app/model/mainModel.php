@@ -111,6 +111,13 @@ class MainModel
     {
         mysqli_select_db($this->db_server, $this->db_database);
 
+        //게시물 중복 체크
+        $dupQuery = "SELECT * FROM post WHERE imageId='$imageId'";
+        $dupResult = mysqli_query($this->db_server, $dupQuery);
+        $dup = mysqli_fetch_array($dupResult, MYSQLI_ASSOC);
+
+        if (isset($dup))
+            return $this->createResult(false, '중복', NULL);
         //유저 아이디 기반으로 이미지 객체를 가져오고,
         $imagesQuery = "SELECT * FROM image WHERE imageId = '$imageId' ORDER BY imageId DESC";
         $imagesResult = mysqli_query($this->db_server, $imagesQuery);
@@ -120,8 +127,8 @@ class MainModel
         $userId = $images['userId'];
         $postQuery = "INSERT INTO post (date, likes_count, userId, imageId) VALUES (NOW(), null, '$userId', '$imageId')";
         $postResult = mysqli_query($this->db_server, $postQuery);
-
-        return $this->createResult(true, '업로드 성공', NULL);
+        $postId = mysqli_insert_id($this->db_server);
+        return $this->createResult(true, '업로드 성공', $postId);
     }
 
     public function getPostByPostId($postId)

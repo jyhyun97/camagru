@@ -21,7 +21,6 @@ navigator.mediaDevices.getUserMedia({video : true, audio : false})
 })
 
 function deleteImage(e) {
-    
     if(confirm('정말로 이미지를 삭제하시겠습니까? 이미지에 연결된 게시물도 삭제됩니다.'))
     {
         const data = {imageId : e.target.dataset.imageId}
@@ -44,7 +43,16 @@ function postImage() {
     httpRequest.open('POST', '/image');
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
-        console.log(httpRequest.response);
+        const responseData = JSON.parse(httpRequest.response);
+        if (httpRequest.status === 201)
+        {
+            alert('게시물이 등록되었습니다.');
+            location.href = '/post/' + responseData.postId;
+        }
+        else if (httpRequest.status === 409)
+        {
+            alert(responseData.message);
+        }
     }
     httpRequest.send(JSON.stringify(data));
 }
@@ -88,25 +96,37 @@ function takePicture() {
         'Content-Type', 'text/plain'
     );
     httpRequest.onload = () => {
-        const responseData = JSON.parse(httpRequest.response);
-        const capturedImages = document.getElementsByClassName('captured-image');
-        Array.from(capturedImages).forEach((ele) => {
-            ele.remove();
-        });
-        responseData.forEach((ele) => {
-            const newNode = document.createElement('img');
-            newNode.src = ele.image;
-            newNode.className = 'captured-image';
-            newNode.id = "captured-image-" + ele.imageId;
-            newNode.onclick = () => selectImage(event);
-            capturedList.appendChild(newNode);
-        })
+        if (httpRequest.status === 201)
+        {
+            const responseData = JSON.parse(httpRequest.response).data;
+            const capturedImages = document.getElementsByClassName('captured-image');
+            const deleteButtons = document.getElementsByClassName('capture-delete-button');
+            Array.from(capturedImages).forEach((ele) => {
+                ele.remove();
+            });
+            Array.from(deleteButtons).forEach((ele => {
+                ele.remove();
+            }));
+            responseData.forEach((ele) => {
+                const newImgNode = document.createElement('img');
+                newImgNode.src = ele.image;
+                newImgNode.className = 'captured-image';
+                newImgNode.id = "captured-image-" + ele.imageId;
+                newImgNode.onclick = (event) => selectImage(event);
+
+                const newButtonNode = document.createElement('button');
+                newButtonNode.dataset.imageId = ele.imageId;
+                newButtonNode.className = 'capture-delete-button';
+                newButtonNode.innerText = 'X';
+                newButtonNode.onclick = (event) => deleteImage(event);
+
+                const newDivNode = document.createElement('div');
+                newDivNode.className = 'capture';
+                newDivNode.appendChild(newImgNode);
+                newDivNode.appendChild(newButtonNode);
+                capturedList.appendChild(newDivNode);
+            })
+        }
     }
     httpRequest.send(JSON.stringify(capturedData));
 }
-/**
- * <div class="capture">
- *  <img>
- *  <button 삭제>
- * </div>
- */
