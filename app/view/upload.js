@@ -28,7 +28,8 @@ function deleteImage(e) {
         httpRequest.open('DELETE', '/image');
         httpRequest.setRequestHeader('Content-Type', 'application/json');
         httpRequest.onload = () => {
-            location.reload();
+            if (httpRequest.status === 200)
+                location.reload();
         }
         httpRequest.send(JSON.stringify(data));
     }

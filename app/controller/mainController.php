@@ -444,7 +444,8 @@ class MainController
         $commentId = $data->commentId;
         
         $result = self::getModel()->deleteComment($commentId);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
     
     /**
@@ -458,7 +459,8 @@ class MainController
         $newComment = $data->newComment;
 
         $result = self::getModel()->patchComment($commentId, $newComment);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
 
     /**
@@ -479,7 +481,8 @@ class MainController
         $postId = $data->postId;
 
         $result = self::getModel()->deletePost($postId);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
 
     /**
@@ -494,7 +497,8 @@ class MainController
         unlink($image);
 
         $result = self::getModel()->deleteImage($imageId);
-        return print_r($result);
+        http_response_code(200);
+        return;
     }
 
     /**

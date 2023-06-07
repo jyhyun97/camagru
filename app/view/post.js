@@ -29,8 +29,10 @@ if (postDeleteButton)
             httpRequest.open('DELETE', '/post');
             httpRequest.setRequestHeader('Content-Type', 'application/json');
             httpRequest.onload = () => {
-                alert('삭제되었습니다');
-                window.location.href = '/';
+                if (httpRequest.status === 200) {
+                    alert('삭제되었습니다');
+                    window.location.href = '/';
+                }
             };
             httpRequest.send(JSON.stringify(data));
         }
@@ -72,8 +74,8 @@ Array.from(commentPatchSubmits).forEach((ele) => {
         httpRequest.open('PATCH', '/comment');
         httpRequest.setRequestHeader('Content-Type', 'application/json');
         httpRequest.onload = () => {
-            console.log(httpRequest.response);
-            location.reload();
+            if (httpRequest.status === 200)
+                location.reload();
         }
         httpRequest.send(JSON.stringify(data));
     })
@@ -82,19 +84,17 @@ Array.from(commentPatchSubmits).forEach((ele) => {
 // 댓글 삭제
 Array.from(commentDeleteButtons).forEach((ele) => {
     ele.addEventListener('click', () => {
-        if (confirm('댓글을 삭제하시겠습니까?'))
-        {
+        if (confirm('댓글을 삭제하시겠습니까?')) {
             const data = {commentId : ele.dataset.commentId};
             
             const httpRequest = new XMLHttpRequest();
             httpRequest.open('DELETE', '/comment');
             httpRequest.onload = () => {
-                console.log(httpRequest.response);
-                location.reload();
+                if (httpRequest.status === 200)
+                    location.reload();
             }
             httpRequest.send(JSON.stringify(data));
         }
-
     })
 });
 
