@@ -12,6 +12,8 @@
         <label>비밀번호</label>
         <input type="password" id="signup-password" name="password">
     </div>
-    <button id="signup-submit">회원가입</button>
-    <button class="modal-cancel" id="signup-cancel">취소</button>
+    <div class="signform-button">
+        <button id="signup-submit" class="btn btn-primary">회원가입</button>
+        <button class="modal-cancel btn btn-default" id="signup-cancel">취소</button>
+    </div>
 </div>
