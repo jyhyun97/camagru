@@ -1,4 +1,4 @@
-const pageData = { currentPage: 1, size: 6, firstPage : true, lastPage : true };
+const pageData = { currentPage: 1, size: 8, firstPage : true, lastPage : true };
 
 const gallaryLeftButton = document.getElementById('gallary-left-button');
 gallaryLeftButton.addEventListener('click', () => {pagination(pageData.currentPage - 1)});
@@ -43,8 +43,6 @@ function postGallary() {
             responseData.data.forEach((ele) => {
                 const newImgNode = document.createElement('img');
                 newImgNode.src = ele.image;
-                newImgNode.style.width = '200px';
-                newImgNode.style.height = '200px';
                 
                 const newANode = document.createElement('a');
                 newANode.href = "/post/" + ele.postId;
@@ -56,12 +54,11 @@ function postGallary() {
                 newLabelNode.innerText = ele.likes_count + "❤️";
                 
                 const newDivNode = document.createElement('div');
-                newDivNode.className = 'gallary-post';
+                newDivNode.className = 'col-md-3 thumbnail';
                 newDivNode.appendChild(newANode);
                 newDivNode.appendChild(newLabelNode);
                 
                 gallaryPosts.appendChild(newDivNode);
-                
             });
             pageData.lastPage = responseData.lastPage;
             buttonRerender();

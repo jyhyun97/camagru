@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camagru</title>
     <link rel="stylesheet" type="text/css" href="app/styles/common.css">
-    <link rel="stylesheet" type="text/css" href="app/styles/main.css">
     <link rel="stylesheet" type="text/css" href="app/styles/upload.css">
 </head>
 

@@ -1,12 +1,18 @@
 #gallary {
-    background-color: lightcyan;
     width : 80%;
-    height : 80%;
-}
-#gallary-posts {
-    display: flex;
-}
+    height: 90%;
 
-.gallary-post {
-    flex : 1;
+    padding-top : 1%;
+    padding-bottom: 1%;
+    padding-left: 2%;
+    padding-right: 2%;
+    background-color: white;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+#gallary-container {
+    width : 100%;
+    height : 100%;
 }
