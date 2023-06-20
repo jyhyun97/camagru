@@ -46,7 +46,8 @@
                 if ($ele['username'] === $_SESSION['username'])
                     echo "<textarea data-comment-id='".$ele['commentId']."' class='comment-patch-input' hidden></textarea>";
                 echo "</span>";
-                echo "<span class='col-md-2'>".$ele['date']."</span>";
+                $date = date_format(date_create($ele['date']), "y/m/d h:i:s");
+                echo "<span class='col-md-2'>".$date."</span>";
                 echo "<span class='col-md-2'>";
                 if ($ele['username'] === $_SESSION['username'])
                 {

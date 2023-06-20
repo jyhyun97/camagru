@@ -18,13 +18,13 @@ function pagination(movePage)
 function buttonRerender()
 {
     if (pageData.firstPage === true)
-    gallaryLeftButton.disabled = true;
+        gallaryLeftButton.disabled = true;
     else
-    gallaryLeftButton.disabled = false;
+        gallaryLeftButton.disabled = false;
     if (pageData.lastPage === true)
-    gallaryRightButton.disabled = true;
+        gallaryRightButton.disabled = true;
     else
-    gallaryRightButton.disabled = false;
+        gallaryRightButton.disabled = false;
 }
 
 function postGallary() {

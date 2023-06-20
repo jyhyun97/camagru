@@ -172,7 +172,7 @@ class MainController
         }
 
         // 마지막 페이지인지 판단
-        if ($currentPage * $size > $result['data']['rownum'])
+        if ($currentPage * $size >= $result['data']['rownum'])
             $result['data']['lastPage'] = true;
         else
             $result['data']['lastPage'] = false;
