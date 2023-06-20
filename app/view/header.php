@@ -2,7 +2,6 @@
 <link rel="stylesheet" type="text/css" href="/app/styles/modal.css">
 
 <nav class="navbar navbar-default">
-    <!-- <div class="collapse navbar-collapse"> -->
     <button class="btn btn-default navbar-btn" onclick="location.href='/'">홈</button>
     <?php
     if (!isset($_SESSION['username']) || $_SESSION['username'] == null)
@@ -14,16 +13,15 @@
     }
     else
     {
-        echo "<p class='navbar-text'>Hello, ".$_SESSION['username']."!!</p>";
+        echo "Hello, ".$_SESSION['username']."!!";
         echo "<a href='/mypage'><button id='mypage-button' class='btn btn-default navbar-btn'>마이페이지</button></a>";
         echo "<button id='logout-button' class='btn btn-default navbar-btn'>로그아웃</button>";
         echo "<script src='/app/view/logout.js'></script>";
     }
     ?>
-    <!-- </div> -->
 </nav>
 <?php
-include_once 'app/view/modal/modal.php';
+    include_once 'app/view/modal/modal.php';
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="app/bootstrap/js/bootstrap.min.js"></script>
+<script src="/app/bootstrap/js/bootstrap.min.js"></script>
