@@ -1,29 +1,14 @@
-#myimages-scroll {
-    border : 1px solid black;
-    width : 50%;
-    height : 20%;
-    overflow : scroll;
-    white-space: nowrap;
-
+.mypage-row{
+    width : 80%;
+    background-color: white;
+    padding : 2%;
 }
-#mylikes-scroll {
-    border : 1px solid black;
-    width : 50%;
-    height : 20%;
-    overflow : scroll;
-    white-space: nowrap;
-}
-#myposts-scroll {
-    border : 1px solid black;
-    width : 50%;
-    height : 20%;
-    overflow : scroll;
-    white-space: nowrap;
+.mypage-change-form{
+    padding-bottom: 2%;
 }
 
-#mylikes-scroll {
+.post-scroll {
     border : 1px solid black;
-    width : 50%;
     height : 20%;
     overflow : scroll;
     white-space: nowrap;
