@@ -1,0 +1,22 @@
+#post-container{
+    width : 80%;
+    background-color : white;
+}
+#post-image{
+    margin: auto;
+    display: block;
+    padding : 1%;
+}
+#comment-form{
+    padding : 1%;
+}
+#comment-input{
+    width: 68vw;
+}
+.comment{
+    padding : 1%;
+}
+.comment-patch-input{
+    width : 100%;
+    height : auto;
+}

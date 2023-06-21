@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camagru</title>
     <link rel="stylesheet" type="text/css" href="app/styles/common.css">
-    <link rel="stylesheet" type="text/css" href="app/styles/main.css">
     <link rel="stylesheet" type="text/css" href="app/styles/upload.css">
 </head>
 
@@ -24,8 +23,8 @@
                     <img id="photo" hidden />
                 </div>
                 <div id="buttons">
-                    <button id="capture-button">촬영</button>
-                    <input type="file" accept="image/png, image/jpeg" id="upload-button" />
+                    <input type="file" accept="image/png, image/jpeg" id="upload-button"></input>    
+                    <button id="capture-button" class='btn btn-primary'>촬영</button>    
                 </div>
                 <div id="sticky-list">스티커 목록</div>
             </div>
@@ -41,12 +40,12 @@
                         $imageId = $ele['imageId'];
                         echo "<div class='capture'>";
                         echo "<img src=\"$src\" class='captured-image' onclick='selectImage(event)' id='captured-image-$imageId'>";
-                        echo "<button onclick='deleteImage(event)' class='capture-delete-button' data-image-id='$imageId'>X</button>";
+                        echo "<button onclick='deleteImage(event)' class='capture-delete-button' data-image-id='$imageId'>삭제</button>";
                         echo "</div>";
                     }
                     ?>
                 </div>
-                <button id="post-button">업로드</button>
+                <button id="post-button" class='btn btn-primary'>업로드</button>
             </div>
         </div>
     </div>

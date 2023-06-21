@@ -19,7 +19,7 @@
         require_once('app/view/gallary.php');
         ?>
         <div class="buttons">
-            <a href="/upload"><button>업로드</button></a>
+            <a href="/upload"><button class="btn btn-default">업로드</button></a>
         </div>
     </div>
 </body>

@@ -1,9 +1,8 @@
 #modal {
-    background-color: greenyellow;
     z-index: 2;
 	position: fixed;
-	--width: 30vw;
-	--height: 100vh;
+	--width: 350px;
+	--height: 550px;
 	visibility: hidden;
 
     width: var(--width);
@@ -12,21 +11,47 @@
 	left: calc(50% - (var(--width) / 2));
 }
 #modal-content {
+	--width: 350px;
+	--height: 550px;
+    width: var(--width);
+	height: var(--height);
+	top: calc(50% - (var(--height) / 2));
+	left: calc(50% - (var(--width) / 2));
+	min-width : 250px;
+	min-height : 500px;
+
 	background-color: white;
-	border : 1px solid red;
+	border-radius: 5% 5% 5% 5% / 3% 3% 3% 3%;
+	padding : 2%;
+	box-shadow : 5px 5px 3px 3px;
+
 	position : relative;
 	z-index : 3;
 }
 #modal-background {
-	background-color: #00000080;
 	width : 100vw;
 	height : 100vh;
 	left: 0px;
 	top: 0px;
+
+	background-color: #00000080;
 	position : fixed;
 	z-index: 1;
 }
 
 .signform {
 	display : none;
+	position : relative;
+	height : 100%;
+}
+
+.signform-button {
+	position : absolute;
+	bottom : 5%;
+	right : 2%;
+}
+
+.navbar-default {
+	margin : 0px;
+	padding-left : 0.5%;
 }
