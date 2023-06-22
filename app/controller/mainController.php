@@ -267,7 +267,9 @@ class MainController
     public static function postLikesProcess($postId, $username)
     {
         $statusCode = 0;
-        if (self::getModel()->postLikes($postId, $username)['success'] === true)
+        if (!$postId || !$username)
+            $statusCode = 400;
+        else if (self::getModel()->postLikes($postId, $username)['success'] === true)
             $statusCode = 201;
         else
             $statusCode = 409;
