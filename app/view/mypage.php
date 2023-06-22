@@ -13,6 +13,8 @@
 <body>
     <?php
     require_once('app/view/header.php');
+    if (!isset($_SESSION['username']))
+        header('Location: /');
     ?>
     <div class="content">
         <div class="mypage-row row">

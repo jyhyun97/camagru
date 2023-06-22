@@ -138,6 +138,8 @@ class MainModel
         $postQuery = "SELECT * FROM post WHERE postId = '$postId'";
         $postResult = mysqli_query($this->db_server, $postQuery);
         $post = mysqli_fetch_array($postResult, MYSQLI_ASSOC);
+        if (!$post)
+            return $this->createResult(false, '게시물 조회 실패', null);
 
         $imageId = $post['imageId'];
         $imageQuery = "SELECT * FROM image WHERE imageId = '$imageId' ORDER BY imageId DESC";

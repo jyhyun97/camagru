@@ -14,8 +14,14 @@
     width: 68vw;
 }
 .comment{
-    padding : 1%;
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
 }
+.comment li {
+  width: 100%;
+}
+
 .comment-patch-input{
     width : 100%;
     height : auto;
