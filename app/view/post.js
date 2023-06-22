@@ -6,12 +6,16 @@ likesButton.addEventListener('click', () => {
         postId: window.location.pathname.split('/')[2],
         username: sessionStorage.getItem('username')
     };
+    if (!data.username)
+        return (alert('로그인 한 사용자만 추천할 수 있습니다'));
     const httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', '/likes');
     httpRequest.setRequestHeader('Content-Type', 'application/json');
     httpRequest.onload = () => {
         if (httpRequest.status === 201)
             location.reload();
+        else if (httpRequest.status === 400)
+            alert('유효하지 않은 요청입니다');
         else if (httpRequest.status === 409)
             alert('이미 추천한 글입니다');
     };
