@@ -18,23 +18,41 @@ class MainController
     }
     public static function getPost()
     {
-        include_once 'app/view/post.php';
+        $currentUrl = $_SERVER['REQUEST_URI'];
+        $postId = explode("/", $currentUrl)[2];
+
+        $data = self::getPostByPostId($postId);
+        if (!$data)
+        {
+            http_response_code(404);
+            include_once('app/view/404.php');
+        }
+        else
+            include_once 'app/view/post.php';
     }
     public static function getMypage()
     {
-        include_once 'app/view/mypage.php';
+        $currentUrl = $_SERVER['REQUEST_URI'];
+        $additionalPath = explode("/", $currentUrl)[2];
+        if ($additionalPath || $additionalPath === '')
+        {
+            http_response_code(404);
+            include_once('app/view/404.php');
+        }
+        else
+            include_once 'app/view/mypage.php';
     }
     public static function getUpload()
     {
-        include_once 'app/view/upload.php';
-    }
-    public static function getSignup()
-    {
-        include_once 'app/view/modal/signup.php';
-    }
-    public static function getSignin()
-    {
-        include_once 'app/view/modal/signin.php';
+        $currentUrl = $_SERVER['REQUEST_URI'];
+        $additionalPath = explode("/", $currentUrl)[2];
+        if ($additionalPath || $additionalPath === '')
+        {
+            http_response_code(404);
+            include_once('app/view/404.php');
+        }
+        else
+            include_once 'app/view/upload.php';
     }
     /**
      * [영숫자-_.]*@[영숫자-_.]*.[영숫자]
@@ -248,7 +266,11 @@ class MainController
      */
     public static function getPostByPostId($postId)
     {
-        return self::getModel()->getPostByPostId($postId)['data'];
+        $rst = self::getModel()->getPostByPostId($postId);
+        if ($rst['success'] === false)
+            return false;
+        else
+            return $rst['data'];
     }
 
     /**

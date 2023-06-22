@@ -36,11 +36,12 @@ class Router
 
         if (isset(self::$routes[$path][$method]))
             call_user_func(self::$routes[$path][$method]);
-        //arge 필요?? 나중에 생각해서 처리하자..
         else
-            echo '라우터에 등록된 요청인지 확인하세요';
+        {
+            http_response_code(404);
+            include_once('app/view/404.php');
+        }
     }
-// 나중에 잘못된 경로에 대한 예외처리를 만들기.
 }
 
 ?>
