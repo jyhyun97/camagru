@@ -210,8 +210,6 @@ class MainController
         $baseImage = $data->baseImage;
         $stickyImages = $data->stickyImages;
         
-        //합성();
-        
         //파일 만들기
         $userId = self::getUserIdbyUsername($username);
         $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . ".png";
@@ -221,6 +219,19 @@ class MainController
         fwrite($newFile, base64_decode($newImage));
         fclose($newFile);
 
+        //합성 과정
+        if ($stickyImages)
+        {
+            foreach ($stickyImages as $key) {
+                $img = imagecreatefrompng($newFileName);
+                $sticky = imagecreatefrompng($key);
+
+                imagecopy($img, $sticky, 0,0,0,0, 640, 480);
+                imagepng($img, $newFileName);
+                imagedestroy($img);
+                imagedestroy($sticky);
+            }
+        }
         //db에 저장하고 올린 이미지 목록 받아옴
         $result = self::getModel()->postCapture($newFileName, $username);
         http_response_code(201);

@@ -1,41 +1,70 @@
 .main-content {
-    width: 80%;
-    display: flex;
-    background-color: white;
+  width: 80%;
+  display: flex;
+  background-color: white;
 }
 
 .captured-image {
-    width: 100%;
+  width: 100%;
 }
 #buttons {
-    display: flex;
+  display: flex;
 }
 #capture-button {
-    flex : 1;
+  flex: 1;
 }
 #upload-button {
-    flex : 9;
+  flex: 9;
+}
+#output {
+  width: 35.75vw;
+  height: 27.5vw;
+  left: 50%;
+  transform: translate(-50%, 0%);
+
+  position: relative;
 }
 #video {
-    width : 60%;
-    height : 40%;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+#sticky-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }
 
 #upload-left {
-    flex : 4;
-    text-align: center;
+  flex: 4;
+  text-align: center;
 }
 
 #upload-right {
-    flex : 1;
-    text-align: center;
+  flex: 1;
+  text-align: center;
 }
 
 #sticky-list {
-    border: 1px solid green;
-    height: 20%;
+  border: 1px solid black;
+  width: 65vw;
+
+  overflow: auto;
+  white-space: nowrap;
 }
 #captured-list {
-    height : 85vh;
-    overflow : scroll;
+  height: 85vh;
+  overflow: scroll;
+}
+
+.sticky-image {
+  width: 30%;
+  margin-left: 1%;
+  border: 1px solid gray;
 }

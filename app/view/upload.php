@@ -20,6 +20,7 @@
         <div class="main-content">
             <div id="upload-left">
                 <div id="output">
+                    <canvas id='sticky-canvas'></canvas>
                     <video id="video"></video>
                     <canvas id="canvas" width="640" height="480" hidden></canvas>
                     <img id="photo" hidden />
@@ -28,7 +29,20 @@
                     <input type="file" accept="image/png, image/jpeg" id="upload-button"></input>    
                     <button id="capture-button" class='btn btn-primary'>촬영</button>    
                 </div>
-                <div id="sticky-list">스티커 목록</div>
+                <div id="sticky-list">
+                    스티커 목록
+                    <?php
+                        $dirpath = 'img/sticky/';
+                        $dir = scandir($dirpath);
+                        
+                        foreach ($dir as $key) {
+                            if ($key === '.' || $key === '..')
+                                continue;
+                            $stickyPath = $dirpath.$key;
+                            echo "<img src='$stickyPath' class='sticky-image' id='$stickyPath' onclick='selectSticky(event)'>";//선택 가능할 것..
+                        }
+                    ?>
+                </div>
             </div>
             <div id="upload-right">
                 <div id="captured-list">
