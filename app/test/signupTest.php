@@ -6,11 +6,13 @@ class SignupTest extends Test
     {
         try {
             $this->assertEquals(TestController::postSignupProcess(
-                'abcd@1234', 'bb', 'abcd1234'), '중복된 닉네임입니다.');
-            //테스트 작성
-            print_r("testPlus success!\n");
+                'abcd@abc.dd', 'jeonhyun', 'abcd1234')['message'], '중복된 닉네임입니다.');
+            $this->assertEquals(TestController::postSignupProcess(
+                'jeonhyun@student.42seoul.kr', 'vvvvv', 'abcd1234')['message'], '중복된 이메일입니다.');                
+            print_r("testDup success!\n");
         } catch (Exception $e) {
             echo "$e\n";
+            exit(1);
         }
     }
     public function testValidate()
@@ -57,6 +59,7 @@ class SignupTest extends Test
             print_r("testValidate success!\n");
         } catch (Exception $e) {
             echo "$e\n";
+            exit(1);
         }
     }
 
@@ -68,10 +71,9 @@ class SignupTest extends Test
         $endTime = microtime(true);
         $time = number_format($endTime - $startTime, 6);
         echo $time."초 소요됨\n";
+        exit(0);
     }
 }
-
-
 
 $test1 = new SignupTest;
 $test1->run();
