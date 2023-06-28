@@ -294,6 +294,11 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
+        if (!isset($_SESSION['username']))
+        {
+            http_response_code(400);
+            return;
+        }
         self::postLikesProcess($postId, $username);
         return;
     }
