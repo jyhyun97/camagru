@@ -85,7 +85,7 @@ class MainController
      */
     public static function postSignup()
     {
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
 
         $email = $data->email;
         $username = $data->username;
@@ -132,12 +132,13 @@ class MainController
      */
     public static function postSignin()
     {
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
 
         $email = $data->email;
         $password = $data->password;
 
         $response = self::postSigninProcess($email, $password);
+        $response['zzz'] = strip_tags(file_get_contents("php://input"));
         return print_r(json_encode($response));
     }
 
@@ -323,7 +324,7 @@ class MainController
     {
         $data = json_decode(file_get_contents("php://input"));
 
-        $comment = $data->comment;
+        $comment = htmlspecialchars($data->comment);
         $postId = $data->postId;
         $username = $data->username;
 
@@ -354,7 +355,7 @@ class MainController
      */
     public static function patchUsername()
     {
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
         $change = $data->username;
         $username = $_SESSION['username'];
         
@@ -388,7 +389,7 @@ class MainController
      */
     public static function patchEmail()
     {
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
         $change = $data->email;
         $email = $_SESSION['email'];
 
@@ -421,7 +422,7 @@ class MainController
      */
     public static function patchPassword()
     {
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
         $originPassword = $data->originPassword;
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
@@ -497,7 +498,7 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $commentId = $data->commentId;
-        $newComment = $data->newComment;
+        $newComment = htmlspecialchars($data->newComment);
 
         $result = self::getModel()->patchComment($commentId, $newComment);
         http_response_code(200);
