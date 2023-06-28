@@ -35,12 +35,17 @@ function deleteImage(e) {
       '정말로 이미지를 삭제하시겠습니까? 이미지에 연결된 게시물도 삭제됩니다.'
     )
   ) {
-    const data = { imageId: e.target.dataset.imageId }
+    const data = {
+      imageId: e.target.dataset.imageId,
+      username: sessionStorage.getItem('username'),
+    }
     const httpRequest = new XMLHttpRequest()
     httpRequest.open('DELETE', '/image')
     httpRequest.setRequestHeader('Content-Type', 'application/json')
     httpRequest.onload = () => {
       if (httpRequest.status === 200) location.reload()
+      else if (httpRequest.status === 401)
+        alert('올바르지 않은 인증 정보입니다.')
     }
     httpRequest.send(JSON.stringify(data))
   }
@@ -48,7 +53,10 @@ function deleteImage(e) {
 
 function postImage() {
   if (selectedImage === null) return alert('이미지를 선택해주세요')
-  const data = { imageId: selectedImage.id }
+  const data = {
+    imageId: selectedImage.id,
+    username: sessionStorage.getItem('username'),
+  }
 
   const httpRequest = new XMLHttpRequest()
   httpRequest.open('POST', '/image')
@@ -58,6 +66,8 @@ function postImage() {
     if (httpRequest.status === 201) {
       alert('게시물이 등록되었습니다.')
       location.href = '/post/' + responseData.postId
+    } else if (httpRequest.status === 401) {
+      alert('올바르지 않은 인증 정보입니다.')
     } else if (httpRequest.status === 409) {
       alert(responseData.message)
     }
@@ -167,7 +177,8 @@ function takePicture() {
         newDivNode.appendChild(newButtonNode)
         capturedList.appendChild(newDivNode)
       })
-    }
+    } else if (httpRequest.status === 401)
+      alert('올바르지 않은 인증 정보입니다.')
   }
   httpRequest.send(JSON.stringify(capturedData))
 }

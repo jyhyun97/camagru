@@ -33,7 +33,7 @@ class Router
         $url = $_SERVER['REQUEST_URI'];
         $path = self::pathParser($url);
         $method = $_SERVER['REQUEST_METHOD'];
-
+        
         if (isset(self::$routes[$path][$method]))
             call_user_func(self::$routes[$path][$method]);
         else
