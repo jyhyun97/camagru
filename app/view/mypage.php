@@ -42,15 +42,15 @@
         <div>
             <lable>비밀번호 : </lable>
             <div id="password-origin" hidden>
-                <lable id="password-origin-lable">기존 비밀번호</label>
+                <lable id="password-origin-lable" type="password">기존 비밀번호</label>
                 <input id="password-origin-input" hidden></input>
             </div>
             <div id="password-new" hidden>
-                <lable id="password-new-lable">새 비밀번호</label>
+                <lable id="password-new-lable" type="password">새 비밀번호</label>
                 <input id="password-new-input" hidden></input>
             </div>
             <div id="password-check" hidden>
-                <lable id="password-check-lable">비밀번호 확인</label>
+                <lable id="password-check-lable" type="password">비밀번호 확인</label>
                 <input id="password-check-input" hidden></input>
             </div>
             <button id="password-change-button">변경</button>
