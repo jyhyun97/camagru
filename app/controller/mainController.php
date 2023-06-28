@@ -215,9 +215,10 @@ class MainController
         $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . ".png";
         $newImage = str_replace('data:image/png;base64,', '', $baseImage);
         $newImage = str_replace(' ', '+', $newImage);
-        $newFile = fopen($newFileName, "w");
-        fwrite($newFile, base64_decode($newImage));
-        fclose($newFile);
+
+        $newFile = new SplFileObject($newFileName, "w");
+        $newFile->fwrite(base64_decode($newImage));
+        $newFile = null;//close가 없어서 이렇게 닫아줘야 한다..
 
         //합성 과정
         if ($stickyImages)
