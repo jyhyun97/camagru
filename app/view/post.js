@@ -23,7 +23,10 @@ const postDeleteButton = document.getElementById('post-delete-button')
 if (postDeleteButton) {
   postDeleteButton.addEventListener('click', () => {
     if (confirm('정말로 게시물을 삭제하시겠습니까?')) {
-      const data = { postId: window.location.pathname.split('/')[2] }
+      const data = {
+        postId: window.location.pathname.split('/')[2],
+        username: sessionStorage.getItem('username'),
+      }
       const httpRequest = new XMLHttpRequest()
       httpRequest.open('DELETE', '/post')
       httpRequest.setRequestHeader('Content-Type', 'application/json')
@@ -31,7 +34,8 @@ if (postDeleteButton) {
         if (httpRequest.status === 200) {
           alert('삭제되었습니다')
           window.location.href = '/'
-        }
+        } else if (httpRequest.status === 401)
+          alert('올바르지 않은 인증 정보입니다.')
       }
       httpRequest.send(JSON.stringify(data))
     }
@@ -98,11 +102,14 @@ Array.from(commentPatchSubmits).forEach((ele) => {
     const data = {
       commentId: commentId,
       newComment: commentPatchInput.value,
+      username: sessionStorage.getItem('username'),
     }
     httpRequest.open('PATCH', '/comment')
     httpRequest.setRequestHeader('Content-Type', 'application/json')
     httpRequest.onload = () => {
       if (httpRequest.status === 200) location.reload()
+      else if (httpRequest.status === 401)
+        alert('올바르지 않은 인증 정보입니다.')
     }
     httpRequest.send(JSON.stringify(data))
   })
@@ -111,12 +118,16 @@ Array.from(commentPatchSubmits).forEach((ele) => {
 Array.from(commentDeleteButtons).forEach((ele) => {
   ele.addEventListener('click', () => {
     if (confirm('댓글을 삭제하시겠습니까?')) {
-      const data = { commentId: ele.dataset.commentId }
-
+      const data = {
+        commentId: ele.dataset.commentId,
+        username: sessionStorage.getItem('username'),
+      }
       const httpRequest = new XMLHttpRequest()
       httpRequest.open('DELETE', '/comment')
       httpRequest.onload = () => {
         if (httpRequest.status === 200) location.reload()
+        else if (httpRequest.status === 401)
+          alert('올바르지 않은 인증 정보입니다.')
       }
       httpRequest.send(JSON.stringify(data))
     }

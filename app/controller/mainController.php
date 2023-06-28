@@ -264,10 +264,13 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = str_replace("captured-image-", "", $data->imageId);
+        $username = $data->username;
         $result = self::getModel()->postImage($imageId);
         $body = array();
 
-        if ($result['message'] === '중복')
+        if ($username !== $_SESSION['username'])
+            http_response_code(401);
+        else if ($result['message'] === '중복')
         {
             http_response_code(409);
             $body['message'] = '이미 업로드한 이미지입니다.';
@@ -367,8 +370,14 @@ class MainController
     public static function patchUsername()
     {
         $data = json_decode(strip_tags(file_get_contents("php://input")));
-        $change = $data->username;
-        $username = $_SESSION['username'];
+        $change = $data->change;
+        $username = $data->username;
+        
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
         
         $body = self::patchUsernameProcess($change, $username);
         return print_r(json_encode($body));
@@ -403,6 +412,13 @@ class MainController
         $data = json_decode(strip_tags(file_get_contents("php://input")));
         $change = $data->email;
         $email = $_SESSION['email'];
+        $username = $data->username;
+        
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
 
         $body = self::patchEmailProcess($change, $email);
         return print_r(json_encode($body));
@@ -437,7 +453,13 @@ class MainController
         $originPassword = $data->originPassword;
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
-
+        $username = $data->username;
+        
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
         $body = self::patchPasswordProcess($originPassword, $newPassword, $checkPassword);
         return print_r(json_encode($body));
     }
@@ -495,6 +517,13 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $commentId = $data->commentId;
+        $username = $data->username;
+
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
         
         $result = self::getModel()->deleteComment($commentId);
         http_response_code(200);
@@ -510,7 +539,13 @@ class MainController
 
         $commentId = $data->commentId;
         $newComment = htmlspecialchars($data->newComment);
+        $username = $data->username;
 
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
         $result = self::getModel()->patchComment($commentId, $newComment);
         http_response_code(200);
         return;
@@ -532,6 +567,13 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $postId = $data->postId;
+        $username = $data->username;
+
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
 
         $result = self::getModel()->deletePost($postId);
         http_response_code(200);
@@ -546,6 +588,13 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
 
         $imageId = $data->imageId;
+        $username = $data->username;
+
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
         $image = self::getModel()->getImageByImageId($imageId)['data'];
         unlink($image);
 
