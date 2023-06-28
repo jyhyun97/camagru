@@ -37,9 +37,12 @@
             $currentUrl = $_SERVER['REQUEST_URI'];
             $postId = explode("/", $currentUrl)[2];
             $data = MainController::getCommentbyPostId($postId);
+            $dataObj = new ArrayObject($data);
+            $dataIt = $dataObj->getIterator();
 
-            foreach($data as $ele)
+            while ($dataIt->valid())
             {
+                $ele = $dataIt->current();
                 echo "<li class='text-left list-unstyled container'>";
                 echo "<span class='col-md-1'><strong>".$ele['username']."</strong></span>";
                 echo "<span class='col-md-7'>".$ele['comment'];
@@ -58,6 +61,7 @@
                 }    
                 echo "</span>";
                 echo "</li>";
+                $dataIt->next();
             }
             echo "<script src='/app/view/post.js' type='module'></script>";
             ?>

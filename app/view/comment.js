@@ -7,7 +7,7 @@ function submitComment()
 {
     const data = {
         postId : window.location.pathname.split('/')[2],
-        username : document.getElementById('login-label').innerText,
+        username : sessionStorage.getItem('username'),
         comment : commentInput.value
     }
     const httpRequest = new XMLHttpRequest();

@@ -63,10 +63,15 @@
         <div class="post-scroll">
             <?php
                 $images = MainController::getImagesByUsername($_SESSION['username']);
-                foreach($images as $ele)
+                $imagesObj = new ArrayObject($images);
+                $imagesIt = $imagesObj->getIterator();
+
+                while ($imagesIt->valid())
                 {
+                    $ele = $imagesIt->current();
                     echo "<img src=".$ele['image']." width='200px'>";
                     echo "<button class='image-delete-button' data-image-id=".$ele['imageId'].">삭제</button>";
+                    $imagesIt->next();
                 }
             ?>
         </div>
@@ -74,10 +79,15 @@
         <div class="post-scroll">
             <?php
                 $posts = MainController::getPostsByUsername($_SESSION['username']);
-                foreach($posts as $ele)
+                $postsObj = new ArrayObject($posts);
+                $postsIt = $postsObj->getIterator();
+
+                while ($postsIt->valid())
                 {
+                    $ele = $postsIt->current();
                     echo "<a href=/post/".$ele['postId']."><img src=".$ele['image']." width='200px'></a>";
                     echo "<button class='post-delete-button' data-post-id=".$ele['postId'].">삭제</button>";
+                    $postsIt->next();
                 }
             ?>
         </div>
@@ -85,9 +95,14 @@
         <div class="post-scroll">
             <?php
                 $posts = MainController::getLikesPostsByUsername($_SESSION['username']);
-                foreach($posts as $ele)
+                $postsObj = new ArrayObject($posts);
+                $postsIt = $postsObj->getIterator();
+
+                while ($postsIt->valid())
                 {
+                    $ele = $postsIt->current();
                     echo "<a href=/post/".$ele['postId']."><img src=".$ele['image']." width='200px'></a>";
+                    $postsIt->next();
                 }
             ?>
         </div>
