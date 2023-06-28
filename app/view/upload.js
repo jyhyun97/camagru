@@ -167,7 +167,8 @@ function takePicture() {
         newDivNode.appendChild(newButtonNode)
         capturedList.appendChild(newDivNode)
       })
-    }
+    } else if (httpRequest.status === 401)
+      alert('올바르지 않은 인증 정보입니다.')
   }
   httpRequest.send(JSON.stringify(capturedData))
 }

@@ -210,6 +210,12 @@ class MainController
         $username = $data->username;
         $baseImage = $data->baseImage;
         $stickyImages = $data->stickyImages;
+
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
         
         //파일 만들기
         $userId = self::getUserIdbyUsername($username);
@@ -297,11 +303,11 @@ class MainController
         $username = $data->username;
 
         if (!isset($_SESSION['username']))
-        {
             http_response_code(400);
-            return;
-        }
-        self::postLikesProcess($postId, $username);
+        else if ($username !== $_SESSION['username'])
+            http_response_code(401);
+        else
+            self::postLikesProcess($postId, $username);
         return;
     }
     public static function postLikesProcess($postId, $username)
@@ -328,6 +334,11 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
         self::getModel()->postComment($comment, $postId, $username);
         http_response_code(201);
         return;
