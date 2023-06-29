@@ -44,8 +44,9 @@ class MainModel
             return $this->createResult(false, '중복된 이메일입니다.', NULL);
 
         $query = "INSERT INTO user (email, username, password, auth) VALUES (?, ?, ?, NULL)";
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param("sss", $email, $username, $password);
+        $stmt->bind_param("sss", $email, $username, $hashed_password);
         $stmt->execute();
 
         return $this->createResult(true, '성공', NULL);
@@ -60,7 +61,7 @@ class MainModel
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
 
-        if (isset($row['password']) && $row['password'] === $password)
+        if (isset($row['password']) && password_verify($password ,$row['password']))
             return $this->createResult(true, '로그인 성공', $row['username']);
         else
             return $this->createResult(false, '로그인 실패', null);
@@ -288,18 +289,18 @@ class MainModel
     
     public function patchPassword($origin, $new, $username)
     {
-        $query = "SELECT * FROM user WHERE username=? AND password=?";
+        $query = "SELECT * FROM user WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param("ss", $username, $origin);
+        $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
         $originCheck = $result->fetch_array(MYSQLI_ASSOC);
 
-        if (empty($originCheck))
+        if (empty($originCheck) || !password_verify($origin, $originCheck['password']))
             return $this->createResult(false, '기존 비밀번호가 틀렸습니다', NULL);
         $query = "UPDATE user SET password = ? WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param("ss", $new, $username);
+        $stmt->bind_param("ss", password_hash($new, PASSWORD_DEFAULT), $username);
         $stmt->execute();
 
         return $this->createResult(true, '비밀번호 변경 성공', NULL);
