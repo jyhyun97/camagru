@@ -49,8 +49,10 @@ function patchData(type) {
       if (httpRequest.status === 200) {
         if (type === 'username') sessionStorage.setItem('username', data.change)
         location.reload()
-      } else if (httpRequest.status === 400) alert(responseData.message)
-      else if (httpRequest.status === 401)
+      } else if (httpRequest.status === 400) {
+        const responseData = JSON.parse(httpRequest.response)
+        alert(responseData.message)
+      } else if (httpRequest.status === 401)
         alert('올바르지 않은 인증 정보입니다.')
       else if (httpRequest.status === 409) {
         if (type === 'username') alert('이미 등록된 닉네임입니다.')
