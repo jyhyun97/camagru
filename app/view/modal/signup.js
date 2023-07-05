@@ -6,6 +6,9 @@ signupSubmitButton.addEventListener('click', () => submitSignup())
 const signupButton = document.getElementById('signup-button')
 signupButton.addEventListener('click', () => activeModal('signup-form'))
 
+const certSubmitButton = document.getElementById('cert-submit')
+certSubmitButton.addEventListener('click', (event) => certSignup(event))
+
 const signupEmail = document.getElementById('signup-email')
 const signupUsername = document.getElementById('signup-username')
 const signupPassword = document.getElementById('signup-password')
@@ -56,4 +59,25 @@ function submitSignup() {
     else if (httpRequest.status === 409) alert(response.message)
   }
   httpRequest.send(JSON.stringify(signupData))
+}
+
+function certSignup(e) {
+  const certData = {
+    email: signupEmail.value,
+    username: signupUsername.value,
+    password: signupPassword.value,
+  }
+  e.target.disabled = true
+  signupSubmitButton.disabled = false
+  const httpRequest = new XMLHttpRequest()
+  httpRequest.open('POST', '/signup-cert')
+  httpRequest.onload = () => {
+    const response = JSON.parse(httpRequest.response)
+    if (httpRequest.status === 200) {
+      console.log(response)
+      alert('메일이 발송되었습니다. 인증을 완료해주세요.')
+    } else if (httpRequest.status === 400) alert(response.message)
+    else if (httpRequest.status === 409) alert(response.message)
+  }
+  httpRequest.send(JSON.stringify(certData))
 }

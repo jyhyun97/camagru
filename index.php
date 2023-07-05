@@ -9,6 +9,7 @@ Router::add('/post', 'GET', 'MainController::getPost');
 Router::add('/mypage', 'GET', 'MainController::getMypage');
 Router::add('/upload', 'GET', 'MainController::getUpload');
 Router::add('/signup', 'POST', 'MainController::postSignup');
+Router::add('/signup-cert', 'POST', 'MainController::postSignupCert');
 Router::add('/signin', 'POST', 'MainController::postSignin');
 Router::add('/gallary', 'POST', 'MainController::postGallary');
 Router::add('/capture', 'POST', 'MainController::postCapture');

@@ -97,8 +97,22 @@ class MainController
 
     public static function postSignupProcess($email, $username, $password)
     {
+        
+
+        self::getModel()->postSignup($email, $username, $password);
+            http_response_code(201);
+            return;
+    }
+
+    public static function postSignupCert() {
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
+
+        $email = $data->email;
+        $username = $data->username;
+        $password = $data->password;
+
         if (!self::validateEmail($email) || !self::validateUsername($username) ||
-            !self::validatePassword($password))
+        !self::validatePassword($password))
         {
             http_response_code(400);
             header('Content-type: application/json; charset=utf-8');
@@ -111,19 +125,36 @@ class MainController
                 $body['message'] = '비밀번호 규칙을 확인해주세요';
             return $body;
         }
-        $result = self::getModel()->postSignup($email, $username, $password);
-        if ($result['success'] === false)
+        $dupCheck = self::getModel()->checkDupSignup($email, $username);
+        if ($dupCheck['success'] === false)
         {
             http_response_code(409);
             header('Content-type: application/json; charset=utf-8');
             $body = array();
-            $body['message'] = $result['message'];
+            $body['message'] = $dupCheck['message'];
             return $body;
         }
-        else {
-            http_response_code(201);
-            return;
-        }
+        $subject = 'camagru 인증 메일';
+        $_SESSION['cert_code'] = sprintf('%06d',rand(000000,999999));;
+        $mailBody = $_SESSION['cert_code'].' 코드를 입력해 인증을 완료해주세요.';
+        
+        $body = array();
+        $body['success'] = self::sendMail($email, $subject, $mailBody);
+        $body['email'] = $email;
+        $body['subject'] = $subject;
+        $body['body'] = $mailBody;
+        http_response_code(200);
+        return print_r(json_encode($body));
+    }
+    
+    private static function sendMail($email, $subject, $mailBody)
+    {
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= sprintf('Content-Type: text/plain; charset=utf-8' . "\r\n");
+        $headers .= sprintf('From: wjddus2005@naver.com');
+        $additionalHeaders = "-f wjddus2005@naver.com";
+        $result = mail($email, $subject, $mailBody, $headers, $additionalHeaders);
+        return $result;
     }
 
     /**
@@ -138,7 +169,6 @@ class MainController
         $password = $data->password;
 
         $response = self::postSigninProcess($email, $password);
-        $response['zzz'] = strip_tags(file_get_contents("php://input"));
         return print_r(json_encode($response));
     }
 

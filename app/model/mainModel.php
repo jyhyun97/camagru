@@ -24,6 +24,16 @@ class MainModel
 
     public function postSignup($email, $username, $password)
     {
+        $query = "INSERT INTO user (email, username, password, auth) VALUES (?, ?, ?, NULL)";
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("sss", $email, $username, $hashed_password);
+        $stmt->execute();
+
+        return $this->createResult(true, '성공', NULL);
+    }
+    
+    public function checkDupSignup ($email, $username) {
         $query = "SELECT * FROM user WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("s", $username);
@@ -43,11 +53,6 @@ class MainModel
         if (isset($emailDup))
             return $this->createResult(false, '중복된 이메일입니다.', NULL);
 
-        $query = "INSERT INTO user (email, username, password, auth) VALUES (?, ?, ?, NULL)";
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param("sss", $email, $username, $hashed_password);
-        $stmt->execute();
 
         return $this->createResult(true, '성공', NULL);
     }
