@@ -9,7 +9,9 @@ Router::add('/post', 'GET', 'MainController::getPost');
 Router::add('/mypage', 'GET', 'MainController::getMypage');
 Router::add('/upload', 'GET', 'MainController::getUpload');
 Router::add('/signup', 'POST', 'MainController::postSignup');
+Router::add('/signup-auth', 'POST', 'MainController::postSignupAuth');
 Router::add('/signin', 'POST', 'MainController::postSignin');
+Router::add('/signin-auth', 'POST', 'MainController::postSigninAuth');
 Router::add('/gallary', 'POST', 'MainController::postGallary');
 Router::add('/capture', 'POST', 'MainController::postCapture');
 Router::add('/image', 'POST', 'MainController::postImage');
@@ -23,5 +25,6 @@ Router::add('/comment', 'DELETE', 'MainController::deleteComment');
 Router::add('/comment', 'PATCH', 'MainController::patchComment');
 Router::add('/post', 'DELETE', 'MainController::deletePost');
 Router::add('/image', 'DELETE', 'MainController::deleteImage');
+Router::add('/user', 'PATCH', 'MainController::patchUser');
 Router::run();
 ?>

@@ -90,15 +90,46 @@ class MainController
         $email = $data->email;
         $username = $data->username;
         $password = $data->password;
+        $authCode = $data->authCode;
         
-        $response = self::postSignupProcess($email, $username, $password);
+        $response = self::postSignupProcess($email, $username, $password, $authCode);
         return print_r(json_encode($response));
     }
 
-    public static function postSignupProcess($email, $username, $password)
+    public static function postSignupProcess($email, $username, $password, $authCode)
     {
+        if ($authCode !== $_SESSION['auth_code'])
+        {
+            http_response_code(400);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            $body['message'] = '인증번호가 올바른지 확인해주세요.';
+            return $body;
+        }
+        $dupCheck = self::getModel()->checkDupSignup($email, $username);
+        if ($dupCheck['success'] === false)
+        {
+            http_response_code(409);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            $body['message'] = $dupCheck['message'];
+            return $body;
+        }        
+        self::getModel()->postSignup($email, $username, $password);
+        http_response_code(201);
+        unset($_SESSION['auth_code']);
+        return;
+    }
+
+    public static function postSignupAuth() {
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
+
+        $email = $data->email;
+        $username = $data->username;
+        $password = $data->password;
+
         if (!self::validateEmail($email) || !self::validateUsername($username) ||
-            !self::validatePassword($password))
+        !self::validatePassword($password))
         {
             http_response_code(400);
             header('Content-type: application/json; charset=utf-8');
@@ -111,19 +142,36 @@ class MainController
                 $body['message'] = '비밀번호 규칙을 확인해주세요';
             return $body;
         }
-        $result = self::getModel()->postSignup($email, $username, $password);
-        if ($result['success'] === false)
+        $dupCheck = self::getModel()->checkDupSignup($email, $username);
+        if ($dupCheck['success'] === false)
         {
             http_response_code(409);
             header('Content-type: application/json; charset=utf-8');
             $body = array();
-            $body['message'] = $result['message'];
+            $body['message'] = $dupCheck['message'];
             return $body;
         }
-        else {
-            http_response_code(201);
-            return;
-        }
+        $subject = 'camagru 회원 가입 메일';
+        $_SESSION['auth_code'] = sprintf('%06d',rand(000000,999999));;
+        $mailBody = $_SESSION['auth_code'].' 코드를 입력해 회원가입을 완료해주세요.';
+        
+        $body = array();
+        $body['success'] = self::sendMail($email, $subject, $mailBody);
+        $body['email'] = $email;
+        $body['subject'] = $subject;
+        $body['body'] = $mailBody;
+        http_response_code(200);
+        return print_r(json_encode($body));
+    }
+    
+    private static function sendMail($email, $subject, $mailBody)
+    {
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= sprintf('Content-Type: text/plain; charset=utf-8' . "\r\n");
+        $headers .= sprintf('From: wjddus2005@naver.com');
+        $additionalHeaders = "-f wjddus2005@naver.com";
+        $result = mail($email, $subject, $mailBody, $headers, $additionalHeaders);
+        return $result;
     }
 
     /**
@@ -138,7 +186,6 @@ class MainController
         $password = $data->password;
 
         $response = self::postSigninProcess($email, $password);
-        $response['zzz'] = strip_tags(file_get_contents("php://input"));
         return print_r(json_encode($response));
     }
 
@@ -155,6 +202,19 @@ class MainController
             http_response_code(401);
             return;
         }
+        else if ($result['message'] === '인증 필요')
+        {
+            $_SESSION['auth_code'] = sprintf('%06d',rand(000000,999999));
+            $subject = 'camagru 로그인 인증 메일';
+            $mailBody = $_SESSION['auth_code'].' 코드를 입력해 로그인을 완료해주세요.';
+            self::sendMail($email, $subject, $mailBody);
+            http_response_code(202);
+            $body = array();
+            $body['message'] = '메일을 확인해 인증코드를 입력해주세요.';
+            return $body;
+        }
+        //postSignin에서 인증 활성화 여부 확인해서,
+        //인증이 필요한 거면 다른 status코드와 바디를 보낼 것
         else {
             $_SESSION['username'] = $result['data'];
             $_SESSION['email'] = $email;
@@ -163,6 +223,44 @@ class MainController
             $body = array();
             $body['username'] = $result['data'];
             return $body;
+        }
+    }
+    /**
+     * 인증 코드를 확인해서 로그인 진행.
+     */
+    public static function postSigninAuth()
+    {
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
+
+        $email = $data->email;
+        $password = $data->password;
+        $authCode = $data->authCode;
+
+        if (!self::validateEmail($email) || !self::validatePassword($password))
+        {
+            http_response_code(400);
+            return;
+        }
+        $result = self::getModel()->postSignin($email, $password);
+        if ($result['success'] === false || $authCode !== $_SESSION['auth_code'])
+        {
+            http_response_code(401);
+            $body = array();
+            if ($result['success'] === true)
+                $body['message'] = '올바른 인증 코드를 입력해주세요.';
+            else
+                $body['message'] = '비밀번호를 확인해주세요.';
+            return print_r(json_encode($body));
+        }
+        else {
+            unset($_SESSION['auth_code']);
+            $_SESSION['username'] = $result['data'];
+            $_SESSION['email'] = $email;
+            header('Content-type: application/json; charset=utf-8');
+            http_response_code(200);
+            $body = array();
+            $body['username'] = $result['data'];
+            return print_r(json_encode($body));
         }
     }
     /**
@@ -344,7 +442,29 @@ class MainController
         }
         self::getModel()->postComment($comment, $postId, $username);
         http_response_code(201);
+        self::sendNotice($username, $comment, $postId);
         return;
+    }
+    /**
+     * 댓글 달렸을 경우 상대방에게 알림 메일 보내는 기능
+     */
+    private static function sendNotice($commentUsername, $comment, $sendUserPostId)
+    {
+        $sendUserPost = self::getPostByPostId($sendUserPostId);
+        $sendUsername = self::getUsernameByUserId($sendUserPost['userId']);
+        $sendUser = self::getUserbyUsername($sendUsername);
+        if ($sendUser['notice'] === 'always')
+        {
+            $email = $sendUser['email'];
+            $subject = 'camagru 댓글 알림 메일';
+            $mailBody = '당신의 '.$sendUserPostId.'번 게시물에 다음과 같은 댓글이 달렸습니다'."\r\n";
+            $mailBody .= $commentUsername." : ".$comment;
+            self::sendMail($email, $subject, $mailBody);
+        }
+    }
+    private static function getUsernameByUserId($userId)
+    {
+        return self::getModel()->getUsernameByUserId($userId)['data'];
     }
 
     /**
@@ -558,7 +678,14 @@ class MainController
     {
         return self::getModel()->getUserIdbyUsername($username)['data'];
     }
-    
+
+    /**
+     * 닉네임으로 유저 정보 가져오기.
+     */
+    public static function getUserbyUsername($username)
+    {
+        return self::getModel()->getUserbyUsername($username)['data'];
+    }
     /**
      * 게시물 삭제 요청
      */
@@ -610,6 +737,23 @@ class MainController
     {
         $result = self::getModel()->getLikesPostsByUsername($username);
         return $result['data'];
+    }
+
+    public static function patchUser()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $username = $data->username;
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
+        if (isset($data->auth))
+            self::getModel()->patchUserAuth($username, $data->auth);
+        else if (isset($data->notice))
+            self::getModel()->patchUserNotice($username, $data->notice);
+        http_response_code(200);
+        return;
     }
 }
 
