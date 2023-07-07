@@ -431,6 +431,17 @@ class MainModel
         return $this->createResult(true, '인증 수정 성공', NULL);
 
     }
+    public function getUsernameByUserId($userId)
+    {
+        $query = "SELECT * FROM user WHERE userId = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $username = $result->fetch_array(MYSQLI_ASSOC)['username'];
+
+        return $this->createResult(true, '이미지 조회 성공', $username);
+    }
 }
 
 ?>

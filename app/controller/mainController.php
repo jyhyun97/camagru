@@ -442,7 +442,29 @@ class MainController
         }
         self::getModel()->postComment($comment, $postId, $username);
         http_response_code(201);
+        self::sendNotice($username, $comment, $postId);
         return;
+    }
+    /**
+     * 댓글 달렸을 경우 상대방에게 알림 메일 보내는 기능
+     */
+    private static function sendNotice($commentUsername, $comment, $sendUserPostId)
+    {
+        $sendUserPost = self::getPostByPostId($sendUserPostId);
+        $sendUsername = self::getUsernameByUserId($sendUserPost['userId']);
+        $sendUser = self::getUserbyUsername($sendUsername);
+        if ($sendUser['notice'] === 'always')
+        {
+            $email = $sendUser['email'];
+            $subject = 'camagru 댓글 알림 메일';
+            $mailBody = '당신의 '.$sendUserPostId.'번 게시물에 다음과 같은 댓글이 달렸습니다'."\r\n";
+            $mailBody .= $commentUsername." : ".$comment;
+            self::sendMail($email, $subject, $mailBody);
+        }
+    }
+    private static function getUsernameByUserId($userId)
+    {
+        return self::getModel()->getUsernameByUserId($userId)['data'];
     }
 
     /**
