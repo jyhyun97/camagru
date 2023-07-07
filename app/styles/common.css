@@ -1,13 +1,18 @@
-html, body {
-    margin : 0px;
-    padding : 0px;
-    background-color : lightcoral;
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+  background-color: lightcoral;
 }
 
 .content {
-    background-color : lightcoral;
-    height : 80%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+  background-color: lightcoral;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.footer {
+  text-align: center;
 }

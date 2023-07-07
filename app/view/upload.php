@@ -12,9 +12,9 @@
 
 <body>
     <?php
-    require_once('app/view/header.php');
-    if (!isset($_SESSION['username']))
-        header('Location: /');
+        require_once('app/view/header.php');
+        if (!isset($_SESSION['username']))
+            header('Location: /');
     ?>
     <div class="content">
         <div class="main-content">
@@ -69,6 +69,8 @@
         </div>
     </div>
     <script src="/app/view/upload.js"></script>
+    <?php
+        require_once('app/view/footer.php');
+    ?>
 </body>
-
 </html>

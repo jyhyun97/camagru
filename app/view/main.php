@@ -12,7 +12,7 @@
 
 <body>
     <?php
-    require_once('app/view/header.php');
+        require_once('app/view/header.php');
     ?>
     <div class="content">
         <?php
@@ -22,6 +22,9 @@
             <a href="/upload"><button class="btn btn-default">업로드</button></a>
         </div>
     </div>
+    <?php
+        require_once('app/view/footer.php');
+    ?>
 </body>
 
 </html>
