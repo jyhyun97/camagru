@@ -52,7 +52,6 @@ function deleteImage(e) {
 }
 
 function postImage() {
-  if (selectedImage === null) return alert('이미지를 선택해주세요')
   const data = {
     imageId: selectedImage.id,
     username: sessionStorage.getItem('username'),
@@ -77,6 +76,7 @@ function postImage() {
 
 function selectImage(e) {
   const capturedImages = document.getElementsByClassName('captured-image')
+  postButton.disabled = false
   Array.from(capturedImages).forEach((ele) => {
     ele.style.border = 'none'
   })
