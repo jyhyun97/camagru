@@ -12,9 +12,9 @@
 
 <body>
     <?php
-    require_once('app/view/header.php');
-    if (!isset($_SESSION['username']))
-        header('Location: /');
+        require_once('app/view/header.php');
+        if (!isset($_SESSION['username']))
+            header('Location: /');
     ?>
     <div class="content">
         <div class="mypage-row row">
@@ -131,8 +131,12 @@
         </div>
         </div>
     </div>
+    <?php
+        require_once('app/view/footer.php');
+    ?>
 </body>
 <?php
     echo "<script src='/app/view/mypage.js' type='module'></script>";
 ?>
+
 </html>

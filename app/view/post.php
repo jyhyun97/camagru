@@ -12,7 +12,7 @@
 
 <body>
     <?php
-    require_once('app/view/header.php');
+        require_once('app/view/header.php');
     ?>
     <div class="content">
         <div class="row" id="post-container">
@@ -79,4 +79,7 @@
         </form>
         </div>
     </div>
+    <?php
+        require_once('app/view/footer.php');
+    ?>
 </body>
