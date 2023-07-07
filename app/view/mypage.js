@@ -113,3 +113,30 @@ Array.from(imageDeleteButtons).forEach((ele) => {
     }
   })
 })
+
+const patchAuthButtons = document.getElementsByClassName('patch-auth btn btn-default');
+Array.from(patchAuthButtons).forEach((ele) => {
+  ele.addEventListener('click', (event) => patchAuthNotice('auth', event));
+})
+
+
+const patchNoticeButtons = document.getElementsByClassName('patch-notice btn btn-default');
+Array.from(patchNoticeButtons).forEach((ele) => {
+  ele.addEventListener('click', (event) => patchAuthNotice('notice', event));
+})
+
+function patchAuthNotice (type, event) {
+  const data = { username : sessionStorage.getItem('username')}
+  if (type === 'auth')
+    data.auth = event.target.dataset.active;
+  else if (type === 'notice')
+    data.notice = event.target.dataset.active;
+  const httpRequest = new XMLHttpRequest()
+  httpRequest.open('PATCH', '/user')
+  httpRequest.setRequestHeader('Content-Type', 'application/json')
+  httpRequest.onload = () => {
+    if (httpRequest.status === 200) location.reload()
+    else if (httpRequest.status === 401) alert('올바르지 않은 인증 정보입니다.')
+  }
+  httpRequest.send(JSON.stringify(data))
+}

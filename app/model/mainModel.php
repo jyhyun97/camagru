@@ -348,6 +348,16 @@ class MainModel
 
         return $this->createResult(true, '닉네임 조회 성공', $userId);
     }
+    public function getUserbyUsername($username)
+    {
+        $query = "SELECT * FROM user WHERE username = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        return $this->createResult(true, '유저 조회 성공', $result->fetch_array(MYSQLI_ASSOC));
+    }
 
     public function deletePost($postId)
     {
@@ -400,6 +410,26 @@ class MainModel
             array_push($rst, $post);
         }
         return $this->createResult(true, '좋아요 조회 성공', $rst);
+    }
+
+    public function patchUserAuth($username, $auth)
+    {
+        $query = "UPDATE user SET auth = ? WHERE username = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("ss", $auth, $username);
+        $stmt->execute();
+
+        return $this->createResult(true, '인증 수정 성공', NULL);
+    }
+    public function patchUserNotice($username, $notice)
+    {
+        $query = "UPDATE user SET notice = ? WHERE username = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("ss", $notice, $username);
+        $stmt->execute();
+
+        return $this->createResult(true, '인증 수정 성공', NULL);
+
     }
 }
 

@@ -656,7 +656,14 @@ class MainController
     {
         return self::getModel()->getUserIdbyUsername($username)['data'];
     }
-    
+
+    /**
+     * 닉네임으로 유저 정보 가져오기.
+     */
+    public static function getUserbyUsername($username)
+    {
+        return self::getModel()->getUserbyUsername($username)['data'];
+    }
     /**
      * 게시물 삭제 요청
      */
@@ -708,6 +715,23 @@ class MainController
     {
         $result = self::getModel()->getLikesPostsByUsername($username);
         return $result['data'];
+    }
+
+    public static function patchUser()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $username = $data->username;
+        if ($username !== $_SESSION['username'])
+        {
+            http_response_code(401);
+            return;
+        }
+        if (isset($data->auth))
+            self::getModel()->patchUserAuth($username, $data->auth);
+        else if (isset($data->notice))
+            self::getModel()->patchUserNotice($username, $data->notice);
+        http_response_code(200);
+        return;
     }
 }
 
