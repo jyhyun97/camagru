@@ -151,9 +151,9 @@ class MainController
             $body['message'] = $dupCheck['message'];
             return $body;
         }
-        $subject = 'camagru 인증 메일';
+        $subject = 'camagru 회원 가입 메일';
         $_SESSION['auth_code'] = sprintf('%06d',rand(000000,999999));;
-        $mailBody = $_SESSION['auth_code'].' 코드를 입력해 인증을 완료해주세요.';
+        $mailBody = $_SESSION['auth_code'].' 코드를 입력해 회원가입을 완료해주세요.';
         
         $body = array();
         $body['success'] = self::sendMail($email, $subject, $mailBody);
@@ -202,6 +202,19 @@ class MainController
             http_response_code(401);
             return;
         }
+        else if ($result['message'] === '인증 필요')
+        {
+            $_SESSION['auth_code'] = sprintf('%06d',rand(000000,999999));
+            $subject = 'camagru 로그인 인증 메일';
+            $mailBody = $_SESSION['auth_code'].' 코드를 입력해 로그인을 완료해주세요.';
+            self::sendMail($email, $subject, $mailBody);
+            http_response_code(202);
+            $body = array();
+            $body['message'] = '메일을 확인해 인증코드를 입력해주세요.';
+            return $body;
+        }
+        //postSignin에서 인증 활성화 여부 확인해서,
+        //인증이 필요한 거면 다른 status코드와 바디를 보낼 것
         else {
             $_SESSION['username'] = $result['data'];
             $_SESSION['email'] = $email;
@@ -210,6 +223,44 @@ class MainController
             $body = array();
             $body['username'] = $result['data'];
             return $body;
+        }
+    }
+    /**
+     * 인증 코드를 확인해서 로그인 진행.
+     */
+    public static function postSigninAuth()
+    {
+        $data = json_decode(strip_tags(file_get_contents("php://input")));
+
+        $email = $data->email;
+        $password = $data->password;
+        $authCode = $data->authCode;
+
+        if (!self::validateEmail($email) || !self::validatePassword($password))
+        {
+            http_response_code(400);
+            return;
+        }
+        $result = self::getModel()->postSignin($email, $password);
+        if ($result['success'] === false || $authCode !== $_SESSION['auth_code'])
+        {
+            http_response_code(401);
+            $body = array();
+            if ($result['success'] === true)
+                $body['message'] = '올바른 인증 코드를 입력해주세요.';
+            else
+                $body['message'] = '비밀번호를 확인해주세요.';
+            return print_r(json_encode($body));
+        }
+        else {
+            unset($_SESSION['auth_code']);
+            $_SESSION['username'] = $result['data'];
+            $_SESSION['email'] = $email;
+            header('Content-type: application/json; charset=utf-8');
+            http_response_code(200);
+            $body = array();
+            $body['username'] = $result['data'];
+            return print_r(json_encode($body));
         }
     }
     /**

@@ -66,8 +66,14 @@ class MainModel
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
 
+        
         if (isset($row['password']) && password_verify($password ,$row['password']))
-            return $this->createResult(true, '로그인 성공', $row['username']);
+        {
+            if (isset($row['auth']) && $row['auth'] === 'always')
+                return $this->createResult(true, '인증 필요', $row['username']);
+            else
+                return $this->createResult(true, '로그인 성공', $row['username']);
+        }
         else
             return $this->createResult(false, '로그인 실패', null);
     }
