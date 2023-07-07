@@ -64,7 +64,7 @@
                     }
                     ?>
                 </div>
-                <button id="post-button" class='btn btn-primary'>업로드</button>
+                <button id="post-button" class='btn btn-primary' disabled>업로드</button>
             </div>
         </div>
     </div>
