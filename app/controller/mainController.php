@@ -90,21 +90,38 @@ class MainController
         $email = $data->email;
         $username = $data->username;
         $password = $data->password;
+        $authCode = $data->authCode;
         
-        $response = self::postSignupProcess($email, $username, $password);
+        $response = self::postSignupProcess($email, $username, $password, $authCode);
         return print_r(json_encode($response));
     }
 
-    public static function postSignupProcess($email, $username, $password)
+    public static function postSignupProcess($email, $username, $password, $authCode)
     {
-        
-
+        if ($authCode !== $_SESSION['auth_code'])
+        {
+            http_response_code(400);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            $body['message'] = '인증번호가 올바른지 확인해주세요.';
+            return $body;
+        }
+        $dupCheck = self::getModel()->checkDupSignup($email, $username);
+        if ($dupCheck['success'] === false)
+        {
+            http_response_code(409);
+            header('Content-type: application/json; charset=utf-8');
+            $body = array();
+            $body['message'] = $dupCheck['message'];
+            return $body;
+        }        
         self::getModel()->postSignup($email, $username, $password);
-            http_response_code(201);
-            return;
+        http_response_code(201);
+        unset($_SESSION['auth_code']);
+        return;
     }
 
-    public static function postSignupCert() {
+    public static function postSignupAuth() {
         $data = json_decode(strip_tags(file_get_contents("php://input")));
 
         $email = $data->email;
@@ -135,8 +152,8 @@ class MainController
             return $body;
         }
         $subject = 'camagru 인증 메일';
-        $_SESSION['cert_code'] = sprintf('%06d',rand(000000,999999));;
-        $mailBody = $_SESSION['cert_code'].' 코드를 입력해 인증을 완료해주세요.';
+        $_SESSION['auth_code'] = sprintf('%06d',rand(000000,999999));;
+        $mailBody = $_SESSION['auth_code'].' 코드를 입력해 인증을 완료해주세요.';
         
         $body = array();
         $body['success'] = self::sendMail($email, $subject, $mailBody);

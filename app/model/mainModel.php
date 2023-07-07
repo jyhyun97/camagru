@@ -24,7 +24,7 @@ class MainModel
 
     public function postSignup($email, $username, $password)
     {
-        $query = "INSERT INTO user (email, username, password, auth) VALUES (?, ?, ?, NULL)";
+        $query = "INSERT INTO user (email, username, password, auth, notice) VALUES (?, ?, ?, 'always', 'always')";
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("sss", $email, $username, $hashed_password);

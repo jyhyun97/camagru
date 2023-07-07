@@ -17,8 +17,8 @@
     </div>
     <div class="signform-line">
         <label>인증번호</label>
-        <input type="test">
-        <button id="cert-submit" class="btn btn-primary">인증 메일 발송</button>
+        <input type="text" id="signup-auth-code">
+        <button id="auth-submit" class="btn btn-primary">인증 메일 발송</button>
     </div>
     <div class="signform-button">
         <button id="signup-submit" class="btn btn-primary" disabled>회원가입 완료</button>
