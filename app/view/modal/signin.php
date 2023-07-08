@@ -19,7 +19,7 @@
         </div>
         <label>이메일</label>
         <input type='email' id="pw-recovery-input"></input>
-        <button id="password-recovery-submit">임시 비밀번호 발급</button>
+        <button id="pw-recovery-submit">임시 비밀번호 발급</button>
     </div>
     <div class="signform-button">
         <button id="signin-submit" class="btn btn-primary">로그인</button>

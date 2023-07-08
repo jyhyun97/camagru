@@ -82,7 +82,6 @@ function pwRecoveryRequest() {
   httpRequest.open('POST', '/password-recovery')
   httpRequest.setRequestHeader('Content-Type', 'application/json')
   httpRequest.onload = () => {
-    const response = JSON.parse(httpRequest.response)
     if (httpRequest.status === 200) {
       alert('임시 비밀번호가 발급되었습니다.')
     }

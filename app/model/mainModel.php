@@ -442,6 +442,17 @@ class MainModel
 
         return $this->createResult(true, '이미지 조회 성공', $username);
     }
+
+    public function postPasswordRecovery($email, $tmpPassword)
+    {
+        $hashed_password = password_hash($tmpPassword, PASSWORD_DEFAULT);
+        $query = "UPDATE user SET auth = 'temporal', password = ? WHERE email = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("ss", $hashed_password, $email);
+        $stmt->execute();
+
+        return $this->createResult(true, '인증 상태 변경 성공', null);
+    }
 }
 
 ?>
