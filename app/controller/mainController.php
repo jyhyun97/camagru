@@ -755,6 +755,18 @@ class MainController
         http_response_code(200);
         return;
     }
+    public static function postPasswordRecovery()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $email = $data->email;
+        self::postLogout();
+        //$email로 user의 auth를 temporal로 변경하세요
+        //비밀번호 임시로 랜덤8글자 만들고 db에 저장~~하세요
+        //$email로 비밀번호 메일 보내기
+
+        http_response_code(200);
+        return;
+    }
 }
 
 ?>
