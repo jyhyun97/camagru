@@ -306,10 +306,14 @@ class MainModel
         $stmt->execute();
         $result = $stmt->get_result();
         $originCheck = $result->fetch_array(MYSQLI_ASSOC);
+        $auth = $originCheck['auth'];
 
         if (empty($originCheck) || !password_verify($origin, $originCheck['password']))
             return $this->createResult(false, '기존 비밀번호가 틀렸습니다', NULL);
-        $query = "UPDATE user SET password = ? WHERE username = ?";
+        if ($auth === 'temporal')
+            $query = "UPDATE user SET password = ?, auth = 'always' WHERE username = ?";
+        else
+            $query = "UPDATE user SET password = ? WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("ss", password_hash($new, PASSWORD_DEFAULT), $username);
         $stmt->execute();

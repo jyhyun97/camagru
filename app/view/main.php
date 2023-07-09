@@ -10,6 +10,10 @@
     <link rel="stylesheet" type="text/css" href="app/styles/main.css">
 </head>
 
+<?php
+    //만약 user의 auth가 temporal이면 mypage로 보내는 코드 작성..
+?>
+
 <body>
     <?php
         require_once('app/view/header.php');
