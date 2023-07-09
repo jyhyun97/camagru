@@ -1,3 +1,7 @@
+<?php
+    ob_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,8 +17,15 @@
 <body>
     <?php
         require_once('app/view/header.php');
-        if (!isset($_SESSION['username']))
+        if (!isset($_SESSION['username'])) {
             header('Location: /');
+        } else if (isset($_SESSION['username'])) {
+            $user = MainController::getUserbyUsername($_SESSION['username']);
+            $auth = $user['auth'];
+    
+            if ($auth === 'temporal')
+                header('Location: /mypage');
+        }
     ?>
     <div class="content">
         <div class="main-content">

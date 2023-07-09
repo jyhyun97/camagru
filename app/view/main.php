@@ -1,3 +1,6 @@
+<?php
+    ob_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +14,14 @@
 </head>
 
 <?php
-    //만약 user의 auth가 temporal이면 mypage로 보내는 코드 작성..
+    if (isset($_SESSION['username']))
+    {
+        $user = MainController::getUserbyUsername($_SESSION['username']);
+        $auth = $user['auth'];
+
+        if ($auth === 'temporal')
+            header('Location: /mypage');
+    }
 ?>
 
 <body>
