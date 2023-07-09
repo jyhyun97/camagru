@@ -97,3 +97,6 @@
         require_once('app/view/footer.php');
     ?>
 </body>
+<?php
+    ob_end_flush(); 
+?>
