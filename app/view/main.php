@@ -11,6 +11,7 @@
     <title>Camagru</title>
     <link rel="stylesheet" type="text/css" href="app/styles/common.css">
     <link rel="stylesheet" type="text/css" href="app/styles/main.css">
+    <link rel="shortcut icon" href="/app/asset/favicon.ico">
 </head>
 
 <?php
