@@ -29,6 +29,7 @@
         }
     ?>
     <div class="content">
+    <div class="wrapper">
         <div class="main-content">
             <div id="upload-left">
                 <div id="output">
@@ -79,6 +80,7 @@
                 <button id="post-button" class='btn btn-primary' disabled>업로드</button>
             </div>
         </div>
+    </div>
     </div>
     <script src="/app/view/upload.js"></script>
     <?php

@@ -30,6 +30,7 @@
         require_once('app/view/header.php');
     ?>
     <div class="content">
+    <div class="wrapper">
         <div class="row" id="post-container">
         <?php
         $currentUrl = $_SERVER['REQUEST_URI'];
@@ -93,6 +94,7 @@
             ?>
         </form>
         </div>
+    </div>
     </div>
     <?php
         require_once('app/view/footer.php');

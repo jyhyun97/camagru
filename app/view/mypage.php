@@ -22,6 +22,7 @@
             header('Location: /');
     ?>
     <div class="content">
+    <div class="wrapper">
         <div class="mypage-row row">
         <div class="mypage-change-form">
             <div>
@@ -139,6 +140,7 @@
             </div>
         </div>
         </div>
+    </div>
     </div>
     <?php
         require_once('app/view/footer.php');
