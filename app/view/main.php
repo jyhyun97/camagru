@@ -1,3 +1,6 @@
+<?php
+    ob_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,6 +12,17 @@
     <link rel="stylesheet" type="text/css" href="app/styles/common.css">
     <link rel="stylesheet" type="text/css" href="app/styles/main.css">
 </head>
+
+<?php
+    if (isset($_SESSION['username']))
+    {
+        $user = MainController::getUserbyUsername($_SESSION['username']);
+        $auth = $user['auth'];
+
+        if ($auth === 'temporal')
+            header('Location: /mypage');
+    }
+?>
 
 <body>
     <?php
@@ -28,3 +42,6 @@
 </body>
 
 </html>
+<?php
+    ob_end_flush(); 
+?>

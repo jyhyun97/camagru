@@ -1,3 +1,7 @@
+<?php
+    ob_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -64,17 +68,21 @@
                     $user = MainController::getUserbyUsername($_SESSION['username']);
                     $auth = $user['auth'];
                     $notice = $user['notice'];
+                    if ($auth === 'temporal')
+                        echo "<div class='alert alert-info' style='margin-top : 1%'>비밀번호 변경을 완료해주세요.</div>";
                     echo "<div class='mypage-setting'>";
                     if ($auth === 'always')
                         echo "<button class='patch-auth btn btn-default' data-active='none'>메일 인증 비활성화</button>";
-                    else
+                    else if ($auth === 'none')
                         echo "<button class='patch-auth btn btn-default' data-active='always'>메일 인증 활성화</button>";
+                    else
+                        echo "<button class='patch-auth btn btn-default' data-active='always' disabled>메일 인증 활성화</button>";
                     echo " 로그인 시 메일 인증 여부를 활성화 합니다.";
                     echo "</div>";
                     echo "<div class='mypage-setting'>";
                     if ($notice === 'always')
                         echo "<button class='patch-notice btn btn-default' data-active='none'>댓글 안내 메일 비활성화</button>";
-                    else
+                    else if ($notice === 'none')
                         echo "<button class='patch-notice btn btn-default' data-active='always'>댓글 안내 메일 활성화</button>";
                     echo " 게시물에 댓글이 달릴 때 메일로 알림을 받습니다.";
                     echo "</div>";
@@ -140,3 +148,6 @@
 ?>
 
 </html>
+<?php
+    ob_end_flush(); 
+?>

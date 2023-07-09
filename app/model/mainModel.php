@@ -306,10 +306,14 @@ class MainModel
         $stmt->execute();
         $result = $stmt->get_result();
         $originCheck = $result->fetch_array(MYSQLI_ASSOC);
+        $auth = $originCheck['auth'];
 
         if (empty($originCheck) || !password_verify($origin, $originCheck['password']))
             return $this->createResult(false, '기존 비밀번호가 틀렸습니다', NULL);
-        $query = "UPDATE user SET password = ? WHERE username = ?";
+        if ($auth === 'temporal')
+            $query = "UPDATE user SET password = ?, auth = 'always' WHERE username = ?";
+        else
+            $query = "UPDATE user SET password = ? WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("ss", password_hash($new, PASSWORD_DEFAULT), $username);
         $stmt->execute();
@@ -441,6 +445,17 @@ class MainModel
         $username = $result->fetch_array(MYSQLI_ASSOC)['username'];
 
         return $this->createResult(true, '이미지 조회 성공', $username);
+    }
+
+    public function postPasswordRecovery($email, $tmpPassword)
+    {
+        $hashed_password = password_hash($tmpPassword, PASSWORD_DEFAULT);
+        $query = "UPDATE user SET auth = 'temporal', password = ? WHERE email = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("ss", $hashed_password, $email);
+        $stmt->execute();
+
+        return $this->createResult(true, '인증 상태 변경 성공', null);
     }
 }
 

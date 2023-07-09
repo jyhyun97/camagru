@@ -755,6 +755,31 @@ class MainController
         http_response_code(200);
         return;
     }
+    public static function postPasswordRecovery()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $email = $data->email;
+        $tmpPassword= self::makeTmpPassword();
+        $mailBody = '임시 비밀번호 '.$tmpPassword.' 를 입력해 로그인하세요'."\r\n";
+        $mailBody .= '로그인 후 비밀번호를 반드시 변경해주세요.';
+
+        self::postLogout();
+        self::getModel()->postPasswordRecovery($email, $tmpPassword);
+        self::sendMail($email, 'camagru 임시 비밀번호 발급',$mailBody);
+
+        http_response_code(200);
+        return;
+    }
+    private static function makeTmpPassword () {
+        $str = '';
+        $alphaNum = 'abcdefghijklnmopqrstuvwxyz0123456789';
+        
+        for ($i = 0; $i < 8; $i++)
+        {
+            $str .= $alphaNum[rand(0, 35)];
+        }
+        return $str;
+    }
 }
 
 ?>
