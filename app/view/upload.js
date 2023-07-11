@@ -119,12 +119,14 @@ function uploadImage(e) {
   video.hidden = true
   canvas.hidden = false
 
-  const context = canvas.getContext('2d')
-  const newImage = new Image()
-  newImage.src = URL.createObjectURL(uploadFile)
-  newImage.onload = () => {
-    context.drawImage(newImage, 0, 0, canvas.width, canvas.height)
-  }
+  if (uploadFile) {
+    const context = canvas.getContext('2d')
+    const newImage = new Image()
+    newImage.src = URL.createObjectURL(uploadFile)
+    newImage.onload = () => {
+      context.drawImage(newImage, 0, 0, canvas.width, canvas.height)
+    }
+  } else alert('이미지를 선택해 주세요.')
 }
 
 function takePicture() {
