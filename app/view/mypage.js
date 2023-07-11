@@ -1,4 +1,4 @@
-import { changeHiddenStatus } from '/app/view/common.js'
+import { changeHiddenStatus, changeHiddenStatusBootstrap } from '/app/view/common.js'
 
 patchData('username')
 patchData('email')
@@ -25,11 +25,13 @@ function patchData(type) {
   }
 
   elements.changeButton.addEventListener('click', () => {
-    changeHiddenStatus(elements)
+    changeHiddenStatusBootstrap(elements)
+    
   })
   elements.cancelButton.addEventListener('click', () => {
-    changeHiddenStatus(elements)
+    changeHiddenStatusBootstrap(elements)
   })
+
   elements.submitButton.addEventListener('click', () => {
     const data = { username: sessionStorage.getItem('username') }
     if (type === 'username') {
