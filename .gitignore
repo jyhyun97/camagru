@@ -1,3 +1,4 @@
 .env
 /img
 /app/bootstrap
+backup.sql
