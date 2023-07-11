@@ -60,14 +60,14 @@
             {
                 $ele = $dataIt->current();
                 echo "<li class='text-left list-unstyled container'>";
-                echo "<span class='col-md-1'><strong>".$ele['username']."</strong></span>";
-                echo "<span class='col-md-7'>".$ele['comment'];
+                echo "<span class='col-md-1 col-xs-1'><strong>".$ele['username']."</strong></span>";
+                echo "<span class='col-md-7 col-xs-8'>".$ele['comment'];
                 if ($ele['username'] === $_SESSION['username'])
                     echo "<textarea data-comment-id='".$ele['commentId']."' class='comment-patch-input' hidden></textarea>";
                 echo "</span>";
                 $date = date_format(date_create($ele['date']), "y/m/d h:i:s");
-                echo "<span class='col-md-2'>".$date."</span>";
-                echo "<span class='col-md-2'>";
+                echo "<span class='col-md-2 col-xs-1'>".$date."</span>";
+                echo "<span class='col-md-2 col-xs-2'>";
                 if ($ele['username'] === $_SESSION['username'])
                 {
                     echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-button'>변경</button>";
@@ -85,9 +85,11 @@
         <form id='comment-form' class="form-inline">
             <?php
             if (isset($_SESSION['username'])) {
-                echo "<div class='form-group'><label id='login-label'>" . $_SESSION['username'] . "</label>";
-                echo "<div class='input-group'><textarea id='comment-input' class='form-control'></textarea></div>";
-                echo "<button id='comment-submit-button' class='btn btn-primary'>submit</button></div>";
+                echo "<div class='form-group row'>";
+                echo "<div class='col-md-1'><label id='login-label'>" . $_SESSION['username'] . "</label></div>";
+                echo "<div class='col-md-10'><textarea id='comment-input' class='form-control'></textarea></div>";
+                echo "<div class='col-md-1'><button id='comment-submit-button' class='btn btn-primary'>submit</button></div>";
+                echo "</div>";
                 echo "<script src='/app/view/comment.js'></script>";
             } else
                 echo "<label>로그인 한 사용자만 댓글을 달 수 있습니다</label>";
