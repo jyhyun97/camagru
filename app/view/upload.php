@@ -70,7 +70,7 @@
 
                         echo "<div class='capture'>";
                         echo "<img src=\"$src\" class='captured-image' onclick='selectImage(event)' id='captured-image-$imageId'>";
-                        echo "<button onclick='deleteImage(event)' class='capture-delete-button' data-image-id='$imageId'>삭제</button>";
+                        echo "<button onclick='deleteImage(event)' class='capture-delete-button btn btn-default' data-image-id='$imageId'>삭제</button>";
                         echo "</div>";
                         
                         $imagesIt->next();

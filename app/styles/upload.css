@@ -64,7 +64,8 @@
 }
 #captured-list {
   height: 82vh;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .sticky-image {
