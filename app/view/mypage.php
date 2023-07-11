@@ -12,6 +12,7 @@
     <title>Camagru</title>
     <link rel="stylesheet" type="text/css" href="/app/styles/common.css">
     <link rel="stylesheet" type="text/css" href="/app/styles/mypage.css">
+    <link rel="shortcut icon" href="/app/asset/favicon.ico">
 </head>
 
 <body>
@@ -21,6 +22,7 @@
             header('Location: /');
     ?>
     <div class="content">
+    <div class="wrapper">
         <div class="mypage-row row">
         <div class="mypage-change-form">
             <div>
@@ -28,38 +30,38 @@
                 <?php
                     echo "<label id='username-label'>".$_SESSION['username']."</label>";
                 ?>
-                <input id="username-change-input" hidden></input>
-                <button id="username-change-button" >변경</button>
-                <button id="username-submit-button" hidden>제출</button>
-                <button id="username-cancel-button" hidden>취소</button>
+                <input id="username-change-input" class="hidden"></input>
+                <button id="username-change-button" class="btn btn-default">변경</button>
+                <button id="username-submit-button" class="btn btn-default hidden">제출</button>
+                <button id="username-cancel-button" class="btn btn-default hidden">취소</button>
             </div>
             <div>
                 <lable>이메일 : </lable>
                 <?php
                     echo "<label id='email-label'>".$_SESSION['email']."</label>";
                 ?>
-                <input id="email-change-input" hidden></input>
-                <button id="email-change-button">변경</button>
-                <button id="email-submit-button" hidden>제출</button>
-                <button id="email-cancel-button" hidden>취소</button>
+                <input id="email-change-input" class="hidden"></input>
+                <button id="email-change-button" class="btn btn-default">변경</button>
+                <button id="email-submit-button" class="btn btn-default hidden">제출</button>
+                <button id="email-cancel-button" class="btn btn-default hidden">취소</button>
             </div>
             <div>
                 <lable>비밀번호 : </lable>
-                <div id="password-origin" hidden>
+                <div id="password-origin" class="hidden">
                     <lable id="password-origin-lable">기존 비밀번호</label>
-                    <input id="password-origin-input" type="password" hidden></input>
+                    <input id="password-origin-input" type="password" class="hidden"></input>
                 </div>
-                <div id="password-new" hidden>
+                <div id="password-new" class="hidden">
                     <lable id="password-new-lable">새 비밀번호</label>
-                    <input id="password-new-input" type="password" hidden></input>
+                    <input id="password-new-input" type="password" class="hidden"></input>
                 </div>
-                <div id="password-check" hidden>
+                <div id="password-check" class="hidden">
                     <lable id="password-check-lable">비밀번호 확인</label>
-                    <input id="password-check-input" type="password" hidden></input>
+                    <input id="password-check-input" type="password" class="hidden"></input>
                 </div>
-                <button id="password-change-button">변경</button>
-                <button id="password-submit-button" hidden>제출</button>
-                <button id="password-cancel-button" hidden>취소</button>
+                <button id="password-change-button" class="btn btn-default">변경</button>
+                <button id="password-submit-button" class="btn btn-default hidden">제출</button>
+                <button id="password-cancel-button" class="btn btn-default hidden">취소</button>
             </div>
             <div>
             <?php
@@ -100,7 +102,7 @@
                     {
                         $ele = $imagesIt->current();
                         echo "<img src=".$ele['image']." width='200px'>";
-                        echo "<button class='image-delete-button' data-image-id=".$ele['imageId'].">삭제</button>";
+                        echo "<button class='image-delete-button btn btn-default' data-image-id=".$ele['imageId'].">삭제</button>";
                         $imagesIt->next();
                     }
                 ?>
@@ -116,7 +118,7 @@
                     {
                         $ele = $postsIt->current();
                         echo "<a href=/post/".$ele['postId']."><img src=".$ele['image']." width='200px'></a>";
-                        echo "<button class='post-delete-button' data-post-id=".$ele['postId'].">삭제</button>";
+                        echo "<button class='post-delete-button btn btn-default' data-post-id=".$ele['postId'].">삭제</button>";
                         $postsIt->next();
                     }
                 ?>
@@ -138,6 +140,7 @@
             </div>
         </div>
         </div>
+    </div>
     </div>
     <?php
         require_once('app/view/footer.php');

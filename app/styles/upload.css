@@ -1,5 +1,4 @@
 .main-content {
-  width: 80%;
   display: flex;
   background-color: white;
 }
@@ -9,12 +8,13 @@
 }
 #buttons {
   display: flex;
+  padding : 1%;
 }
 #capture-button {
   flex: 1;
 }
 #upload-button {
-  flex: 9;
+  flex: 7;
 }
 #output {
   width: 35.75vw;
@@ -57,18 +57,28 @@
 
 #sticky-list {
   border: 1px solid black;
-  width: 65vw;
+  margin-right : 1%;
 
   overflow: auto;
   white-space: nowrap;
 }
 #captured-list {
-  height: 85vh;
-  overflow: scroll;
+  height: 82vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .sticky-image {
-  width: 30%;
+  width: 20%;
   margin-left: 1%;
   border: 1px solid gray;
+}
+@media (max-width: 991px) {
+  .sticky-image {
+    width: 40%;
+  }
+  #output {
+    width: 52vw;
+    height: 40vw;
+  }
 }

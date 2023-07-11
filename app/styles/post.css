@@ -1,28 +1,37 @@
-#post-container{
-    width : 80%;
-    background-color : white;
+#post-image {
+  margin: auto;
+  display: block;
+  padding: 1%;
 }
-#post-image{
-    margin: auto;
-    display: block;
-    padding : 1%;
+
+#comment-form {
+  padding: 1%;
+  text-align: center;
+  width: 100%;
 }
-#comment-form{
-    padding : 1%;
+.form-group {
+  width : 100%; 
 }
-#comment-input{
-    width: 68vw;
+@media (max-width: 991px)
+{
+  .form-group {
+    padding-left : 2%;
+  }
 }
-.comment{
-    display: flex;
-    flex-direction: column;
-    padding: 1%;
+
+#comment-input {
+  width : 100%;
+}
+.comment {
+  display: flex;
+  flex-direction: column;
+  padding: 1%;
 }
 .comment li {
   width: 100%;
 }
 
-.comment-patch-input{
-    width : 100%;
-    height : auto;
+.comment-patch-input {
+  width: 100%;
+  height: auto;
 }

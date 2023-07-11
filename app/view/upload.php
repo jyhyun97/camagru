@@ -12,6 +12,7 @@
     <title>Camagru</title>
     <link rel="stylesheet" type="text/css" href="app/styles/common.css">
     <link rel="stylesheet" type="text/css" href="app/styles/upload.css">
+    <link rel="shortcut icon" href="/app/asset/favicon.ico">
 </head>
 
 <body>
@@ -28,6 +29,7 @@
         }
     ?>
     <div class="content">
+    <div class="wrapper">
         <div class="main-content">
             <div id="upload-left">
                 <div id="output">
@@ -68,7 +70,7 @@
 
                         echo "<div class='capture'>";
                         echo "<img src=\"$src\" class='captured-image' onclick='selectImage(event)' id='captured-image-$imageId'>";
-                        echo "<button onclick='deleteImage(event)' class='capture-delete-button' data-image-id='$imageId'>삭제</button>";
+                        echo "<button onclick='deleteImage(event)' class='capture-delete-button btn btn-default' data-image-id='$imageId'>삭제</button>";
                         echo "</div>";
                         
                         $imagesIt->next();
@@ -78,6 +80,7 @@
                 <button id="post-button" class='btn btn-primary' disabled>업로드</button>
             </div>
         </div>
+    </div>
     </div>
     <script src="/app/view/upload.js"></script>
     <?php

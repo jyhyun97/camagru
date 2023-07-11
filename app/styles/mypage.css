@@ -1,7 +1,10 @@
 .mypage-row{
-    width : 80%;
-    background-color: white;
     padding : 2%;
+}
+@media (max-width: 991px) {
+    .mypage-row{
+        padding-left : 5%;
+    }
 }
 .mypage-change-form{
     padding-bottom: 2%;
@@ -10,8 +13,10 @@
 .post-scroll {
     border : 1px solid black;
     height : 20%;
-    overflow : scroll;
+    overflow-x : scroll;
+    overflow-y : hidden;
     white-space: nowrap;
+    margin-right : 2%;
 }
 .mypage-setting {
     margin-top : 1%;

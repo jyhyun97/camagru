@@ -11,6 +11,7 @@
     <title>Camagru</title>
     <link rel="stylesheet" type="text/css" href="app/styles/common.css">
     <link rel="stylesheet" type="text/css" href="app/styles/main.css">
+    <link rel="shortcut icon" href="/app/asset/favicon.ico">
 </head>
 
 <?php
@@ -29,11 +30,13 @@
         require_once('app/view/header.php');
     ?>
     <div class="content">
+        <div class="wrapper">
         <?php
         require_once('app/view/gallary.php');
         ?>
         <div class="buttons">
             <a href="/upload"><button class="btn btn-default">업로드</button></a>
+        </div>
         </div>
     </div>
     <?php
