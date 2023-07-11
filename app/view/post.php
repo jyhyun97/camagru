@@ -86,9 +86,9 @@
             <?php
             if (isset($_SESSION['username'])) {
                 echo "<div class='form-group row'>";
-                echo "<div class='col-md-1'><label id='login-label'>" . $_SESSION['username'] . "</label></div>";
-                echo "<div class='col-md-10'><textarea id='comment-input' class='form-control'></textarea></div>";
-                echo "<div class='col-md-1'><button id='comment-submit-button' class='btn btn-primary'>submit</button></div>";
+                echo "<div class='col-md-1 col-sm-2 col-xs-3'><label id='login-label'>" . $_SESSION['username'] . "</label></div>";
+                echo "<div class='col-md-10 col-sm-8 col-xs-12'><textarea id='comment-input' class='form-control'></textarea></div>";
+                echo "<div class='col-md-1 col-sm-2 col-xs-3'><button id='comment-submit-button' class='btn btn-primary'>submit</button></div>";
                 echo "</div>";
                 echo "<script src='/app/view/comment.js'></script>";
             } else

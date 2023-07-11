@@ -10,7 +10,13 @@
   width: 100%;
 }
 .form-group {
-  width : 100%;
+  width : 100%; 
+}
+@media (max-width: 991px)
+{
+  .form-group {
+    padding-left : 2%;
+  }
 }
 
 #comment-input {
