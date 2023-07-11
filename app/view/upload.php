@@ -45,7 +45,7 @@
                 <div id="sticky-list">
                     스티커 목록
                     <?php
-                        foreach (new DirectoryIterator('img/sticky/') as $fileInfo)
+                        foreach (new DirectoryIterator('sticky/') as $fileInfo)
                         {
                             $filePath = $fileInfo->getPathname();
                             if ($fileInfo->getFileName() === '.' || $fileInfo->getFileName() === '..')
