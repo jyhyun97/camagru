@@ -1,3 +1,5 @@
 .env
 /img
 /app/bootstrap
+struct.sql
+dump.sql

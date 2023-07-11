@@ -166,6 +166,7 @@ class MainController
     
     private static function sendMail($email, $subject, $mailBody)
     {
+        $subject = "=?UTF-8?B?".base64_encode($subject)."?=";
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= sprintf('Content-Type: text/plain; charset=utf-8' . "\r\n");
         $headers .= sprintf('From: wjddus2005@naver.com');
