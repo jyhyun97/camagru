@@ -60,14 +60,14 @@
             {
                 $ele = $dataIt->current();
                 echo "<li class='text-left list-unstyled container'>";
-                echo "<span class='col-md-1 col-xs-1'><strong>".$ele['username']."</strong></span>";
-                echo "<span class='col-md-7 col-xs-8'>".$ele['comment'];
+                echo "<span class='col-md-1 col-sm-1 col-xs-3'><strong>".$ele['username']."</strong></span>";
+                echo "<span class='col-md-7 col-sm-8 col-xs-9'>".$ele['comment'];
                 if ($ele['username'] === $_SESSION['username'])
                     echo "<textarea data-comment-id='".$ele['commentId']."' class='comment-patch-input' hidden></textarea>";
                 echo "</span>";
                 $date = date_format(date_create($ele['date']), "y/m/d h:i:s");
-                echo "<span class='col-md-2 col-xs-1'>".$date."</span>";
-                echo "<span class='col-md-2 col-xs-2'>";
+                echo "<span class='col-md-2 col-sm-1  col-xs-3'>".$date."</span>";
+                echo "<span class='col-md-2 col-sm-2  col-xs-3'>";
                 if ($ele['username'] === $_SESSION['username'])
                 {
                     echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-button'>변경</button>";
