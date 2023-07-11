@@ -25,7 +25,6 @@ navigator.mediaDevices
     video.play()
   })
   .catch((err) => {
-    console.log(err)
     video.hidden = true
   })
 
