@@ -63,17 +63,17 @@
                 echo "<span class='col-md-1 col-sm-1 col-xs-3'><strong>".$ele['username']."</strong></span>";
                 echo "<span class='col-md-7 col-sm-8 col-xs-9'>".$ele['comment'];
                 if ($ele['username'] === $_SESSION['username'])
-                    echo "<textarea data-comment-id='".$ele['commentId']."' class='comment-patch-input' hidden></textarea>";
+                    echo "<textarea data-comment-id='".$ele['commentId']."' class='comment-patch-input hidden'></textarea>";
                 echo "</span>";
                 $date = date_format(date_create($ele['date']), "y/m/d h:i:s");
                 echo "<span class='col-md-2 col-sm-1  col-xs-3'>".$date."</span>";
                 echo "<span class='col-md-2 col-sm-2  col-xs-3'>";
                 if ($ele['username'] === $_SESSION['username'])
                 {
-                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-button'>변경</button>";
-                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-submit' hidden>제출</button>";
-                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-cancel' hidden>취소</button>";
-                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-delete-button'>삭제</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-button btn btn-default'>변경</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-submit btn btn-default hidden'>제출</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-patch-cancel btn btn-default hidden'>취소</button>";
+                    echo "<button data-comment-id='".$ele['commentId']."' class='comment-delete-button btn btn-default'>삭제</button>";
                 }    
                 echo "</span>";
                 echo "</li>";

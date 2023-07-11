@@ -1,4 +1,4 @@
-import { changeHiddenStatus } from '/app/view/common.js'
+import { changeHiddenStatusBootstrap } from '/app/view/common.js'
 
 const likesButton = document.getElementById('likes-button')
 likesButton.addEventListener('click', () => {
@@ -86,7 +86,7 @@ Array.from(commentPatchButtons)
           commentId
         ),
       }
-      changeHiddenStatus(elements)
+      changeHiddenStatusBootstrap(elements)
     })
   })
 //댓글 수정
