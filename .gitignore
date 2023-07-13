@@ -1,5 +1,7 @@
 .env
 /img
 /app/bootstrap
-struct.sql
-dump.sql
+/setting/dump.sql
+/setting/struct.sql
+/setting/img.tar
+/setting/sasl_passwd
