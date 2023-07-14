@@ -19,8 +19,10 @@ service mariadb start
 service postfix start
 
 echo "CREATE DATABASE $DB_DATABASE;" | mysql
+echo "CREATE DATABASE test;" | mysql
 echo "CREATE USER '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD';" | mysql
 echo "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'$DB_HOST' WITH GRANT OPTION;" | mysql
 mysql -p$DB_PASSWORD $DB_DATABASE < dump.sql
+mysql -p$DB_PASSWORD test < dump.sql
 
 service mariadb reload
