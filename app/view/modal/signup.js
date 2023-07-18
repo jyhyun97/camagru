@@ -47,19 +47,23 @@ function submitSignup() {
     username: signupUsername.value,
     password: signupPassword.value,
     authCode : signupAuthCode.value
-    //인증번호도 추가하세요!!!
   }
 
   const httpRequest = new XMLHttpRequest()
   httpRequest.open('POST', '/signup')
   httpRequest.setRequestHeader('Content-Type', 'application/json')
   httpRequest.onload = () => {
-    const response = JSON.parse(httpRequest.response)
+    
     if (httpRequest.status === 201) {
       alert('가입이 완료되었습니다.')
       location.reload()
-    } else if (httpRequest.status === 400) alert(response.message)
-    else if (httpRequest.status === 409) alert(response.message)
+    } else if (httpRequest.status === 400) {
+      const response = JSON.parse(httpRequest.response)
+      alert(response.message)
+    } else if (httpRequest.status === 409) {
+      const response = JSON.parse(httpRequest.response)
+      alert(response.message)
+    }
   }
   httpRequest.send(JSON.stringify(signupData))
 }
@@ -74,12 +78,16 @@ function authSignup(e) {
   signupSubmitButton.disabled = false
   const httpRequest = new XMLHttpRequest()
   httpRequest.open('POST', '/signup-auth')
-  httpRequest.onload = () => {
-    const response = JSON.parse(httpRequest.response)
+  httpRequest.onload = () => {    
     if (httpRequest.status === 200) {
       alert('메일이 발송되었습니다. 인증을 완료해주세요.')
-    } else if (httpRequest.status === 400) alert(response.message)
-    else if (httpRequest.status === 409) alert(response.message)
+    } else if (httpRequest.status === 400) {
+      const response = JSON.parse(httpRequest.response)
+      alert(response.message)
+    } else if (httpRequest.status === 409) {
+      const response = JSON.parse(httpRequest.response)
+      alert(response.message)
+    }
   }
   httpRequest.send(JSON.stringify(authData))
 }

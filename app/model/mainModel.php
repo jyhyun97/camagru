@@ -32,24 +32,26 @@ class MainModel
 
         return $this->createResult(true, '성공', NULL);
     }
-    
-    public function checkDupSignup ($email, $username) {
+
+    public function checkDupSignup($email, $username)
+    {
         $query = "SELECT * FROM user WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
         $usernameDup = $result->fetch_array(MYSQLI_ASSOC);
-        
+
         if (isset($usernameDup))
-            return $this->createResult(false, '중복된 닉네임입니다.', NULL);;
+            return $this->createResult(false, '중복된 닉네임입니다.', NULL);
+        ;
         $query = "SELECT * FROM user WHERE email = ?";
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
         $emailDup = $result->fetch_array(MYSQLI_ASSOC);
-        
+
         if (isset($emailDup))
             return $this->createResult(false, '중복된 이메일입니다.', NULL);
 
@@ -66,15 +68,13 @@ class MainModel
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
 
-        
-        if (isset($row['password']) && password_verify($password ,$row['password']))
-        {
+
+        if (isset($row['password']) && password_verify($password, $row['password'])) {
             if (isset($row['auth']) && $row['auth'] === 'always')
                 return $this->createResult(true, '인증 필요', $row['username']);
             else
                 return $this->createResult(true, '로그인 성공', $row['username']);
-        }
-        else
+        } else
             return $this->createResult(false, '로그인 실패', null);
     }
 
@@ -141,10 +141,10 @@ class MainModel
         $stmt->execute();
         $result = $stmt->get_result();
         $dup = $result->fetch_array(MYSQLI_ASSOC);
-        
+
         if (isset($dup))
             return $this->createResult(false, '중복', NULL);
-        
+
         //유저 아이디 기반으로 이미지 객체를 가져오고,
         $query = "SELECT * FROM image WHERE imageId = ? ORDER BY imageId DESC";
         $stmt = $this->mysqli->prepare($query);
@@ -207,7 +207,7 @@ class MainModel
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("ii", $postId, $postId);
         $stmt->execute();
-        
+
         if ($affectedRow === 0)
             return $this->createResult(false, '중복', NULL);
         else
@@ -261,17 +261,16 @@ class MainModel
         $stmt->bind_param("s", $change);
         $stmt->execute();
         $result = $stmt->get_result();
-        $dup = $result->fetch_array(MYSQLI_ASSOC)['username'];
+        $dup = $result->fetch_array(MYSQLI_ASSOC);
 
-        if ($dup === $change)
+        if (isset($dup) && $dup['username'] === $change)
             return $this->createResult(false, '중복된 닉네임입니다', NULL);
-        else
-        {
+        else {
             $query = "UPDATE user SET username= ? WHERE username = ?";
             $stmt = $this->mysqli->prepare($query);
             $stmt->bind_param("ss", $change, $username);
             $stmt->execute();
-            
+
             return $this->createResult(true, '닉네임 변경 성공', NULL);
         }
     }
@@ -287,8 +286,7 @@ class MainModel
 
         if ($dup === $change)
             return $this->createResult(false, '중복된 이메일입니다.', NULL);
-        else
-        {
+        else {
             $query = "UPDATE user SET email = ? WHERE email = ?";
             $stmt = $this->mysqli->prepare($query);
             $stmt->bind_param("ss", $change, $email);
@@ -297,7 +295,7 @@ class MainModel
             return $this->createResult(true, '이메일 변경 성공', NULL);
         }
     }
-    
+
     public function patchPassword($origin, $new, $username)
     {
         $query = "SELECT * FROM user WHERE username = ?";
@@ -315,7 +313,8 @@ class MainModel
         else
             $query = "UPDATE user SET password = ? WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param("ss", password_hash($new, PASSWORD_DEFAULT), $username);
+        $hashed_password = password_hash($new, PASSWORD_DEFAULT);
+        $stmt->bind_param("ss", $hashed_password, $username);
         $stmt->execute();
 
         return $this->createResult(true, '비밀번호 변경 성공', NULL);
@@ -359,7 +358,7 @@ class MainModel
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         return $this->createResult(true, '유저 조회 성공', $result->fetch_array(MYSQLI_ASSOC));
     }
 
@@ -394,7 +393,7 @@ class MainModel
 
         return $this->createResult(true, '이미지 조회 성공', $image);
     }
-    
+
     public function getLikesPostsByUsername($username)
     {
         $userId = $this->getUserIdbyUsername($username)['data'];
@@ -407,8 +406,7 @@ class MainModel
         $likes = $result->fetch_all(MYSQLI_ASSOC);
 
         $rst = array();
-        foreach($likes as $ele)
-        {
+        foreach ($likes as $ele) {
             $post = $this->getPostByPostId($ele['postId'])['data'];
             $post['postId'] = $ele['postId'];
             array_push($rst, $post);
