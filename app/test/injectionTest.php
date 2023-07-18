@@ -7,14 +7,14 @@ class InjectionTest extends Test
         return http_response_code();
     }
 
-    private function injectionTest()
+    private function SQLinjectionTest()
     {
         try {
             $this->assertEquals($this->statusCode(TestController::postSigninProcess('jeonhyun@student.42seoul.kr', ' OR 1=1 -- ')), 400);
             $this->assertEquals($this->statusCode(TestController::patchUsernameProcess(' OR 1=1 -- ', 'jeonhyun')), 400);
             $_SERVER['REQUEST_URI'] = '/post/<script>alert("url injection!")</script>';
             $this->assertEquals($this->statusCode(TestController::getPost()), 404);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             echo "$e\n";
             exit(1);
         }
@@ -22,11 +22,11 @@ class InjectionTest extends Test
     public function run()
     {
         $startTime = microtime(true);
-        $this->injectionTest();
-        
+        $this->SQLinjectionTest();
+
         $endTime = microtime(true);
         $time = number_format($endTime - $startTime, 6);
-        echo $time."초 소요됨\n";
+        echo $time . "초 소요됨\n";
         exit(0);
     }
 }
