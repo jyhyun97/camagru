@@ -1,0 +1,84 @@
+.main-content {
+  display: flex;
+  background-color: white;
+}
+
+.captured-image {
+  width: 100%;
+}
+#buttons {
+  display: flex;
+  padding : 1%;
+}
+#capture-button {
+  flex: 1;
+}
+#upload-button {
+  flex: 7;
+}
+#output {
+  width: 35.75vw;
+  height: 27.5vw;
+  left: 50%;
+  transform: translate(-50%, 0%);
+
+  position: relative;
+}
+#video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+#sticky-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+#canvas {
+  width: 100%;
+  height : 100%;
+}
+
+#upload-left {
+  flex: 4;
+  text-align: center;
+}
+
+#upload-right {
+  flex: 1;
+  text-align: center;
+}
+
+#sticky-list {
+  border: 1px solid black;
+  margin-right : 1%;
+
+  overflow: auto;
+  white-space: nowrap;
+}
+#captured-list {
+  height: 82vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.sticky-image {
+  width: 20%;
+  margin-left: 1%;
+  border: 1px solid gray;
+}
+@media (max-width: 991px) {
+  .sticky-image {
+    width: 40%;
+  }
+  #output {
+    width: 52vw;
+    height: 40vw;
+  }
+}

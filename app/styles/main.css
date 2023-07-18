@@ -1,0 +1,15 @@
+#gallary {
+    padding : 1%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+#gallary-container {
+    width : 100%;
+}
+
+.buttons {
+    text-align: center;
+    padding-bottom: 1%;
+    background-color: white;
+}

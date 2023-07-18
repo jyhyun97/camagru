@@ -1,0 +1,7 @@
+.env
+/img
+/app/bootstrap
+/setting/dump.sql
+/setting/struct.sql
+/setting/img.tar
+/setting/sasl_passwd
