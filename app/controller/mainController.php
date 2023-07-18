@@ -19,40 +19,35 @@ class MainController
     public static function getPost()
     {
         $currentUrl = $_SERVER['REQUEST_URI'];
-        $postId = explode("/", $currentUrl)[2];
-
-        $data = self::getPostByPostId($postId);
-        if (!$data)
-        {
+        $urlExplode = explode("/", $currentUrl);
+        if (count($urlExplode) === 3 && self::getPostByPostId($urlExplode[2]) !== false) {
+            include_once 'app/view/post.php';
+        } else {
             http_response_code(404);
             include_once('app/view/404.php');
         }
-        else
-            include_once 'app/view/post.php';
     }
     public static function getMypage()
     {
         $currentUrl = $_SERVER['REQUEST_URI'];
-        $additionalPath = explode("/", $currentUrl)[2];
-        if ($additionalPath || $additionalPath === '')
-        {
+        $urlExplode = explode("/", $currentUrl);
+        if (count($urlExplode) === 2) {
+            include_once 'app/view/mypage.php';
+        } else {
             http_response_code(404);
             include_once('app/view/404.php');
         }
-        else
-            include_once 'app/view/mypage.php';
     }
     public static function getUpload()
     {
         $currentUrl = $_SERVER['REQUEST_URI'];
-        $additionalPath = explode("/", $currentUrl)[2];
-        if ($additionalPath || $additionalPath === '')
-        {
+        $urlExplode = explode("/", $currentUrl);
+        if (count($urlExplode) === 2) {
+            include_once 'app/view/upload.php';
+        } else {
             http_response_code(404);
             include_once('app/view/404.php');
         }
-        else
-            include_once 'app/view/upload.php';
     }
     /**
      * [영숫자-_.]*@[영숫자-_.]*.[영숫자]
@@ -91,46 +86,46 @@ class MainController
         $username = $data->username;
         $password = $data->password;
         $authCode = $data->authCode;
-        
+
         $response = self::postSignupProcess($email, $username, $password, $authCode);
         return print_r(json_encode($response));
     }
 
     public static function postSignupProcess($email, $username, $password, $authCode)
     {
-        if ($authCode !== $_SESSION['auth_code'])
-        {
+        if ($authCode !== $_SESSION['auth_code']) {
             http_response_code(400);
             header('Content-type: application/json; charset=utf-8');
             $body = array();
             $body['message'] = '인증번호가 올바른지 확인해주세요.';
-            return $body;
+            return print(json_encode($body));
         }
         $dupCheck = self::getModel()->checkDupSignup($email, $username);
-        if ($dupCheck['success'] === false)
-        {
+        if ($dupCheck['success'] === false) {
             http_response_code(409);
             header('Content-type: application/json; charset=utf-8');
             $body = array();
             $body['message'] = $dupCheck['message'];
-            return $body;
-        }        
+            return print(json_encode($body));
+        }
         self::getModel()->postSignup($email, $username, $password);
         http_response_code(201);
         unset($_SESSION['auth_code']);
         return;
     }
 
-    public static function postSignupAuth() {
+    public static function postSignupAuth()
+    {
         $data = json_decode(strip_tags(file_get_contents("php://input")));
 
         $email = $data->email;
         $username = $data->username;
         $password = $data->password;
 
-        if (!self::validateEmail($email) || !self::validateUsername($username) ||
-        !self::validatePassword($password))
-        {
+        if (
+            !self::validateEmail($email) || !self::validateUsername($username) ||
+            !self::validatePassword($password)
+        ) {
             http_response_code(400);
             header('Content-type: application/json; charset=utf-8');
             $body = array();
@@ -140,21 +135,21 @@ class MainController
                 $body['message'] = '닉네임 규칙을 확인해주세요.';
             else
                 $body['message'] = '비밀번호 규칙을 확인해주세요';
-            return $body;
+            return print_r(json_encode($body));
         }
         $dupCheck = self::getModel()->checkDupSignup($email, $username);
-        if ($dupCheck['success'] === false)
-        {
+        if ($dupCheck['success'] === false) {
             http_response_code(409);
             header('Content-type: application/json; charset=utf-8');
             $body = array();
             $body['message'] = $dupCheck['message'];
-            return $body;
+            return print_r(json_encode($body));
         }
         $subject = 'camagru 회원 가입 메일';
-        $_SESSION['auth_code'] = sprintf('%06d',rand(000000,999999));;
-        $mailBody = $_SESSION['auth_code'].' 코드를 입력해 회원가입을 완료해주세요.';
-        
+        $_SESSION['auth_code'] = sprintf('%06d', rand(000000, 999999));
+        ;
+        $mailBody = $_SESSION['auth_code'] . ' 코드를 입력해 회원가입을 완료해주세요.';
+
         $body = array();
         $body['success'] = self::sendMail($email, $subject, $mailBody);
         $body['email'] = $email;
@@ -163,10 +158,10 @@ class MainController
         http_response_code(200);
         return print_r(json_encode($body));
     }
-    
+
     private static function sendMail($email, $subject, $mailBody)
     {
-        $subject = "=?UTF-8?B?".base64_encode($subject)."?=";
+        $subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= sprintf('Content-Type: text/plain; charset=utf-8' . "\r\n");
         $headers .= sprintf('From: wjddus2005@naver.com');
@@ -192,22 +187,18 @@ class MainController
 
     public static function postSigninProcess($email, $password)
     {
-        if (!self::validateEmail($email) || !self::validatePassword($password))
-        {
+        if (!self::validateEmail($email) || !self::validatePassword($password)) {
             http_response_code(400);
             return;
         }
         $result = self::getModel()->postSignin($email, $password);
-        if ($result['success'] == false)
-        {
+        if ($result['success'] == false) {
             http_response_code(401);
             return;
-        }
-        else if ($result['message'] === '인증 필요')
-        {
-            $_SESSION['auth_code'] = sprintf('%06d',rand(000000,999999));
+        } else if ($result['message'] === '인증 필요') {
+            $_SESSION['auth_code'] = sprintf('%06d', rand(000000, 999999));
             $subject = 'camagru 로그인 인증 메일';
-            $mailBody = $_SESSION['auth_code'].' 코드를 입력해 로그인을 완료해주세요.';
+            $mailBody = $_SESSION['auth_code'] . ' 코드를 입력해 로그인을 완료해주세요.';
             self::sendMail($email, $subject, $mailBody);
             http_response_code(202);
             $body = array();
@@ -237,14 +228,12 @@ class MainController
         $password = $data->password;
         $authCode = $data->authCode;
 
-        if (!self::validateEmail($email) || !self::validatePassword($password))
-        {
+        if (!self::validateEmail($email) || !self::validatePassword($password)) {
             http_response_code(400);
             return;
         }
         $result = self::getModel()->postSignin($email, $password);
-        if ($result['success'] === false || $authCode !== $_SESSION['auth_code'])
-        {
+        if ($result['success'] === false || $authCode !== $_SESSION['auth_code']) {
             http_response_code(401);
             $body = array();
             if ($result['success'] === true)
@@ -252,8 +241,7 @@ class MainController
             else
                 $body['message'] = '비밀번호를 확인해주세요.';
             return print_r(json_encode($body));
-        }
-        else {
+        } else {
             unset($_SESSION['auth_code']);
             $_SESSION['username'] = $result['data'];
             $_SESSION['email'] = $email;
@@ -275,7 +263,7 @@ class MainController
 
         $currentPage = $data->currentPage;
         $size = $data->size;
-        
+
         $result = self::postGallaryProcess($currentPage, $size);
         return print_r($result);
     }
@@ -283,8 +271,7 @@ class MainController
     public static function postGallaryProcess($currentPage, $size)
     {
         $result = self::getModel()->postGallary($currentPage, $size);
-        if (!$result['data']['rownum'])
-        {
+        if (!$result['data']['rownum']) {
             http_response_code(204);
             return;
         }
@@ -310,12 +297,11 @@ class MainController
         $baseImage = $data->baseImage;
         $stickyImages = $data->stickyImages;
 
-        if ($username !== $_SESSION['username'])
-        {
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
-        
+
         //파일 만들기
         $userId = self::getUserIdbyUsername($username);
         $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . ".png";
@@ -324,16 +310,15 @@ class MainController
 
         $newFile = new SplFileObject($newFileName, "w");
         $newFile->fwrite(base64_decode($newImage));
-        $newFile = null;//close가 없어서 이렇게 닫아줘야 한다..
+        $newFile = null; //close가 없어서 이렇게 닫아줘야 한다..
 
         //합성 과정
-        if ($stickyImages)
-        {
+        if (isset($stickyImages)) {
             foreach ($stickyImages as $key) {
                 $img = imagecreatefrompng($newFileName);
                 $sticky = imagecreatefrompng($key);
 
-                imagecopy($img, $sticky, 0,0,0,0, 640, 480);
+                imagecopy($img, $sticky, 0, 0, 0, 0, 640, 480);
                 imagepng($img, $newFileName);
                 imagedestroy($img);
                 imagedestroy($sticky);
@@ -369,13 +354,10 @@ class MainController
 
         if ($username !== $_SESSION['username'])
             http_response_code(401);
-        else if ($result['message'] === '중복')
-        {
+        else if ($result['message'] === '중복') {
             http_response_code(409);
             $body['message'] = '이미 업로드한 이미지입니다.';
-        }
-        else
-        {
+        } else {
             http_response_code(201);
             $body['postId'] = $result['data'];
         }
@@ -436,8 +418,7 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
-        if ($username !== $_SESSION['username'])
-        {
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
@@ -454,12 +435,11 @@ class MainController
         $sendUserPost = self::getPostByPostId($sendUserPostId);
         $sendUsername = self::getUsernameByUserId($sendUserPost['userId']);
         $sendUser = self::getUserbyUsername($sendUsername);
-        if ($sendUser['notice'] === 'always')
-        {
+        if ($sendUser['notice'] === 'always') {
             $email = $sendUser['email'];
             $subject = 'camagru 댓글 알림 메일';
-            $mailBody = '당신의 '.$sendUserPostId.'번 게시물에 다음과 같은 댓글이 달렸습니다'."\r\n";
-            $mailBody .= $commentUsername." : ".$comment;
+            $mailBody = '당신의 ' . $sendUserPostId . '번 게시물에 다음과 같은 댓글이 달렸습니다' . "\r\n";
+            $mailBody .= $commentUsername . " : " . $comment;
             self::sendMail($email, $subject, $mailBody);
         }
     }
@@ -493,21 +473,19 @@ class MainController
         $data = json_decode(strip_tags(file_get_contents("php://input")));
         $change = $data->change;
         $username = $data->username;
-        
-        if ($username !== $_SESSION['username'])
-        {
+
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
-        
+
         $body = self::patchUsernameProcess($change, $username);
         return print_r(json_encode($body));
     }
     public static function patchUsernameProcess($change, $username)
     {
         $body = array();
-        if (!self::validateUsername($change))
-        {
+        if (!self::validateUsername($change)) {
             http_response_code(400);
             $body['message'] = '닉네임 규칙을 확인해주세요';
             return $body;
@@ -516,8 +494,7 @@ class MainController
         $result = self::getModel()->patchUsername($username, $change);
         if ($result['success'] === false)
             http_response_code(409);
-        else
-        {
+        else {
             http_response_code(200);
             $_SESSION['username'] = $change;
         }
@@ -534,9 +511,8 @@ class MainController
         $change = $data->email;
         $email = $_SESSION['email'];
         $username = $data->username;
-        
-        if ($username !== $_SESSION['username'])
-        {
+
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
@@ -547,8 +523,7 @@ class MainController
     public static function patchEmailProcess($change, $email)
     {
         $body = array();
-        if (!self::validateEmail($change))
-        {
+        if (!self::validateEmail($change)) {
             http_response_code(400);
             $body['message'] = '이메일 규칙을 확인해주세요';
             return $body;
@@ -556,8 +531,7 @@ class MainController
         $result = self::getModel()->patchEmail($email, $change);
         if ($result['success'] === false)
             http_response_code(409);
-        else
-        {
+        else {
             http_response_code(200);
             $_SESSION['email'] = $change;
         }
@@ -575,9 +549,8 @@ class MainController
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
         $username = $data->username;
-        
-        if ($username !== $_SESSION['username'])
-        {
+
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
@@ -589,21 +562,17 @@ class MainController
     {
         $username = $_SESSION['username'];
         $body = array();
-        if ($originPassword === $newPassword)
-        {
+        if ($originPassword === $newPassword) {
             http_response_code(400);
             $body['message'] = '현재 비밀번호와 같습니다.';
             return $body;
-        }
-        else if ($newPassword !== $checkPassword)
-        {
+        } else if ($newPassword !== $checkPassword) {
             http_response_code(400);
             $body['message'] = '변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.';
             return $body;
         }
 
-        if (!self::validatePassword($newPassword))
-        {
+        if (!self::validatePassword($newPassword)) {
             http_response_code(400);
             $body['message'] = '비밀번호 규칙을 확인해주세요';
             return $body;
@@ -612,8 +581,7 @@ class MainController
         $result = self::getModel()->patchPassword($originPassword, $newPassword, $username);
         if ($result['success'])
             http_response_code(200);
-        else
-        {
+        else {
             http_response_code(400);
             $body['message'] = '기존 비밀번호가 틀렸습니다.';
         }
@@ -640,17 +608,16 @@ class MainController
         $commentId = $data->commentId;
         $username = $data->username;
 
-        if ($username !== $_SESSION['username'])
-        {
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
-        
+
         $result = self::getModel()->deleteComment($commentId);
         http_response_code(200);
         return;
     }
-    
+
     /**
      * 댓글 수정 요청
      */
@@ -662,8 +629,7 @@ class MainController
         $newComment = htmlspecialchars($data->newComment);
         $username = $data->username;
 
-        if ($username !== $_SESSION['username'])
-        {
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
@@ -697,8 +663,7 @@ class MainController
         $postId = $data->postId;
         $username = $data->username;
 
-        if ($username !== $_SESSION['username'])
-        {
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
@@ -718,8 +683,7 @@ class MainController
         $imageId = $data->imageId;
         $username = $data->username;
 
-        if ($username !== $_SESSION['username'])
-        {
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
@@ -744,8 +708,7 @@ class MainController
     {
         $data = json_decode(file_get_contents("php://input"));
         $username = $data->username;
-        if ($username !== $_SESSION['username'])
-        {
+        if ($username !== $_SESSION['username']) {
             http_response_code(401);
             return;
         }
@@ -760,23 +723,23 @@ class MainController
     {
         $data = json_decode(file_get_contents("php://input"));
         $email = $data->email;
-        $tmpPassword= self::makeTmpPassword();
-        $mailBody = '임시 비밀번호 '.$tmpPassword.' 를 입력해 로그인하세요'."\r\n";
+        $tmpPassword = self::makeTmpPassword();
+        $mailBody = '임시 비밀번호 ' . $tmpPassword . ' 를 입력해 로그인하세요' . "\r\n";
         $mailBody .= '로그인 후 비밀번호를 반드시 변경해주세요.';
 
         self::postLogout();
         self::getModel()->postPasswordRecovery($email, $tmpPassword);
-        self::sendMail($email, 'camagru 임시 비밀번호 발급',$mailBody);
+        self::sendMail($email, 'camagru 임시 비밀번호 발급', $mailBody);
 
         http_response_code(200);
         return;
     }
-    private static function makeTmpPassword () {
+    private static function makeTmpPassword()
+    {
         $str = '';
         $alphaNum = 'abcdefghijklnmopqrstuvwxyz0123456789';
-        
-        for ($i = 0; $i < 8; $i++)
-        {
+
+        for ($i = 0; $i < 8; $i++) {
             $str .= $alphaNum[rand(0, 35)];
         }
         return $str;
