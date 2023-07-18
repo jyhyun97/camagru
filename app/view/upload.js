@@ -60,13 +60,14 @@ function postImage() {
   httpRequest.open('POST', '/image')
   httpRequest.setRequestHeader('Content-Type', 'application/json')
   httpRequest.onload = () => {
-    const responseData = JSON.parse(httpRequest.response)
     if (httpRequest.status === 201) {
+      const responseData = JSON.parse(httpRequest.response)
       alert('게시물이 등록되었습니다.')
       location.href = '/post/' + responseData.postId
     } else if (httpRequest.status === 401) {
       alert('올바르지 않은 인증 정보입니다.')
     } else if (httpRequest.status === 409) {
+      const responseData = JSON.parse(httpRequest.response)
       alert(responseData.message)
     }
   }

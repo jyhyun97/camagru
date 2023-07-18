@@ -28,11 +28,12 @@ function submitSignin() {
   httpRequest.open('POST', '/signin')
   httpRequest.setRequestHeader('Content-Type', 'application/json')
   httpRequest.onload = () => {
-    const response = JSON.parse(httpRequest.response)
     if (httpRequest.status === 200) {
+      const response = JSON.parse(httpRequest.response)
       sessionStorage.setItem('username', response.username)
       location.reload()
     } else if (httpRequest.status === 202) {
+      const response = JSON.parse(httpRequest.response)
       alert(response.message)
       signinAuthLine.hidden = false
       signinAuthSubmit.className = 'btn btn-primary'
@@ -57,13 +58,16 @@ function submitSigninAuth() {
   httpRequest.open('POST', '/signin-auth')
   httpRequest.setRequestHeader('Content-Type', 'application/json')
   httpRequest.onload = () => {
-    const response = JSON.parse(httpRequest.response)
     if (httpRequest.status === 200) {
+      const response = JSON.parse(httpRequest.response)
       sessionStorage.setItem('username', response.username)
       location.reload()
     } else if (httpRequest.status === 400)
       alert('이메일과 비밀번호를 확인해주세요.')
-    else if (httpRequest.status === 401) alert(response.message)
+    else if (httpRequest.status === 401) {
+      const response = JSON.parse(httpRequest.response)
+      alert(response.message)
+    }
   }
   httpRequest.send(JSON.stringify(signinData))
 }
