@@ -282,9 +282,9 @@ class MainModel
         $stmt->bind_param("s", $change);
         $stmt->execute();
         $result = $stmt->get_result();
-        $dup = $result->fetch_array(MYSQLI_ASSOC)['email'];
+        $dup = $result->fetch_array(MYSQLI_ASSOC);
 
-        if ($dup === $change)
+        if (isset($dup) && $dup['email'] === $change)
             return $this->createResult(false, '중복된 이메일입니다.', NULL);
         else {
             $query = "UPDATE user SET email = ? WHERE email = ?";
@@ -304,10 +304,11 @@ class MainModel
         $stmt->execute();
         $result = $stmt->get_result();
         $originCheck = $result->fetch_array(MYSQLI_ASSOC);
-        $auth = $originCheck['auth'];
 
         if (empty($originCheck) || !password_verify($origin, $originCheck['password']))
             return $this->createResult(false, '기존 비밀번호가 틀렸습니다', NULL);
+
+        $auth = $originCheck['auth'];
         if ($auth === 'temporal')
             $query = "UPDATE user SET password = ?, auth = 'always' WHERE username = ?";
         else
