@@ -85,17 +85,15 @@ class MainController
     }
     private static function is_upper($text) {
         for ($i = 0; $i < strlen($text); $i++) {
-            if (ctype_upper($text[$i])) {
+            if (ctype_upper($text[$i]))
                 return true;
-            }
         }
         return false;
     }
     private static function is_lower($text){
         for ($i = 0; $i < strlen($text); $i++) {
-            if (ctype_lower($text[$i])) {
+            if (ctype_lower($text[$i]))
                 return true;
-            }
         }
         return false;
     }
@@ -111,9 +109,8 @@ class MainController
     {
         for ($i = 0; $i < strlen($needles); $i++) {
             $needle = $needles[$i];
-            if (strpos($haystack, $needle) !== false) {
+            if (strpos($haystack, $needle) !== false)
               return true;
-            }
           }
           return false;
     }
@@ -143,7 +140,7 @@ class MainController
             header('Content-type: application/json; charset=utf-8');
             $body = array();
             $body['message'] = '인증번호가 올바른지 확인해주세요.';
-            return print(json_encode($body));
+            return $body;
         }
         $dupCheck = self::getModel()->checkDupSignup($email, $username);
         if ($dupCheck['success'] === false) {
@@ -151,7 +148,7 @@ class MainController
             header('Content-type: application/json; charset=utf-8');
             $body = array();
             $body['message'] = $dupCheck['message'];
-            return print(json_encode($body));
+            return $body;
         }
         self::getModel()->postSignup($email, $username, $password);
         http_response_code(201);
