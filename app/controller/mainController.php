@@ -66,13 +66,59 @@ class MainController
         return preg_match($regex, $username);
     }
     /**
-     * 8글자 이상 20글자 이하의 영숫자, 특문 허용
+     * 8글자 이상 20글자 이하의 숫자, 소문자, 대문자 특문 허용
+     * 위 4가지 요소 중 최소 두 가지 조합 사용하도록 할 것
      */
     public static function validatePassword($password)
     {
         $regex = "/^[a-zA-Z0-9`~!@#$%^&*|\\\'\";:\/?]{8,20}$/";
-        return preg_match($regex, $password);
+        $combCount = 0;
+        if (is_numeric($password) === true)
+            $combCount++;
+        if (self::is_lower($password) === true)
+            $combCount++;
+        if (self::is_upper($password) === true)
+            $combCount++;
+        if (self::is_special($password) === true)
+            $combCount++;
+        print_r($combCount);
+        return (preg_match($regex, $password) && $combCount >= 2);
     }
+    private static function is_upper($text) {
+        for ($i = 0; $i < strlen($text); $i++) {
+            if (ctype_upper($text[$i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private static function is_lower($text){
+        for ($i = 0; $i < strlen($text); $i++) {
+            if (ctype_lower($text[$i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static function is_special($text)
+    {
+        $flag = false;
+        if (self::containSpecial($text, '`~!@#$%^&*|\\\'\";:\/?') === true)
+            $flag = true;
+        return $flag;
+    }
+    private static function containSpecial($haystack, $needles)
+    {
+        for ($i = 0; $i < strlen($needles); $i++) {
+            $needle = $needles[$i];
+            if (strpos($haystack, $needle) !== false) {
+              return true;
+            }
+          }
+          return false;
+    }
+    
 
     /**
      * query 결과에 따라 중복된 이메일, 유저네임 알리기

@@ -62,6 +62,8 @@ class ValidateTest extends Test
                 'overThe20LetterCase!!!!'));
             $this->assertFalse(TestController::validatePassword(
                 ''));
+            $this->assertFalse(TestController::validatePassword(
+                'itstosimple'));
         } catch(Exception $e) {
             echo "$e\n";
             exit(1);
