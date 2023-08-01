@@ -81,7 +81,6 @@ class MainController
             $combCount++;
         if (self::is_special($password) === true)
             $combCount++;
-        print_r($combCount);
         return (preg_match($regex, $password) && $combCount >= 2);
     }
     private static function is_upper($text) {
