@@ -26,6 +26,9 @@ navigator.mediaDevices
   })
   .catch((err) => {
     video.hidden = true
+    //촬영 버튼 비활성화
+    captureButton.disabled = true
+    console.log('wtf')
   })
 
 function deleteImage(e) {
@@ -81,7 +84,7 @@ function selectImage(e) {
     ele.style.border = 'none'
   })
   selectedImage = e.target
-  e.target.style.border = 'solid 3px green'
+  e.target.style.border = 'solid 3px red'
 }
 
 function selectSticky(e) {
@@ -90,7 +93,7 @@ function selectSticky(e) {
     selectedStickys.delete(e.target)
   } else {
     selectedStickys.add(e.target)
-    e.target.style.border = 'solid 3px green'
+    e.target.style.border = 'solid 3px red'
   }
   addStikcyToCanvas()
 }
@@ -126,6 +129,7 @@ function uploadImage(e) {
     newImage.onload = () => {
       context.drawImage(newImage, 0, 0, canvas.width, canvas.height)
     }
+    captureButton.disabled = false
   } else alert('이미지를 선택해 주세요.')
 }
 
