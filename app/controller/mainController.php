@@ -347,6 +347,25 @@ class MainController
         //파일 만들기
         $userId = self::getUserIdbyUsername($username);
         $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . ".png";
+
+        foreach(new DirectoryIterator('img/') as $fileInfo)
+        {
+            $fileName = $fileInfo->getPathname();
+            $newFileNameTrimed = substr($newFileName, 0, strlen($newFileName) - 4);
+            $fileNameTrimed = substr($fileName, 0, strlen($newFileName) - 4);
+            if ($newFileNameTrimed === $fileNameTrimed)
+            {
+                $bracket1 = strpos($fileName, '[');
+                $bracket2 = strpos($fileName, ']');
+                if ($bracket1 === false)
+                    $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . '[0]' . ".png";
+                else
+                {
+                    $number = substr($fileName, $bracket1 + 1, $bracket2 - $bracket1 - 1);
+                    $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . '['. $number + 1 .']' . ".png";
+                }
+            }
+        }
         $newImage = str_replace('data:image/png;base64,', '', $baseImage);
         $newImage = str_replace(' ', '+', $newImage);
 
