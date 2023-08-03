@@ -73,7 +73,7 @@ class MainController
     {
         $regex = "/^[a-zA-Z0-9`~!@#$%^&*|\\\'\";:\/?]{8,20}$/";
         $combCount = 0;
-        if (is_numeric($password) === true)
+        if (self::is_num($password) === true)
             $combCount++;
         if (self::is_lower($password) === true)
             $combCount++;
@@ -82,6 +82,13 @@ class MainController
         if (self::is_special($password) === true)
             $combCount++;
         return (preg_match($regex, $password) && $combCount >= 2);
+    }
+    private static function is_num($text) {
+        for ($i = 0; $i < strlen($text); $i++) {
+            if (ctype_digit($text[$i]))
+                return true;
+        }
+        return false;
     }
     private static function is_upper($text) {
         for ($i = 0; $i < strlen($text); $i++) {
@@ -803,6 +810,8 @@ class MainController
         for ($i = 0; $i < 8; $i++) {
             $str .= $alphaNum[rand(0, 35)];
         }
+        if (self::validatePassword($str) === false)
+            $str = self::makeTmpPassword();
         return $str;
     }
 }

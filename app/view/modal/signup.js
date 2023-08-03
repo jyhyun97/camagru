@@ -12,7 +12,10 @@ authSubmitButton.addEventListener('click', (event) => authSignup(event))
 const signupEmail = document.getElementById('signup-email')
 const signupUsername = document.getElementById('signup-username')
 const signupPassword = document.getElementById('signup-password')
-const signupAuthCode = document.getElementById('signup-auth-code');
+const signupAuthCode = document.getElementById('signup-auth-code')
+signupAuthCode.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) submitSignup()
+})
 
 signupEmail.addEventListener('focusin', () => {
   const signupEmailInfo = document.getElementById('signup-email-info')
@@ -46,14 +49,13 @@ function submitSignup() {
     email: signupEmail.value,
     username: signupUsername.value,
     password: signupPassword.value,
-    authCode : signupAuthCode.value
+    authCode: signupAuthCode.value,
   }
 
   const httpRequest = new XMLHttpRequest()
   httpRequest.open('POST', '/signup')
   httpRequest.setRequestHeader('Content-Type', 'application/json')
   httpRequest.onload = () => {
-    
     if (httpRequest.status === 201) {
       alert('가입이 완료되었습니다.')
       location.reload()
@@ -78,15 +80,17 @@ function authSignup(e) {
   signupSubmitButton.disabled = false
   const httpRequest = new XMLHttpRequest()
   httpRequest.open('POST', '/signup-auth')
-  httpRequest.onload = () => {    
+  httpRequest.onload = () => {
     if (httpRequest.status === 200) {
       alert('메일이 발송되었습니다. 인증을 완료해주세요.')
     } else if (httpRequest.status === 400) {
       const response = JSON.parse(httpRequest.response)
       alert(response.message)
+      e.target.disabled = false
     } else if (httpRequest.status === 409) {
       const response = JSON.parse(httpRequest.response)
       alert(response.message)
+      e.target.disabled = false
     }
   }
   httpRequest.send(JSON.stringify(authData))
