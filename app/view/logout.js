@@ -4,7 +4,6 @@ logoutButton.addEventListener('click', () => {
   httpRequest.open('POST', '/logout')
   httpRequest.onload = () => {
     if (httpRequest.response === '성공') {
-      sessionStorage.clear()
       location.replace('/')
     }
   }

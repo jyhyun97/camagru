@@ -3,18 +3,31 @@ import { activeModal } from '/app/view/modal/modal.js'
 const signinSubmitButton = document.getElementById('signin-submit')
 signinSubmitButton.addEventListener('click', () => submitSignin())
 
+const signinPassword = document.getElementById('signin-password')
+signinPassword.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) submitSignin()
+})
+
 const signinButton = document.getElementById('signin-button')
 signinButton.addEventListener('click', () => activeModal('signin-form'))
 
 const signinAuthLine = document.getElementById('signin-auth-line')
 const signinAuthSubmit = document.getElementById('signin-auth-submit')
 signinAuthSubmit.addEventListener('click', () => submitSigninAuth())
+const signinAuthInput = document.getElementById('signin-auth-input')
+signinAuthInput.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) submitSigninAuth()
+})
 
 const pwRecoveryButton = document.getElementById('pw-recovery-button')
 pwRecoveryButton.addEventListener('click', () => pwRecoveryActive())
 
 const pwRecoverySubmit = document.getElementById('pw-recovery-submit')
 pwRecoverySubmit.addEventListener('click', () => pwRecoveryRequest())
+const pwRecoveryInput = document.getElementById('pw-recovery-input')
+pwRecoveryInput.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) pwRecoveryRequest()
+})
 
 function submitSignin() {
   const signinEmail = document.getElementById('signin-email')
@@ -30,7 +43,6 @@ function submitSignin() {
   httpRequest.onload = () => {
     if (httpRequest.status === 200) {
       const response = JSON.parse(httpRequest.response)
-      sessionStorage.setItem('username', response.username)
       location.reload()
     } else if (httpRequest.status === 202) {
       const response = JSON.parse(httpRequest.response)
@@ -60,7 +72,6 @@ function submitSigninAuth() {
   httpRequest.onload = () => {
     if (httpRequest.status === 200) {
       const response = JSON.parse(httpRequest.response)
-      sessionStorage.setItem('username', response.username)
       location.reload()
     } else if (httpRequest.status === 400)
       alert('이메일과 비밀번호를 확인해주세요.')
