@@ -28,7 +28,6 @@ navigator.mediaDevices
     video.hidden = true
     //촬영 버튼 비활성화
     captureButton.disabled = true
-    console.log('wtf')
   })
 
 function deleteImage(e) {
@@ -39,7 +38,6 @@ function deleteImage(e) {
   ) {
     const data = {
       imageId: e.target.dataset.imageId,
-      username: sessionStorage.getItem('username'),
     }
     const httpRequest = new XMLHttpRequest()
     httpRequest.open('DELETE', '/image')
@@ -56,7 +54,6 @@ function deleteImage(e) {
 function postImage() {
   const data = {
     imageId: selectedImage.id,
-    username: sessionStorage.getItem('username'),
   }
 
   const httpRequest = new XMLHttpRequest()
@@ -145,7 +142,6 @@ function takePicture() {
     return ele.id
   })
   const capturedData = {
-    username: sessionStorage.getItem('username'),
     baseImage: data,
     stickyImages: stickyList,
   }
@@ -183,6 +179,7 @@ function takePicture() {
         newDivNode.appendChild(newButtonNode)
         capturedList.appendChild(newDivNode)
       })
+      alert('사진이 등록되었습니다.')
     } else if (httpRequest.status === 401)
       alert('올바르지 않은 인증 정보입니다.')
   }

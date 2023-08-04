@@ -1,4 +1,7 @@
-import { changeHiddenStatus, changeHiddenStatusBootstrap } from '/app/view/common.js'
+import {
+  changeHiddenStatus,
+  changeHiddenStatusBootstrap,
+} from '/app/view/common.js'
 
 patchData('username')
 patchData('email')
@@ -26,14 +29,13 @@ function patchData(type) {
 
   elements.changeButton.addEventListener('click', () => {
     changeHiddenStatusBootstrap(elements)
-    
   })
   elements.cancelButton.addEventListener('click', () => {
     changeHiddenStatusBootstrap(elements)
   })
 
   elements.submitButton.addEventListener('click', () => {
-    const data = { username: sessionStorage.getItem('username') }
+    const data = {}
     if (type === 'username') {
       data.change = elements.changeInput.value
     } else if (type === 'email') {
@@ -44,12 +46,11 @@ function patchData(type) {
       data.checkPassword = elements.passwordCheckInput.value
     }
     const httpRequest = new XMLHttpRequest()
-    const url = '/' + type + '/' + sessionStorage.getItem('username')
+    const url = '/' + type
     httpRequest.open('PATCH', url)
     httpRequest.setRequestHeader('Conetent-Type', 'application/json')
     httpRequest.onload = () => {
       if (httpRequest.status === 200) {
-        if (type === 'username') sessionStorage.setItem('username', data.change)
         location.reload()
       } else if (httpRequest.status === 400) {
         const responseData = JSON.parse(httpRequest.response)
@@ -72,7 +73,6 @@ Array.from(postDeleteButtons).forEach((ele) => {
     if (confirm('정말로 게시물을 삭제하시겠습니까?')) {
       const data = {
         postId: ele.dataset.postId,
-        username: sessionStorage.getItem('username'),
       }
       const httpRequest = new XMLHttpRequest()
       httpRequest.open('DELETE', '/post')
@@ -101,7 +101,6 @@ Array.from(imageDeleteButtons).forEach((ele) => {
     ) {
       const data = {
         imageId: ele.dataset.imageId,
-        username: sessionStorage.getItem('username'),
       }
       const httpRequest = new XMLHttpRequest()
       httpRequest.open('DELETE', '/image')
@@ -116,23 +115,24 @@ Array.from(imageDeleteButtons).forEach((ele) => {
   })
 })
 
-const patchAuthButtons = document.getElementsByClassName('patch-auth btn btn-default');
+const patchAuthButtons = document.getElementsByClassName(
+  'patch-auth btn btn-default'
+)
 Array.from(patchAuthButtons).forEach((ele) => {
-  ele.addEventListener('click', (event) => patchAuthNotice('auth', event));
+  ele.addEventListener('click', (event) => patchAuthNotice('auth', event))
 })
 
-
-const patchNoticeButtons = document.getElementsByClassName('patch-notice btn btn-default');
+const patchNoticeButtons = document.getElementsByClassName(
+  'patch-notice btn btn-default'
+)
 Array.from(patchNoticeButtons).forEach((ele) => {
-  ele.addEventListener('click', (event) => patchAuthNotice('notice', event));
+  ele.addEventListener('click', (event) => patchAuthNotice('notice', event))
 })
 
-function patchAuthNotice (type, event) {
-  const data = { username : sessionStorage.getItem('username')}
-  if (type === 'auth')
-    data.auth = event.target.dataset.active;
-  else if (type === 'notice')
-    data.notice = event.target.dataset.active;
+function patchAuthNotice(type, event) {
+  const data = {}
+  if (type === 'auth') data.auth = event.target.dataset.active
+  else if (type === 'notice') data.notice = event.target.dataset.active
   const httpRequest = new XMLHttpRequest()
   httpRequest.open('PATCH', '/user')
   httpRequest.setRequestHeader('Content-Type', 'application/json')

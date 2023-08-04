@@ -43,7 +43,6 @@ function submitSignin() {
   httpRequest.onload = () => {
     if (httpRequest.status === 200) {
       const response = JSON.parse(httpRequest.response)
-      sessionStorage.setItem('username', response.username)
       location.reload()
     } else if (httpRequest.status === 202) {
       const response = JSON.parse(httpRequest.response)
@@ -73,7 +72,6 @@ function submitSigninAuth() {
   httpRequest.onload = () => {
     if (httpRequest.status === 200) {
       const response = JSON.parse(httpRequest.response)
-      sessionStorage.setItem('username', response.username)
       location.reload()
     } else if (httpRequest.status === 400)
       alert('이메일과 비밀번호를 확인해주세요.')

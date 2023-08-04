@@ -6,7 +6,6 @@ commentSubmitButton.addEventListener('click', () => submitComment())
 function submitComment() {
   const data = {
     postId: window.location.pathname.split('/')[2],
-    username: sessionStorage.getItem('username'),
     comment: commentInput.value,
   }
   const httpRequest = new XMLHttpRequest()
