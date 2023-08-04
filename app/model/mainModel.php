@@ -33,6 +33,17 @@ class MainModel
         return $this->createResult(true, '성공', NULL);
     }
 
+    public function insertAuthInfo($email, $username, $password, $authCode, $authType)
+    {
+        $query = "INSERT INTO auth (email, username, password, authCode, authType) VALUES (?, ?, ?, ?, ?)";
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("sssss", $email, $username, $password, $authCode, $authType);
+        $stmt->execute();
+
+        return $this->createResult(true, '성공', NULL);
+    }
+
     public function checkDupSignup($email, $username)
     {
         $query = "SELECT * FROM user WHERE username = ?";

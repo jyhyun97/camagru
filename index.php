@@ -27,5 +27,6 @@ Router::add('/post', 'DELETE', 'MainController::deletePost');
 Router::add('/image', 'DELETE', 'MainController::deleteImage');
 Router::add('/user', 'PATCH', 'MainController::patchUser');
 Router::add('/password-recovery', 'POST', 'MainController::postPasswordRecovery');
+//Router::add('/auth', 'GET', 'MainController::getAuth');
 Router::run();
 ?>

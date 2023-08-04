@@ -83,21 +83,24 @@ class MainController
             $combCount++;
         return (preg_match($regex, $password) && $combCount >= 2);
     }
-    private static function is_num($text) {
+    private static function is_num($text)
+    {
         for ($i = 0; $i < strlen($text); $i++) {
             if (ctype_digit($text[$i]))
                 return true;
         }
         return false;
     }
-    private static function is_upper($text) {
+    private static function is_upper($text)
+    {
         for ($i = 0; $i < strlen($text); $i++) {
             if (ctype_upper($text[$i]))
                 return true;
         }
         return false;
     }
-    private static function is_lower($text){
+    private static function is_lower($text)
+    {
         for ($i = 0; $i < strlen($text); $i++) {
             if (ctype_lower($text[$i]))
                 return true;
@@ -117,11 +120,11 @@ class MainController
         for ($i = 0; $i < strlen($needles); $i++) {
             $needle = $needles[$i];
             if (strpos($haystack, $needle) !== false)
-              return true;
-          }
-          return false;
+                return true;
+        }
+        return false;
     }
-    
+
 
     /**
      * query 결과에 따라 중복된 이메일, 유저네임 알리기
@@ -194,25 +197,38 @@ class MainController
             $body['message'] = $dupCheck['message'];
             return print_r(json_encode($body));
         }
-        $subject = 'camagru 회원 가입 메일';
-        $_SESSION['auth_code'] = sprintf('%06d', rand(000000, 999999));
-        ;
-        $mailBody = $_SESSION['auth_code'] . ' 코드를 입력해 회원가입을 완료해주세요.';
+        //[수정] 회원가입 페이지 생성 추가, mailBody html식으로 변경
+        //1. db에 이메일, 유저네임, 패스워드, 인증코드, 종류 삽입 -> 난수 인증코드 만들기
+        //인증코드는 makeAuthCode, 종류는 signup~!
+        //2. 하이퍼링크를 생성해서 메일 날리기
+        //self::getModel->insertAuthInfo($email, $username, $password, $authCode, 'signup');
 
-        $body = array();
-        $body['success'] = self::sendMail($email, $subject, $mailBody);
-        $body['email'] = $email;
-        $body['subject'] = $subject;
-        $body['body'] = $mailBody;
+        //auth페이지에서는?
+        //parameter로 받은 authcode를 db에 있는 거랑 대조해서
+        //회원가입 처리 혹은 로그인 처리 해주고 메인으로 리다이렉트. db에서도 지워주기
+        //만약 authcode가 틀렸으면 그냥 메인 리다이렉트
+
+        //삭재할 것들 삭제해야함..
+        $authCode = self::makeAuthCode();
+        $hyperlink = "http://localhost/auth?authcode=$authCode";
+        self::getModel()->insertAuthInfo($email, $username, $password, $authCode, 'signup');
+
+        $subject = 'camagru 회원 가입 메일';
+        $mailBody = '<html><body>';
+        $mailBody .= '아래 버튼을 눌러 인증을 완료하세요.' . '<br>';
+        $mailBody .= "<a href=$hyperlink><button>인증완료</button></a>";
+        $mailBody .= '</body></html>';
+
+        self::sendMail($email, $subject, $mailBody);
         http_response_code(200);
-        return print_r(json_encode($body));
+        return;
     }
 
     private static function sendMail($email, $subject, $mailBody)
     {
         $subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
         $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= sprintf('Content-Type: text/plain; charset=utf-8' . "\r\n");
+        $headers .= sprintf('Content-Type: text/html; charset=utf-8' . "\r\n");
         $headers .= sprintf('From: wjddus2005@naver.com');
         $additionalHeaders = "-f wjddus2005@naver.com";
         $result = mail($email, $subject, $mailBody, $headers, $additionalHeaders);
@@ -245,6 +261,7 @@ class MainController
             http_response_code(401);
             return;
         } else if ($result['message'] === '인증 필요') {
+            //[수정] 여기도 임시 로그인 페이지 추가 및 mailBody html화!! 로그인, 회원가입 2개만 하면 되네용ㅎㅎ!
             $_SESSION['auth_code'] = sprintf('%06d', rand(000000, 999999));
             $subject = 'camagru 로그인 인증 메일';
             $mailBody = $_SESSION['auth_code'] . ' 코드를 입력해 로그인을 완료해주세요.';
@@ -350,21 +367,18 @@ class MainController
         $userId = self::getUserIdbyUsername($username);
         $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . ".png";
 
-        foreach(new DirectoryIterator('img/') as $fileInfo)
-        {
+        foreach (new DirectoryIterator('img/') as $fileInfo) {
             $fileName = $fileInfo->getPathname();
             $newFileNameTrimed = substr($newFileName, 0, strlen($newFileName) - 4);
             $fileNameTrimed = substr($fileName, 0, strlen($newFileName) - 4);
-            if ($newFileNameTrimed === $fileNameTrimed)
-            {
+            if ($newFileNameTrimed === $fileNameTrimed) {
                 $bracket1 = strpos($fileName, '[');
                 $bracket2 = strpos($fileName, ']');
                 if ($bracket1 === false)
                     $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . '[0]' . ".png";
-                else
-                {
+                else {
                     $number = substr($fileName, $bracket1 + 1, $bracket2 - $bracket1 - 1);
-                    $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . '['. $number + 1 .']' . ".png";
+                    $newFileName = "img/" . $userId . "_" . date("Y-m-d_H:i:s") . '[' . $number + 1 . ']' . ".png";
                 }
             }
         }
@@ -444,11 +458,10 @@ class MainController
     {
         $data = json_decode(file_get_contents("php://input"));
         $postId = $data->postId;
-        
+
         if (!isset($_SESSION['username']))
             http_response_code(400);
-        else
-        {
+        else {
             $username = $_SESSION['username'];
             self::postLikesProcess($postId, $username);
         }
@@ -492,10 +505,14 @@ class MainController
         $sendUsername = self::getUsernameByUserId($sendUserPost['userId']);
         $sendUser = self::getUserbyUsername($sendUsername);
         if ($sendUser['notice'] === 'always') {
+            $hyperlink = 'http://localhost/post/' . $sendUserPostId;
             $email = $sendUser['email'];
             $subject = 'camagru 댓글 알림 메일';
-            $mailBody = '당신의 ' . $sendUserPostId . '번 게시물에 다음과 같은 댓글이 달렸습니다' . "\r\n";
-            $mailBody .= $commentUsername . " : " . $comment;
+            $mailBody = '<html><body>';
+            $mailBody .= '당신의 게시물에 다음과 같은 댓글이 달렸습니다' . '<br>';
+            $mailBody .= $commentUsername . " : " . $comment . '<br>';
+            $mailBody .= "확인하기 : <a href=$hyperlink> $hyperlink </a>";
+            $mailBody .= '</body></html>';
             self::sendMail($email, $subject, $mailBody);
         }
     }
@@ -593,7 +610,7 @@ class MainController
         $originPassword = $data->originPassword;
         $newPassword = $data->newPassword;
         $checkPassword = $data->checkPassword;
-        
+
         $body = self::patchPasswordProcess($originPassword, $newPassword, $checkPassword);
         return print_r(json_encode($body));
     }
@@ -661,7 +678,7 @@ class MainController
 
         $commentId = $data->commentId;
         $newComment = htmlspecialchars($data->newComment);
-        
+
         $result = self::getModel()->patchComment($commentId, $newComment);
         http_response_code(200);
         return;
@@ -738,8 +755,10 @@ class MainController
         $data = json_decode(file_get_contents("php://input"));
         $email = $data->email;
         $tmpPassword = self::makeTmpPassword();
-        $mailBody = '임시 비밀번호 ' . $tmpPassword . ' 를 입력해 로그인하세요' . "\r\n";
+        $mailBody = '<html><body>';
+        $mailBody .= '임시 비밀번호 ' . $tmpPassword . ' 를 입력해 로그인하세요' . '<br>';
         $mailBody .= '로그인 후 비밀번호를 반드시 변경해주세요.';
+        $mailBody .= '</body></html>';
 
         self::postLogout();
         self::getModel()->postPasswordRecovery($email, $tmpPassword);
@@ -758,6 +777,16 @@ class MainController
         }
         if (self::validatePassword($str) === false)
             $str = self::makeTmpPassword();
+        return $str;
+    }
+    private static function makeAuthCode()
+    {
+        $str = '';
+        $alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789^/';
+
+        for ($i = 0; $i < 64; $i++) {
+            $str .= $alphaNum[rand(0, 63)];
+        }
         return $str;
     }
 }
