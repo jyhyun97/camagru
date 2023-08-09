@@ -36,6 +36,9 @@ signupPassword.addEventListener('focusout', () => {
   const signupPasswordInfo = document.getElementById('signup-password-info')
   signupPasswordInfo.hidden = true
 })
+signupPassword.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) submitSignup()
+})
 
 function submitSignup() {
   const signupData = {

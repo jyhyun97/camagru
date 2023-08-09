@@ -174,7 +174,7 @@ class MainController
         $subject = 'camagru 회원 가입 메일';
         $mailBody = '<html><body>';
         $mailBody .= '아래 버튼을 눌러 인증을 완료하세요.' . '<br>';
-        $mailBody .= "<a href=$hyperlink><button style='border : 1px solid black'>인증완료</button></a>";
+        $mailBody .= "<a href=$hyperlink><button style='border : 1px solid black, background-color : gray'>인증완료</button></a>";
         $mailBody .= '</body></html>';
 
         self::sendMail($email, $subject, $mailBody);
@@ -199,7 +199,6 @@ class MainController
             var_dump($_SERVER);
         }
         //include 인증 완료/인증 실패 페이지~
-        //db 조회해서 authCode가 있는지 확인하세요...
     }
 
     private static function sendMail($email, $subject, $mailBody)
