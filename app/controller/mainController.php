@@ -137,43 +137,13 @@ class MainController
         $email = $data->email;
         $username = $data->username;
         $password = $data->password;
-        $authCode = $data->authCode;
 
-        $response = self::postSignupProcess($email, $username, $password, $authCode);
+        $response = self::postSignupProcess($email, $username, $password);
         return print_r(json_encode($response));
     }
 
-    public static function postSignupProcess($email, $username, $password, $authCode)
+    public static function postSignupProcess($email, $username, $password)
     {
-        if ($authCode !== $_SESSION['auth_code']) {
-            http_response_code(400);
-            header('Content-type: application/json; charset=utf-8');
-            $body = array();
-            $body['message'] = '인증번호가 올바른지 확인해주세요.';
-            return $body;
-        }
-        $dupCheck = self::getModel()->checkDupSignup($email, $username);
-        if ($dupCheck['success'] === false) {
-            http_response_code(409);
-            header('Content-type: application/json; charset=utf-8');
-            $body = array();
-            $body['message'] = $dupCheck['message'];
-            return $body;
-        }
-        self::getModel()->postSignup($email, $username, $password);
-        http_response_code(201);
-        unset($_SESSION['auth_code']);
-        return;
-    }
-
-    public static function postSignupAuth()
-    {
-        $data = json_decode(strip_tags(file_get_contents("php://input")));
-
-        $email = $data->email;
-        $username = $data->username;
-        $password = $data->password;
-
         if (
             !self::validateEmail($email) || !self::validateUsername($username) ||
             !self::validatePassword($password)
@@ -187,7 +157,7 @@ class MainController
                 $body['message'] = '닉네임 규칙을 확인해주세요.';
             else
                 $body['message'] = '비밀번호 규칙을 확인해주세요';
-            return print_r(json_encode($body));
+            return $body;
         }
         $dupCheck = self::getModel()->checkDupSignup($email, $username);
         if ($dupCheck['success'] === false) {
@@ -195,20 +165,8 @@ class MainController
             header('Content-type: application/json; charset=utf-8');
             $body = array();
             $body['message'] = $dupCheck['message'];
-            return print_r(json_encode($body));
+            return $body;
         }
-        //[수정] 회원가입 페이지 생성 추가, mailBody html식으로 변경
-        //1. db에 이메일, 유저네임, 패스워드, 인증코드, 종류 삽입 -> 난수 인증코드 만들기
-        //인증코드는 makeAuthCode, 종류는 signup~!
-        //2. 하이퍼링크를 생성해서 메일 날리기
-        //self::getModel->insertAuthInfo($email, $username, $password, $authCode, 'signup');
-
-        //auth페이지에서는?
-        //parameter로 받은 authcode를 db에 있는 거랑 대조해서
-        //회원가입 처리 혹은 로그인 처리 해주고 메인으로 리다이렉트. db에서도 지워주기
-        //만약 authcode가 틀렸으면 그냥 메인 리다이렉트
-
-        //삭재할 것들 삭제해야함..
         $authCode = self::makeAuthCode();
         $hyperlink = "http://localhost/auth?authcode=$authCode";
         self::getModel()->insertAuthInfo($email, $username, $password, $authCode, 'signup');
@@ -216,12 +174,32 @@ class MainController
         $subject = 'camagru 회원 가입 메일';
         $mailBody = '<html><body>';
         $mailBody .= '아래 버튼을 눌러 인증을 완료하세요.' . '<br>';
-        $mailBody .= "<a href=$hyperlink><button>인증완료</button></a>";
+        $mailBody .= "<a href=$hyperlink><button style='border : 1px solid black'>인증완료</button></a>";
         $mailBody .= '</body></html>';
 
         self::sendMail($email, $subject, $mailBody);
-        http_response_code(200);
+        http_response_code(201);
         return;
+    }
+
+    public static function getAuth()
+    {
+        $authcode = explode("=", $_SERVER['REQUEST_URI']);
+        if (isset($authcode) && $authcode[0] === "/auth?authcode" && isset($authcode[1])) {
+            $auth = self::getModel()->selectAuthInfo($authcode[1])['data'];
+            if ($auth['authType'] === 'signup') {
+                self::getModel()->postSignup($auth['email'], $auth['username'], $auth['password']);
+                self::getModel()->deleteAuthInfo($auth['authCode']);
+                echo "<div>인증 성공.. 메인으로 돌아가기..</div>";
+            } else if ($auth['authType'] === 'signin') {
+                //로그인처리
+                echo "아직 안만듬ㅎㅎ..";
+            }
+        } else {
+            var_dump($_SERVER);
+        }
+        //include 인증 완료/인증 실패 페이지~
+        //db 조회해서 authCode가 있는지 확인하세요...
     }
 
     private static function sendMail($email, $subject, $mailBody)
@@ -787,6 +765,9 @@ class MainController
         for ($i = 0; $i < 64; $i++) {
             $str .= $alphaNum[rand(0, 63)];
         }
+        //가능성은 낮지만 만약 $str이 selectAuthInfo해서 중복이면? 다시 생성하기
+        if (self::getModel()->selectAuthInfo($str) === true)
+            $str = self::makeAuthCode();
         return $str;
     }
 }

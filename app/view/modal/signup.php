@@ -3,7 +3,7 @@
     <div class="signform-line">
         <label>이메일</label>
         <input type="email" id="signup-email" name="email" placeholder="aa@aa.aa">
-        <div id='signup-email-info'class="alert alert-info" hidden>이메일은 30글자 이하로 @문자를 포함해야 합니다.</div>
+        <div id='signup-email-info' class="alert alert-info" hidden>이메일은 30글자 이하로 @문자를 포함해야 합니다.</div>
     </div>
     <div class="signform-line">
         <label>닉네임</label>
@@ -13,15 +13,11 @@
     <div class="signform-line">
         <label>비밀번호</label>
         <input type="password" id="signup-password" name="password">
-        <div id='signup-password-info' class="alert alert-info" hidden>비밀번호는 8~20글자 사이로 소문자, 대문자, 숫자, 특수문자 중 2가지 요소를 포함해야 합니다.</div>
-    </div>
-    <div class="signform-line">
-        <label>인증번호</label>
-        <input type="text" id="signup-auth-code">
-        <button id="auth-submit" class="btn btn-primary">인증 메일 발송</button>
+        <div id='signup-password-info' class="alert alert-info" hidden>비밀번호는 8~20글자 사이로 소문자, 대문자, 숫자, 특수문자 중 2가지 요소를
+            포함해야 합니다.</div>
     </div>
     <div class="signform-button">
-        <button id="signup-submit" class="btn btn-primary" disabled>회원가입 완료</button>
+        <button id="signup-submit" class="btn btn-primary">회원가입</button>
         <button class="modal-cancel btn btn-default" id="signup-cancel">취소</button>
     </div>
 </div>

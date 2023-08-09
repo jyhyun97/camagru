@@ -6,16 +6,9 @@ signupSubmitButton.addEventListener('click', () => submitSignup())
 const signupButton = document.getElementById('signup-button')
 signupButton.addEventListener('click', () => activeModal('signup-form'))
 
-const authSubmitButton = document.getElementById('auth-submit')
-authSubmitButton.addEventListener('click', (event) => authSignup(event))
-
 const signupEmail = document.getElementById('signup-email')
 const signupUsername = document.getElementById('signup-username')
 const signupPassword = document.getElementById('signup-password')
-const signupAuthCode = document.getElementById('signup-auth-code')
-signupAuthCode.addEventListener('keyup', (e) => {
-  if (e.keyCode === 13) submitSignup()
-})
 
 signupEmail.addEventListener('focusin', () => {
   const signupEmailInfo = document.getElementById('signup-email-info')
@@ -48,8 +41,7 @@ function submitSignup() {
   const signupData = {
     email: signupEmail.value,
     username: signupUsername.value,
-    password: signupPassword.value,
-    authCode: signupAuthCode.value,
+    password: signupPassword.value
   }
 
   const httpRequest = new XMLHttpRequest()
@@ -57,7 +49,7 @@ function submitSignup() {
   httpRequest.setRequestHeader('Content-Type', 'application/json')
   httpRequest.onload = () => {
     if (httpRequest.status === 201) {
-      alert('가입이 완료되었습니다.')
+      alert('메일인증을 통해 가입을 완료하세요')
       location.reload()
     } else if (httpRequest.status === 400) {
       const response = JSON.parse(httpRequest.response)
@@ -68,30 +60,4 @@ function submitSignup() {
     }
   }
   httpRequest.send(JSON.stringify(signupData))
-}
-
-function authSignup(e) {
-  const authData = {
-    email: signupEmail.value,
-    username: signupUsername.value,
-    password: signupPassword.value,
-  }
-  e.target.disabled = true
-  signupSubmitButton.disabled = false
-  const httpRequest = new XMLHttpRequest()
-  httpRequest.open('POST', '/signup-auth')
-  httpRequest.onload = () => {
-    if (httpRequest.status === 200) {
-      alert('메일이 발송되었습니다. 인증을 완료해주세요.')
-    } else if (httpRequest.status === 400) {
-      const response = JSON.parse(httpRequest.response)
-      alert(response.message)
-      e.target.disabled = false
-    } else if (httpRequest.status === 409) {
-      const response = JSON.parse(httpRequest.response)
-      alert(response.message)
-      e.target.disabled = false
-    }
-  }
-  httpRequest.send(JSON.stringify(authData))
 }

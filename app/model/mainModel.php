@@ -25,9 +25,8 @@ class MainModel
     public function postSignup($email, $username, $password)
     {
         $query = "INSERT INTO user (email, username, password, auth, notice) VALUES (?, ?, ?, 'always', 'always')";
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param("sss", $email, $username, $hashed_password);
+        $stmt->bind_param("sss", $email, $username, $password);
         $stmt->execute();
 
         return $this->createResult(true, '성공', NULL);
@@ -38,10 +37,32 @@ class MainModel
         $query = "INSERT INTO auth (email, username, password, authCode, authType) VALUES (?, ?, ?, ?, ?)";
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param("sssss", $email, $username, $password, $authCode, $authType);
+        $stmt->bind_param("sssss", $email, $username, $hashed_password, $authCode, $authType);
         $stmt->execute();
 
         return $this->createResult(true, '성공', NULL);
+    }
+    public function deleteAuthInfo($authCode)
+    {
+        $query = "DELETE FROM auth WHERE authCode=?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("s", $authCode);
+        $stmt->execute();
+
+        return $this->createResult(true, '성공', NULL);
+    }
+    public function selectAuthInfo($authCode)
+    {
+        $query = "SELECT * from auth WHERE authCode = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("s", $authCode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $auth = $result->fetch_array(MYSQLI_ASSOC);
+        if (isset($auth))
+            return $this->createResult(true, '성공', $auth);
+        else
+            return $this->createResult(false, '실패', null);
     }
 
     public function checkDupSignup($email, $username)
