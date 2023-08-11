@@ -142,3 +142,33 @@ function patchAuthNotice(type, event) {
   }
   httpRequest.send(JSON.stringify(data))
 }
+
+const usernameChangeInput = document.getElementById('username-change-input');
+usernameChangeInput.addEventListener('focusin', () => {
+  const usernameChangeInfo = document.getElementById('username-change-info')
+  usernameChangeInfo.hidden = false
+});
+usernameChangeInput.addEventListener('focusout', () => {
+  const usernameChangeInfo = document.getElementById('username-change-info')
+  usernameChangeInfo.hidden = true
+});
+
+const emailChangeInput = document.getElementById('email-change-input')
+emailChangeInput.addEventListener('focusin', () => {
+  const emailChangeInfo = document.getElementById('email-change-info')
+  emailChangeInfo.hidden = false
+})
+emailChangeInput.addEventListener('focusout', () => {
+  const emailChangeInfo = document.getElementById('email-change-info')
+  emailChangeInfo.hidden = true
+})
+
+const passwordChangeInput = document.getElementById('password-origin-input')
+passwordChangeInput.addEventListener('focusin', () => {
+  const passwordChangeInfo = document.getElementById('password-change-info')
+  passwordChangeInfo.hidden = false
+})
+passwordChangeInput.addEventListener('focusout', () => {
+  const passwordChangeInfo = document.getElementById('password-change-info')
+  passwordChangeInfo.hidden = true
+})

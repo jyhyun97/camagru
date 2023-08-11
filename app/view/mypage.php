@@ -35,6 +35,7 @@ ob_start();
                         <button id="username-change-button" class="btn btn-default">변경</button>
                         <button id="username-submit-button" class="btn btn-default hidden">제출</button>
                         <button id="username-cancel-button" class="btn btn-default hidden">취소</button>
+                        <div id='username-change-info' class="alert alert-info" hidden>닉네임은 5~20글자 사이의 영숫자만 허용됩니다.</div>
                     </div>
                     <div>
                         <lable>이메일 : </lable>
@@ -46,6 +47,7 @@ ob_start();
                         <button id="email-change-button" class="btn btn-default">변경</button>
                         <button id="email-submit-button" class="btn btn-default hidden">제출</button>
                         <button id="email-cancel-button" class="btn btn-default hidden">취소</button>
+                        <div id='email-change-info' class="alert alert-info" hidden>이메일은 30글자 이하로 @문자를 포함해야 합니다.</div>
                     </div>
                     <div>
                         <lable>비밀번호 : </lable>
@@ -61,6 +63,9 @@ ob_start();
                             <lable id="password-check-lable">비밀번호 확인</label>
                                 <input id="password-check-input" type="password" class="hidden"></input>
                         </div>
+                        <div id='password-change-info' class="alert alert-info" hidden>비밀번호는 8~20글자 사이로 소문자, 대문자, 숫자,
+                            특수문자 중 2가지 요소를 포함해야 합니다.</div>
+
                         <button id="password-change-button" class="btn btn-default">변경</button>
                         <button id="password-submit-button" class="btn btn-default hidden">제출</button>
                         <button id="password-cancel-button" class="btn btn-default hidden">취소</button>
