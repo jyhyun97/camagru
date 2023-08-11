@@ -49,6 +49,18 @@ class MainController
             include_once('app/view/404.php');
         }
     }
+
+    public static function getAuth()
+    {
+        $currentUrl = $_SERVER['REQUEST_URI'];
+        $urlExplode = explode("/", $currentUrl);
+        if (count($urlExplode) === 2) {
+            include_once 'app/view/auth.php';
+        } else {
+            http_response_code(404);
+            include_once('app/view/404.php');
+        }
+    }
     /**
      * [영숫자-_.]*@[영숫자-_.]*.[영숫자]
      */
@@ -124,8 +136,6 @@ class MainController
         }
         return false;
     }
-
-
     /**
      * query 결과에 따라 중복된 이메일, 유저네임 알리기
      * [테스트]
@@ -167,38 +177,25 @@ class MainController
             $body['message'] = $dupCheck['message'];
             return $body;
         }
+
+        $auth = self::getModel()->getAuthInfoByEmail($email, 'signup');
+        if ($auth['success'] === true)
+            self::getModel()->deleteAuthInfoByEmail($email, 'signup');
+
         $authCode = self::makeAuthCode();
         $hyperlink = "http://localhost/auth?authcode=$authCode";
+
         self::getModel()->insertAuthInfo($email, $username, $password, $authCode, 'signup');
 
         $subject = 'camagru 회원 가입 메일';
         $mailBody = '<html><body>';
         $mailBody .= '아래 버튼을 눌러 인증을 완료하세요.' . '<br>';
-        $mailBody .= "<a href=$hyperlink><button style='border : 1px solid black, background-color : gray'>인증완료</button></a>";
+        $mailBody .= "<a href=$hyperlink><button style='border : 1px solid black; background-color: rgb(200, 200, 200)'>인증완료</button></a>";
         $mailBody .= '</body></html>';
 
         self::sendMail($email, $subject, $mailBody);
         http_response_code(201);
         return;
-    }
-
-    public static function getAuth()
-    {
-        $authcode = explode("=", $_SERVER['REQUEST_URI']);
-        if (isset($authcode) && $authcode[0] === "/auth?authcode" && isset($authcode[1])) {
-            $auth = self::getModel()->selectAuthInfo($authcode[1])['data'];
-            if ($auth['authType'] === 'signup') {
-                self::getModel()->postSignup($auth['email'], $auth['username'], $auth['password']);
-                self::getModel()->deleteAuthInfo($auth['authCode']);
-                echo "<div>인증 성공.. 메인으로 돌아가기..</div>";
-            } else if ($auth['authType'] === 'signin') {
-                //로그인처리
-                echo "아직 안만듬ㅎㅎ..";
-            }
-        } else {
-            var_dump($_SERVER);
-        }
-        //include 인증 완료/인증 실패 페이지~
     }
 
     private static function sendMail($email, $subject, $mailBody)
@@ -238,63 +235,36 @@ class MainController
             http_response_code(401);
             return;
         } else if ($result['message'] === '인증 필요') {
-            //[수정] 여기도 임시 로그인 페이지 추가 및 mailBody html화!! 로그인, 회원가입 2개만 하면 되네용ㅎㅎ!
-            $_SESSION['auth_code'] = sprintf('%06d', rand(000000, 999999));
+            $auth = self::getModel()->getAuthInfoByEmail($email, 'signin');
+            if ($auth['success'] === true)
+                self::getModel()->deleteAuthInfoByEmail($email, 'signin');
+
+            $authCode = self::makeAuthCode();
+            $hyperlink = "http://localhost/auth?authcode=$authCode";
+            self::getModel()->insertAuthInfo($email, "", $password, $authCode, 'signin');
+
             $subject = 'camagru 로그인 인증 메일';
-            $mailBody = $_SESSION['auth_code'] . ' 코드를 입력해 로그인을 완료해주세요.';
+            $mailBody = '<html><body>';
+            $mailBody .= '아래 버튼을 눌러 인증을 완료하세요.' . '<br>';
+            $mailBody .= "<a href=$hyperlink><button style='border : 1px solid black; background-color: rgb(200, 200, 200)'>인증완료</button></a>";
+            $mailBody .= '</body></html>';
+
             self::sendMail($email, $subject, $mailBody);
             http_response_code(202);
             $body = array();
-            $body['message'] = '메일을 확인해 인증코드를 입력해주세요.';
+            $body['message'] = '메일을 확인해 인증을 완료하세요.';
             return $body;
-        }
-        //postSignin에서 인증 활성화 여부 확인해서,
-        //인증이 필요한 거면 다른 status코드와 바디를 보낼 것
-        else {
-            $_SESSION['username'] = $result['data'];
-            $_SESSION['email'] = $email;
-            header('Content-type: application/json; charset=utf-8');
-            http_response_code(200);
-            $body = array();
-            $body['username'] = $result['data'];
-            return $body;
-        }
-    }
-    /**
-     * 인증 코드를 확인해서 로그인 진행.
-     */
-    public static function postSigninAuth()
-    {
-        $data = json_decode(strip_tags(file_get_contents("php://input")));
-
-        $email = $data->email;
-        $password = $data->password;
-        $authCode = $data->authCode;
-
-        if (!self::validateEmail($email) || !self::validatePassword($password)) {
-            http_response_code(400);
-            return;
-        }
-        $result = self::getModel()->postSignin($email, $password);
-        if ($result['success'] === false || $authCode !== $_SESSION['auth_code']) {
-            http_response_code(401);
-            $body = array();
-            if ($result['success'] === true)
-                $body['message'] = '올바른 인증 코드를 입력해주세요.';
-            else
-                $body['message'] = '비밀번호를 확인해주세요.';
-            return print_r(json_encode($body));
         } else {
-            unset($_SESSION['auth_code']);
-            $_SESSION['username'] = $result['data'];
+            $_SESSION['username'] = $result['data']['username'];
             $_SESSION['email'] = $email;
             header('Content-type: application/json; charset=utf-8');
             http_response_code(200);
             $body = array();
-            $body['username'] = $result['data'];
-            return print_r(json_encode($body));
+            $body['username'] = $result['data']['username'];
+            return $body;
         }
     }
+
     /**
      * 메인 화면에서 갤러리 이미지 객체와 페이지 데이터를 보내주는 역할
      * 현재 페이지, 한 번에 불러오는 이미지 개수를 가지고 조회를 한다
@@ -759,13 +729,13 @@ class MainController
     private static function makeAuthCode()
     {
         $str = '';
-        $alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789^/';
+        $alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789^$';
 
         for ($i = 0; $i < 64; $i++) {
             $str .= $alphaNum[rand(0, 63)];
         }
-        //가능성은 낮지만 만약 $str이 selectAuthInfo해서 중복이면? 다시 생성하기
-        if (self::getModel()->selectAuthInfo($str) === true)
+        //가능성은 낮지만 만약 $str이 getAuthInfo해서 중복이면? 다시 생성하기
+        if (self::getModel()->getAuthInfo($str) === true)
             $str = self::makeAuthCode();
         return $str;
     }

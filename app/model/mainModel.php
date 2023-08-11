@@ -51,7 +51,7 @@ class MainModel
 
         return $this->createResult(true, '성공', NULL);
     }
-    public function selectAuthInfo($authCode)
+    public function getAuthInfo($authCode)
     {
         $query = "SELECT * from auth WHERE authCode = ?";
         $stmt = $this->mysqli->prepare($query);
@@ -64,6 +64,29 @@ class MainModel
         else
             return $this->createResult(false, '실패', null);
     }
+    public function getAuthInfoByEmail($email, $authType)
+    {
+        $query = "SELECT * from auth WHERE email = ? AND authType = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("ss", $email, $authType);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $auth = $result->fetch_array(MYSQLI_ASSOC);
+        if (isset($auth))
+            return $this->createResult(true, '성공', $auth);
+        else
+            return $this->createResult(false, '실패', null);
+    }
+    public function deleteAuthInfoByEmail($email, $authType)
+    {
+        $query = "DELETE FROM auth WHERE email = ? AND authType = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("ss", $email, $authType);
+        $stmt->execute();
+
+        return $this->createResult(true, '성공', NULL);
+    }
+
 
     public function checkDupSignup($email, $username)
     {
@@ -100,12 +123,11 @@ class MainModel
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
 
-
         if (isset($row['password']) && password_verify($password, $row['password'])) {
             if (isset($row['auth']) && $row['auth'] === 'always')
-                return $this->createResult(true, '인증 필요', $row['username']);
+                return $this->createResult(true, '인증 필요', $row);
             else
-                return $this->createResult(true, '로그인 성공', $row['username']);
+                return $this->createResult(true, '로그인 성공', $row);
         } else
             return $this->createResult(false, '로그인 실패', null);
     }
@@ -389,6 +411,17 @@ class MainModel
         $query = "SELECT * FROM user WHERE username = ?";
         $stmt = $this->mysqli->prepare($query);
         $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $this->createResult(true, '유저 조회 성공', $result->fetch_array(MYSQLI_ASSOC));
+    }
+
+    public function getUserbyEmail($email)
+    {
+        $query = "SELECT * FROM user WHERE email = ?";
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 

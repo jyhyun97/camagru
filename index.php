@@ -10,7 +10,6 @@ Router::add('/mypage', 'GET', 'MainController::getMypage');
 Router::add('/upload', 'GET', 'MainController::getUpload');
 Router::add('/signup', 'POST', 'MainController::postSignup');
 Router::add('/signin', 'POST', 'MainController::postSignin');
-Router::add('/signin-auth', 'POST', 'MainController::postSigninAuth');
 Router::add('/gallary', 'POST', 'MainController::postGallary');
 Router::add('/capture', 'POST', 'MainController::postCapture');
 Router::add('/image', 'POST', 'MainController::postImage');

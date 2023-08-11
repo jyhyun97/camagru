@@ -8,10 +8,6 @@
         <label>비밀번호</label>
         <input type="password" id="signin-password">
     </div>
-    <div class="signform-line" id="signin-auth-line" hidden>
-        <label>인증번호</label>
-        <input type="text" id="signin-auth-input">
-    </div>
     <div class="signform-line" id="pw-recovery-line" hidden>
         <div class="alert alert-info" role="alert">
             하단에 이메일 주소를 작송한 후 발급 버튼을 누르면 메일을 통해 임시 비밀번호가 발급됩니다.<br>
